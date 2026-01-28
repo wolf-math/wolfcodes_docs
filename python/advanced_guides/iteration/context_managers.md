@@ -226,7 +226,7 @@ Rule of thumb:
 
 The most explicit way to define a context manager is with a **class** that implements `__enter__` and `__exit__`.
 
-Example: timing a block of code:
+**Example:** timing a block of code:
 
 ```python
 import time
@@ -244,7 +244,7 @@ class Timer:
         return False
 ```
 
-Usage:
+**Usage:**
 
 ```python
 with Timer() as t:
@@ -270,7 +270,7 @@ When it might be overkill:
 
 The `contextlib` module offers a more compact pattern via the `@contextmanager` decorator.
 
-Example:
+**Example:**
 
 ```python
 from contextlib import contextmanager
@@ -286,7 +286,7 @@ def open_upper(path, mode="r", encoding="utf-8"):
         f.close()
 ```
 
-Usage:
+**Usage:**
 
 ```python
 with open_upper("data.txt") as lines:
@@ -491,7 +491,7 @@ Not just “borrow a resource,” but also “borrow a configuration.”
   - It encourages factoring lifecycle logic into reusable building blocks.
 
 
-## When to use context managers (rules of thumb)
+## When to use context managers
 
 Use a context manager when:
 
@@ -511,53 +511,3 @@ Prefer a simple function (or other pattern) when:
 A good mental test:
 
 > If you catch yourself writing `try` / `finally` more than once for the same pattern, it probably wants to be a context manager.
-
-
-## Suggested callout blocks
-
-- **Under the hood: `with` desugaring**
-
-  ```python
-  mgr = manager
-  value = mgr.__enter__()
-  try:
-      # with-block body
-      ...
-  except BaseException as exc:
-      if not mgr.__exit__(type(exc), exc, exc.__traceback__):
-          raise
-  else:
-      mgr.__exit__(None, None, None)
-  ```
-
-- **Mental model: “Borrow, then return”**
-
-  - Enter: “borrow this resource / configuration.”
-  - Block: “use it safely here.”
-  - Exit: “return it exactly as required, even if things went wrong.”
-
-- **Pitfall alert: exception suppression**
-
-  - `__exit__` returning `True` **hides** exceptions.
-  - Only do this when you are deliberately ignoring specific error conditions.
-
-- **Advanced note: generator-based context managers**
-
-  - `@contextmanager` turns a generator into a context manager:
-    - Code before `yield` → setup.
-    - `yield` value → the object bound after `as`.
-    - `finally` or code after `yield` → teardown.
-
-
-## How this fits your Advanced Python section
-
-- **Iteration protocol** → how Python **loops** (iterables, iterators, `for`).
-- **Generators** → how Python **pauses** (lazy, stateful iteration via `yield`).
-- **Context managers** → how Python **guarantees cleanup** (deterministic setup/teardown via `with`).
-
-Together, they demystify three of the most misunderstood keywords in Python:
-
-- `for` – built on the iteration protocol.
-- `yield` – the heart of generators.
-- `with` – the face of context managers.
-
