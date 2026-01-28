@@ -1,0 +1,8 @@
+{
+  "label": "The Browser Environment",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "Learn how JavaScript runs in the browser and understand the relationship between HTML, CSS, and JavaScript."
+  }
+}

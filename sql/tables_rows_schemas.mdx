@@ -1,0 +1,203 @@
+---
+title: Tables, Rows, and Schemas
+sidebar_position: 2
+author:
+  name: Aaron Wolf
+  url: https://wolfcodes.dev
+license:
+  type: CC BY-NC 4.0
+  attribution_required: true
+source:
+  canonical_url: https://wolfcodes.dev
+---
+
+## The building blocks
+
+Everything in SQL starts with three concepts:
+
+- **Tables**: Collections of related data (like a spreadsheet)
+- **Rows**: Individual records in a table (like a row in a spreadsheet)
+- **Columns**: The attributes of each row (like columns in a spreadsheet)
+
+Think of a table as a structured container. Each row represents one entity (a user, a blog post, a transaction), and each column represents a property of that entity.
+
+## Tables
+
+A **table** is a named collection of rows with a fixed structure. The structure is defined by its **columns** (also called fields or attributes).
+
+```sql
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  name TEXT,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+This creates a table called `users` with four columns. Every row in this table will have these four columns (though some may be `NULL`).
+
+## Rows
+
+A **row** (also called a record or tuple) is one complete entry in a table. Each row contains one value for each column.
+
+```
+id | email                | name  | created_at
+---|----------------------|-------|------------
+1  | alice@wolfcodes.dev  | Alice | 2024-01-15
+2  | bob@wolfcodes.dev    | Bob   | 2024-01-16
+```
+
+## Columns and data types
+
+Each column has a **data type** that defines what kind of data it can store. Here are the most common ones you'll use:
+
+:::note 
+Exact type names vary by database (SQLite uses `TEXT` for everything, PostgreSQL has `SERIAL`, MySQL has `AUTO_INCREMENT`). The concepts are the same.
+:::
+
+### `INTEGER`
+Whole numbers: `1`, `42`, `-100`
+
+```sql
+age INTEGER
+```
+
+### `TEXT` (or `VARCHAR`)
+Text strings: `'hello'`, `'user@wolfcodes.dev'`
+
+```sql
+email TEXT         -- no limit on length
+name VARCHAR(100)  -- limits length to 100 characters
+```
+
+### `BOOLEAN`
+True or false: `TRUE`, `FALSE`
+
+```sql
+is_active BOOLEAN
+```
+
+### `DATE` / `TIMESTAMP`
+Dates and times: `'2024-01-15'`, `'2024-01-15 14:30:00'`
+
+**DATE** stores only a date (year, month, day) without time information. Use it when you only care about the day, not the specific time.
+
+**TIMESTAMP** stores both date and time (year, month, day, hour, minute, second). Use it when you need to know exactly when something happened, like when a record was created or updated.
+
+```sql
+created_at TIMESTAMP  -- Knows the exact time: 2024-01-15 14:30:00
+birth_date DATE      -- Only the date matters: 2024-01-15
+```
+
+### `JSON` / `JSONB`
+Structured data (PostgreSQL): `'{"key": "value"}'`
+
+**JSON** stores the exact text representation of JSON data. It preserves whitespace and key order, but must be parsed every time you query it.
+
+**JSONB** (JSON Binary) stores JSON data in a binary format optimized for querying. It's faster to query and supports indexing, but doesn't preserve whitespace or key order.
+
+In most cases, use **JSONB** because it's faster and more flexible. Use **JSON** only if you need to preserve the exact formatting or key order of the original JSON.
+
+```sql
+metadata JSONB  -- Preferred: faster queries, supports indexing
+config JSON     -- Use only if you need exact formatting preserved
+```
+
+## `NULL` vs empty values
+
+`NULL` is special: it means "no value" or "unknown". It's different from:
+
+- Empty string: `''` (a string with zero length)
+- Zero: `0` (a number)
+- False: `FALSE` (a boolean)
+
+```sql
+-- NULL means "we don't know"
+SELECT * FROM users WHERE middle_name IS NULL;
+
+-- Empty string means "we know it's empty"
+SELECT * FROM users WHERE middle_name = '';
+```
+
+**Important**: `NULL` comparisons use `IS NULL` or `IS NOT NULL`, not `= NULL`:
+
+```sql
+-- ❌ Wrong
+WHERE email = NULL
+
+-- ✅ Correct
+WHERE email IS NULL
+```
+
+## Primary keys `PRIMARY KEY`
+
+A **primary key** uniquely identifies each row in a table. It's like a unique ID that can never be duplicated.
+
+```sql
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,  -- This is the primary key
+  email TEXT NOT NULL UNIQUE
+);
+```
+
+Primary keys:
+- Must be unique (no two rows can have the same value)
+- Cannot be `NULL`
+- Are typically used to reference rows from other tables
+
+Common patterns:
+- **Auto-incrementing integers**: `id SERIAL PRIMARY KEY` (PostgreSQL) or `id INTEGER PRIMARY KEY AUTOINCREMENT` (SQLite)
+- **UUIDs**: `id UUID PRIMARY KEY DEFAULT gen_random_uuid()`
+- **Natural keys**: Using an existing unique field like `email`
+
+## Simple table creation
+
+Here's a complete example:
+
+```sql
+CREATE TABLE expenses (
+  id SERIAL PRIMARY KEY,
+  amount DECIMAL(10, 2) NOT NULL,
+  description TEXT,
+  category TEXT,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+This creates an `expenses` table where:
+- Each expense has a unique `id`
+- `amount` is required (NOT NULL) and can have 2 decimal places
+- `description` and `category` are optional (can be NULL)
+- `created_at` defaults to the current time if not specified
+
+## Schemas
+
+A **schema** is a namespace that contains tables, views, and other database objects. In most databases, you have a default schema (often called `public` in PostgreSQL).
+
+When you create a table, it goes into your current schema:
+
+```sql
+CREATE TABLE users (...);  -- Creates public.users (in PostgreSQL)
+```
+
+Schemas help organize related tables, especially in larger applications.
+
+## Common mistake: forgetting null
+
+Remember that columns can be `NULL` unless you specify `NOT NULL`. This can cause surprises:
+
+```sql
+-- This allows NULL emails
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email TEXT  -- Can be NULL!
+);
+
+-- Later, this query might not work as expected
+SELECT * FROM users WHERE email = 'test@wolfcodes.dev';
+-- Won't match rows where email IS NULL
+```
+
+Always think: "Should this column ever be NULL?" If not, add `NOT NULL`.
+
+

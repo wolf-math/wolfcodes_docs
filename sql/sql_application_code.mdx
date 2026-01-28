@@ -1,0 +1,344 @@
+---
+title: SQL + Application Code
+sidebar_position: 11
+author:
+  name: Aaron Wolf
+  url: https://wolfcodes.dev
+license:
+  type: CC BY-NC 4.0
+  attribution_required: true
+source:
+  canonical_url: https://wolfcodes.dev
+---
+
+## SQL from Python
+
+[Python](/docs/python/) has several libraries for connecting to databases. The two most common are:
+
+### sqlite3 (built-in)
+
+SQLite is a file-based database, perfect for learning and small applications:
+
+```python
+import sqlite3
+
+# Connect to database (creates file if it doesn't exist)
+conn = sqlite3.connect('expenses.db')
+cursor = conn.cursor()
+
+# Execute a query
+cursor.execute("SELECT * FROM users WHERE email = ?", ('alice@example.com',))
+user = cursor.fetchone()
+
+# Insert data
+cursor.execute(
+    "INSERT INTO users (email, name) VALUES (?, ?)",
+    ('bob@example.com', 'Bob')
+)
+conn.commit()  # Save changes
+
+conn.close()
+```
+
+### psycopg (PostgreSQL)
+
+For PostgreSQL databases:
+
+```python
+import psycopg2
+
+conn = psycopg2.connect(
+    host='localhost',
+    database='mydb',
+    user='myuser',
+    password='mypassword'
+)
+cursor = conn.cursor()
+
+cursor.execute("SELECT * FROM users WHERE email = %s", ('alice@example.com',))
+user = cursor.fetchone()
+
+conn.close()
+```
+
+## Parameterized queries (critical)
+
+**Never** build SQL queries by concatenating strings with user input. This creates a **SQL injection vulnerability**:
+
+```python
+# ❌ DANGEROUS: SQL injection vulnerability
+email = input("Enter email: ")
+query = f"SELECT * FROM users WHERE email = '{email}'"
+cursor.execute(query)
+
+# If user enters: ' OR '1'='1
+# Query becomes: SELECT * FROM users WHERE email = '' OR '1'='1'
+# This returns ALL users!
+```
+
+**Always** use parameterized queries:
+
+```python
+# ✅ SAFE: Parameterized query
+email = input("Enter email: ")
+cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
+# or with psycopg: cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+```
+
+The database driver handles escaping and prevents SQL injection.
+
+## ORMs: what they generate
+
+ORMs (Object-Relational Mappers) like Django ORM and SQLAlchemy generate SQL for you:
+
+### Django ORM
+
+```python
+# Django ORM code
+users = User.objects.filter(email='alice@example.com')
+user = User.objects.create(email='bob@example.com', name='Bob')
+```
+
+This generates SQL like:
+
+```sql
+SELECT * FROM users WHERE email = 'alice@example.com';
+INSERT INTO users (email, name) VALUES ('bob@example.com', 'Bob');
+```
+
+### SQLAlchemy
+
+```python
+from sqlalchemy import create_engine, select
+from sqlalchemy.orm import sessionmaker
+
+engine = create_engine('postgresql://user:pass@localhost/db')
+Session = sessionmaker(bind=engine)
+session = Session()
+
+# SQLAlchemy code
+users = session.query(User).filter(User.email == 'alice@example.com').all()
+```
+
+## When to use raw SQL vs ORM
+
+### Use ORM when:
+- **Simple queries**: Standard CRUD operations
+- **Type safety**: ORMs provide type checking and autocomplete
+- **Database portability**: ORMs abstract away SQL differences
+- **Rapid development**: Faster to write, less boilerplate
+
+### Use raw SQL when:
+- **Complex queries**: Aggregations, window functions, complex joins
+- **Performance**: ORM-generated SQL might be inefficient
+- **ORM limitations**: Some queries are hard or impossible to express in ORMs
+- **Reporting/analytics**: One-off queries that don't fit the ORM model
+
+### Hybrid approach
+
+Many applications use both:
+
+```python
+# Simple operations: use ORM
+user = User.objects.get(email='alice@example.com')
+user.name = 'Alice Smith'
+user.save()
+
+# Complex query: use raw SQL
+from django.db import connection
+with connection.cursor() as cursor:
+    cursor.execute("""
+        SELECT u.name, SUM(e.amount) as total
+        FROM users u
+        LEFT JOIN expenses e ON u.id = e.user_id
+        GROUP BY u.id, u.name
+        ORDER BY total DESC
+    """)
+    results = cursor.fetchall()
+```
+
+## SQL from JavaScript/Node.js
+
+### node-postgres (pg)
+
+```javascript
+const { Client } = require('pg');
+
+const client = new Client({
+  host: 'localhost',
+  database: 'mydb',
+  user: 'myuser',
+  password: 'mypassword'
+});
+
+await client.connect();
+
+// Parameterized query
+const result = await client.query(
+  'SELECT * FROM users WHERE email = $1',
+  ['alice@example.com']
+);
+
+console.log(result.rows);
+
+await client.end();
+```
+
+### SQL injection prevention
+
+Same rule applies: **always use parameterized queries**:
+
+```javascript
+// ❌ DANGEROUS
+const email = req.query.email;
+const query = `SELECT * FROM users WHERE email = '${email}'`;
+
+// ✅ SAFE
+const email = req.query.email;
+const result = await client.query(
+  'SELECT * FROM users WHERE email = $1',
+  [email]
+);
+```
+
+## Connection management
+
+Database connections are expensive. Best practices:
+
+### Connection pooling
+
+Instead of creating a new connection for each query, use a **connection pool**:
+
+```python
+# psycopg with connection pooling
+from psycopg2 import pool
+
+connection_pool = pool.SimpleConnectionPool(
+    1, 20,  # min and max connections
+    host='localhost',
+    database='mydb',
+    user='myuser',
+    password='mypassword'
+)
+
+# Get connection from pool
+conn = connection_pool.getconn()
+cursor = conn.cursor()
+cursor.execute("SELECT * FROM users")
+conn.commit()
+connection_pool.putconn(conn)  # Return to pool
+```
+
+### Context managers
+
+Python's `with` statement ensures connections are closed:
+
+```python
+import sqlite3
+
+# Automatically closes connection
+with sqlite3.connect('expenses.db') as conn:
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users")
+    results = cursor.fetchall()
+# Connection closed automatically
+```
+
+## Error handling
+
+Always handle database errors:
+
+```python
+import sqlite3
+
+try:
+    conn = sqlite3.connect('expenses.db')
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO users (email) VALUES (?)", ('alice@example.com',))
+    conn.commit()
+except sqlite3.IntegrityError:
+    print("Email already exists")
+except sqlite3.Error as e:
+    print(f"Database error: {e}")
+finally:
+    if conn:
+        conn.close()
+```
+
+## Transactions
+
+Transactions ensure multiple operations succeed or fail together:
+
+```python
+conn = sqlite3.connect('expenses.db')
+try:
+    cursor = conn.cursor()
+    # Transfer money between accounts
+    cursor.execute("UPDATE accounts SET balance = balance - 100 WHERE id = 1")
+    cursor.execute("UPDATE accounts SET balance = balance + 100 WHERE id = 2")
+    conn.commit()  # Save both changes
+except:
+    conn.rollback()  # Undo both if either fails
+finally:
+    conn.close()
+```
+
+## Debugging ORM queries
+
+Most ORMs let you see the generated SQL:
+
+### Django
+
+```python
+from django.db import connection
+
+# Enable query logging
+User.objects.filter(email='alice@example.com')
+
+# See all queries
+for query in connection.queries:
+    print(query['sql'])
+```
+
+### SQLAlchemy
+
+```python
+# Enable SQL logging
+import logging
+logging.basicConfig()
+logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+
+# Now all SQL will be printed
+```
+
+## Common mistakes
+
+### Not using parameterized queries
+
+We've said it before, but it's critical: **always use parameterized queries** to prevent SQL injection.
+
+### Not closing connections
+
+```python
+# ❌ Connection leak
+conn = sqlite3.connect('db.db')
+cursor.execute("SELECT * FROM users")
+# Forgot to close!
+
+# ✅ Use context manager
+with sqlite3.connect('db.db') as conn:
+    cursor.execute("SELECT * FROM users")
+```
+
+### Fetching too much data
+
+```python
+# ❌ Loads all users into memory
+users = User.objects.all()
+for user in users:
+    print(user.name)
+
+# ✅ Process in chunks
+for user in User.objects.all().iterator(chunk_size=1000):
+    print(user.name)
+```

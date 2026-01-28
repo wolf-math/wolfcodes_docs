@@ -1,0 +1,214 @@
+---
+title: SQL Dialects (Just Enough)
+sidebar_position: 10
+author:
+  name: Aaron Wolf
+  url: https://wolfcodes.dev
+license:
+  type: CC BY-NC 4.0
+  attribution_required: true
+source:
+  canonical_url: https://wolfcodes.dev
+---
+
+## What's standard SQL?
+
+SQL has an official standard (maintained by ISO), but each database implements it slightly differently. Most of what you've learned so far is **standard SQL** and works across databases:
+
+- `SELECT`, `FROM`, `WHERE`
+- `JOIN`, `GROUP BY`, `HAVING`
+- `INSERT`, `UPDATE`, `DELETE`
+- Basic data types and constraints
+
+## SQLite
+
+**SQLite** is a file-based database, perfect for:
+- Learning SQL
+- Small applications
+- Embedded systems
+- Development and testing
+
+**Characteristics**:
+- Single file database (no server needed)
+- Lightweight and fast for small datasets
+- Limited data types (everything is essentially TEXT, INTEGER, REAL, BLOB, or NULL)
+- No separate server process
+
+**Example**:
+```sql
+-- SQLite: INTEGER PRIMARY KEY AUTOINCREMENT
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT NOT NULL UNIQUE,
+  name TEXT
+);
+```
+
+**Limitations**:
+- No `SERIAL` type (use `INTEGER PRIMARY KEY AUTOINCREMENT`)
+- Limited `ALTER TABLE` support
+- No `RETURNING` clause
+- Simpler type system
+
+## PostgreSQL
+
+**PostgreSQL** is a powerful, open-source relational database:
+
+**Characteristics**:
+- Full-featured and standards-compliant
+- Rich data types (JSON, arrays, custom types)
+- Advanced features (CTEs, window functions, full-text search)
+- Excellent for production applications
+
+**Example**:
+```sql
+-- PostgreSQL: SERIAL, RETURNING, rich types
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  metadata JSONB,
+  tags TEXT[]
+);
+
+INSERT INTO users (email) 
+VALUES ('alice@example.com')
+RETURNING *;
+```
+
+**Notable features**:
+- `SERIAL` for auto-incrementing integers
+- `RETURNING` clause for INSERT/UPDATE/DELETE
+- `JSONB` for efficient JSON storage
+- Array types
+- Full-text search
+
+## MySQL / MariaDB
+
+**MySQL** is widely used, especially with PHP and WordPress:
+
+**Characteristics**:
+- Fast and reliable
+- Good for web applications
+- Slightly different syntax in some areas
+
+**Example**:
+```sql
+-- MySQL: AUTO_INCREMENT, different syntax
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  name VARCHAR(255)
+);
+```
+
+**Notable differences**:
+- `AUTO_INCREMENT` instead of `SERIAL`
+- `VARCHAR` instead of `TEXT` (with length required)
+- Slightly different date/time functions
+- Case-insensitive table names by default (on Windows)
+
+## Why examples may differ
+
+Throughout this guide, examples use **PostgreSQL-style syntax** because:
+- It's close to standard SQL
+- It has helpful features like `RETURNING`
+- It's commonly used in production
+
+If you're using a different database, you might need to adjust:
+- `SERIAL` → `AUTO_INCREMENT` (MySQL) or `INTEGER PRIMARY KEY AUTOINCREMENT` (SQLite)
+- `TEXT` → `VARCHAR(255)` (MySQL, with length)
+- `RETURNING` → Not available in SQLite/MySQL (use a separate SELECT)
+
+## Portability tips
+
+To write more portable SQL:
+
+### Use standard SQL when possible
+
+```sql
+-- ✅ Works everywhere
+SELECT * FROM users WHERE email = 'alice@example.com';
+
+-- ❌ PostgreSQL-specific
+SELECT * FROM users WHERE email ILIKE 'alice%';
+-- Use LOWER() for portability
+SELECT * FROM users WHERE LOWER(email) LIKE 'alice%';
+```
+
+### Avoid database-specific functions
+
+```sql
+-- ❌ PostgreSQL-specific
+SELECT NOW();
+
+-- ✅ More portable (but syntax varies)
+SELECT CURRENT_TIMESTAMP;  -- Standard
+-- or
+SELECT datetime('now');    -- SQLite
+```
+
+### Use ORMs for portability
+
+ORMs abstract away database differences:
+
+```python
+# Django ORM: works with SQLite, PostgreSQL, MySQL
+User.objects.filter(email='alice@example.com')
+```
+
+The ORM generates the correct SQL for your database.
+
+## When to worry about dialects
+
+**Don't worry** if you're:
+- Learning SQL (concepts transfer)
+- Using an ORM (it handles differences)
+- Working with one database (learn its specifics)
+
+**Do worry** if you're:
+- Writing raw SQL for multiple databases
+- Using advanced features (window functions, JSON, etc.)
+- Migrating between databases
+
+## Common differences summary
+
+| Feature | SQLite | PostgreSQL | MySQL |
+|---------|--------|------------|-------|
+| Auto-increment | `INTEGER PRIMARY KEY AUTOINCREMENT` | `SERIAL` | `AUTO_INCREMENT` |
+| Text type | `TEXT` | `TEXT` or `VARCHAR(n)` | `VARCHAR(n)` required |
+| Boolean | `INTEGER` (0/1) | `BOOLEAN` | `TINYINT(1)` or `BOOLEAN` |
+| RETURNING | ❌ | ✅ | ❌ (MySQL 8.0+) |
+| JSON support | Limited | `JSONB` | `JSON` |
+| Case sensitivity | Case-sensitive | Case-sensitive | Depends on OS |
+
+## Why we picked PostgreSQL for examples
+
+This guide uses PostgreSQL-style examples because:
+1. **Close to standard**: Most syntax is standard SQL
+2. **Helpful features**: `RETURNING`, `SERIAL`, clear error messages
+3. **Common in production**: Widely used for real applications
+4. **Good for learning**: Concepts transfer to other databases
+
+If you're using SQLite or MySQL, the concepts are the same—just adjust the syntax slightly.
+
+## Learning path
+
+1. **Start with concepts**: Learn SQL fundamentals (works everywhere)
+2. **Pick one database**: Get comfortable with SQLite, PostgreSQL, or MySQL
+3. **Learn its specifics**: Understand your chosen database's features
+4. **Use ORMs**: Let them handle portability when needed
+5. **Drop to raw SQL**: When you need database-specific features or performance
+
+## Next steps
+
+You've completed the SQL guide! You now understand:
+- How to think in SQL (declarative, set-based)
+- Basic and advanced querying
+- Relationships and joins
+- Data modification
+- Constraints and integrity
+- Using SQL from application code
+- Debugging and reading SQL
+- SQL dialect differences
+
+**Further reading**: For advanced topics like query optimization, transactions, indexing, and database design, consider a dedicated "Databases for Developers" guide.

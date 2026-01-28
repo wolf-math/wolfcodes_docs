@@ -1,0 +1,98 @@
+---
+title: SQL Guide
+sidebar_label: SQL
+sidebar_position: 3
+author:
+  name: Aaron Wolf
+  url: https://wolfcodes.dev
+license:
+  type: CC BY-NC 4.0
+  attribution_required: true
+source:
+  canonical_url: https://wolfcodes.dev
+---
+
+import Link from '@docusaurus/Link';
+import styles from './hub.module.css';
+
+Welcome to the SQL User Guide. This section is designed to help you build a solid understanding of SQL, focusing on thinking in queries and working with real schemas without diving into database internals.
+
+## Getting started
+
+New to SQL? Start here! Learn what SQL is, how it differs from other tools, and the fundamental mental models you'll need.
+
+<div className={styles.grid}>
+  <Link className={styles.card} to="/docs/sql/what_sql_is">
+    What SQL Is (and Isn't)
+  </Link>
+
+  <Link className={styles.card} to="/docs/sql/tables_rows_schemas">
+    Tables, Rows, and Schemas
+  </Link>
+</div>
+
+## Querying data
+
+Learn the core skill of SQL: writing queries to retrieve and filter data from your database.
+
+<div className={styles.grid}>
+  <Link className={styles.card} to="/docs/sql/basic_queries">
+    Basic Queries (The Core Skill)
+  </Link>
+
+  <Link className={styles.card} to="/docs/sql/multiple_rows">
+    Working with Multiple Rows
+  </Link>
+</div>
+
+## Relationships & joins
+
+Master one of SQL's most powerful features: combining data from multiple tables.
+
+<div className={styles.grid}>
+  <Link className={styles.card} to="/docs/sql/relationships_joins">
+    Relationships & Joins
+  </Link>
+</div>
+
+## Modifying data
+
+Learn how to insert, update, and delete data safely and effectively.
+
+<div className={styles.grid}>
+  <Link className={styles.card} to="/docs/sql/insert_update_delete">
+    Inserting, Updating, Deleting
+  </Link>
+
+  <Link className={styles.card} to="/docs/sql/constraints_integrity">
+    Constraints & Data Integrity
+  </Link>
+</div>
+
+## Advanced querying
+
+Take your queries to the next level with subqueries and common table expressions.
+
+<div className={styles.grid}>
+  <Link className={styles.card} to="/docs/sql/subqueries_ctes">
+    Subqueries & CTEs
+  </Link>
+</div>
+
+## SQL in practice
+
+Connect SQL to your application code and understand how it fits into real-world development.
+
+<div className={styles.grid}>
+  <Link className={styles.card} to="/docs/sql/debugging_reading_sql">
+    Debugging & Reading SQL
+  </Link>
+
+  <Link className={styles.card} to="/docs/sql/sql_dialects">
+    SQL Dialects (Just Enough)
+  </Link>
+
+  <Link className={styles.card} to="/docs/sql/sql_application_code">
+    SQL + Application Code
+  </Link>
+</div>

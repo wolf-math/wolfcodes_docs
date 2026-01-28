@@ -1,0 +1,8 @@
+{
+  "label": "Language Reference",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "Reference guide to all parts of the Python coding language."
+  }
+}

@@ -1,0 +1,251 @@
+---
+title: Subqueries & CTEs
+sidebar_position: 8
+author:
+  name: Aaron Wolf
+  url: https://wolfcodes.dev
+license:
+  type: CC BY-NC 4.0
+  attribution_required: true
+source:
+  canonical_url: https://wolfcodes.dev
+---
+
+## What are subqueries?
+
+A **subquery** is a query nested inside another query. It lets you use the result of one query as part of another.
+
+```sql
+-- Find users who have expenses
+SELECT * FROM users
+WHERE id IN (
+  SELECT DISTINCT user_id FROM expenses WHERE user_id IS NOT NULL
+);
+```
+
+The inner query (`SELECT DISTINCT user_id FROM expenses`) runs first, and its results are used in the outer query's `WHERE` clause.
+
+## Subqueries in where
+
+The most common use case: filtering based on results from another table.
+
+```sql
+-- Users who have spent more than $100
+SELECT * FROM users
+WHERE id IN (
+  SELECT user_id 
+  FROM expenses 
+  GROUP BY user_id 
+  HAVING SUM(amount) > 100
+);
+```
+
+### EXISTS vs IN
+
+`EXISTS` is often more efficient than `IN` for subqueries:
+
+```sql
+-- Using IN
+SELECT * FROM users
+WHERE id IN (SELECT user_id FROM expenses);
+
+-- Using EXISTS (often faster)
+SELECT * FROM users
+WHERE EXISTS (
+  SELECT 1 FROM expenses WHERE expenses.user_id = users.id
+);
+```
+
+`EXISTS` stops as soon as it finds one matching row. `IN` must check all values.
+
+### Comparison operators with subqueries
+
+```sql
+-- Users older than the average age
+SELECT * FROM users
+WHERE age > (SELECT AVG(age) FROM users);
+```
+
+The subquery must return a single value for comparison operators (`>`, `<`, `=`, etc.).
+
+## Subqueries in select
+
+You can use subqueries to calculate values in your SELECT clause:
+
+```sql
+-- Show user name and their total spending
+SELECT 
+  name,
+  (SELECT SUM(amount) FROM expenses WHERE expenses.user_id = users.id) as total_spent
+FROM users;
+```
+
+This adds a calculated column showing each user's total expenses.
+
+## Common table expressions (CTEs)
+
+A **CTE** (Common Table Expression) is a named temporary result set that exists only for the duration of a query. Think of it as a "temporary view."
+
+CTEs use the `WITH` keyword:
+
+```sql
+WITH recent_orders AS (
+  SELECT * FROM orders WHERE created_at > NOW() - INTERVAL '7 days'
+)
+SELECT COUNT(*) FROM recent_orders;
+```
+
+## Why CTEs are powerful
+
+CTEs make complex queries **readable** by breaking them into logical steps:
+
+```sql
+-- Without CTE: hard to read
+SELECT 
+  u.name,
+  COUNT(e.id) as expense_count
+FROM users u
+INNER JOIN expenses e ON u.id = e.user_id
+WHERE e.created_at > (
+  SELECT MAX(created_at) - INTERVAL '30 days' 
+  FROM expenses
+)
+GROUP BY u.id, u.name
+HAVING COUNT(e.id) > 5;
+
+-- With CTE: much clearer
+WITH recent_expenses AS (
+  SELECT * FROM expenses 
+  WHERE created_at > NOW() - INTERVAL '30 days'
+),
+active_users AS (
+  SELECT user_id, COUNT(*) as expense_count
+  FROM recent_expenses
+  GROUP BY user_id
+  HAVING COUNT(*) > 5
+)
+SELECT u.name, au.expense_count
+FROM users u
+INNER JOIN active_users au ON u.id = au.user_id;
+```
+
+## Multiple CTEs
+
+You can chain multiple CTEs:
+
+```sql
+WITH 
+  recent_expenses AS (
+    SELECT * FROM expenses 
+    WHERE created_at > NOW() - INTERVAL '30 days'
+  ),
+  user_totals AS (
+    SELECT user_id, SUM(amount) as total
+    FROM recent_expenses
+    GROUP BY user_id
+  ),
+  top_spenders AS (
+    SELECT * FROM user_totals
+    ORDER BY total DESC
+    LIMIT 10
+  )
+SELECT u.name, ts.total
+FROM top_spenders ts
+INNER JOIN users u ON ts.user_id = u.id;
+```
+
+Each CTE builds on the previous one, making the logic clear and easy to follow.
+
+## CTEs vs subqueries
+
+Both solve similar problems, but CTEs are often preferred because they're:
+
+- **More readable**: Named steps instead of nested queries
+- **Reusable**: You can reference a CTE multiple times in the same query
+- **Easier to debug**: Test each CTE independently
+
+```sql
+-- Subquery: nested and harder to read
+SELECT * FROM users
+WHERE id IN (
+  SELECT user_id FROM expenses 
+  WHERE amount > (SELECT AVG(amount) FROM expenses)
+);
+
+-- CTE: clear steps
+WITH avg_expense AS (
+  SELECT AVG(amount) as avg_amount FROM expenses
+),
+large_expenses AS (
+  SELECT DISTINCT user_id 
+  FROM expenses, avg_expense
+  WHERE amount > avg_expense.avg_amount
+)
+SELECT * FROM users
+WHERE id IN (SELECT user_id FROM large_expenses);
+```
+
+## Common mistakes
+
+### Subquery returns multiple rows
+
+```sql
+-- ❌ Error: subquery returns multiple rows
+SELECT * FROM users
+WHERE age > (SELECT age FROM users WHERE name LIKE 'A%');
+
+-- ✅ Fix: use aggregation or IN
+SELECT * FROM users
+WHERE age > (SELECT MAX(age) FROM users WHERE name LIKE 'A%');
+```
+
+### Forgetting to correlate subqueries
+
+```sql
+-- ❌ Wrong: subquery doesn't reference outer query
+SELECT 
+  name,
+  (SELECT SUM(amount) FROM expenses) as total_spent
+FROM users;
+-- This sums ALL expenses for every user
+
+-- ✅ Correct: correlate with user_id
+SELECT 
+  name,
+  (SELECT SUM(amount) FROM expenses WHERE expenses.user_id = users.id) as total_spent
+FROM users;
+```
+
+### Overusing subqueries
+
+Sometimes a JOIN is clearer:
+
+```sql
+-- Subquery (works, but less efficient)
+SELECT name, 
+  (SELECT SUM(amount) FROM expenses WHERE expenses.user_id = users.id) as total
+FROM users;
+
+-- JOIN (often better)
+SELECT u.name, SUM(e.amount) as total
+FROM users u
+LEFT JOIN expenses e ON u.id = e.user_id
+GROUP BY u.id, u.name;
+```
+
+## Readability > cleverness
+
+The best query is the one that's easiest to understand and maintain. CTEs help with this:
+
+```sql
+-- Clear, step-by-step logic
+WITH 
+  recent_expenses AS (SELECT * FROM expenses WHERE created_at > NOW() - INTERVAL '7 days'),
+  category_totals AS (
+    SELECT category, SUM(amount) as total
+    FROM recent_expenses
+    GROUP BY category
+  )
+SELECT * FROM category_totals
+ORDER BY total DESC;
+```

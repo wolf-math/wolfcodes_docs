@@ -1,0 +1,8 @@
+{
+  "label": "The DOM",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "Learn how to work with the Document Object Model (DOM) in JavaScript."
+  }
+}

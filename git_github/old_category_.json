@@ -1,0 +1,9 @@
+{
+  "label": "GitHub",
+  "position": 5,
+  "link": {
+    "type": "generated-index",
+    "description": "GitHub is a web-based platform for version control and collaboration. It is widely used for hosting code repositories and tracking changes to code."
+  }
+}
+

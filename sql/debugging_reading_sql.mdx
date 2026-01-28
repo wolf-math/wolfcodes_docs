@@ -1,0 +1,307 @@
+---
+title: Debugging & Reading SQL
+sidebar_position: 9
+author:
+  name: Aaron Wolf
+  url: https://wolfcodes.dev
+license:
+  type: CC BY-NC 4.0
+  attribution_required: true
+source:
+  canonical_url: https://wolfcodes.dev
+---
+
+## Reading SQL errors
+
+SQL errors can be cryptic, but they usually tell you what's wrong. Here's how to read them:
+
+### Syntax errors
+
+```
+ERROR: syntax error at or near "FRMO"
+LINE 1: SELECT * FRMO users;
+                    ^
+```
+
+The `^` points to where the parser got confused. In this case, `FRMO` should be `FROM`.
+
+### Column/table not found
+
+```
+ERROR: column "emial" does not exist
+LINE 1: SELECT emial FROM users;
+                ^
+HINT: Perhaps you meant "email".
+```
+
+Check for typos. The database often suggests the correct name.
+
+### Constraint violations
+
+```
+ERROR: duplicate key value violates unique constraint "users_email_key"
+DETAIL: Key (email)=(alice@example.com) already exists.
+```
+
+This tells you:
+- What constraint was violated (`users_email_key`)
+- What value caused the problem (`alice@example.com`)
+
+### Foreign key violations
+
+```
+ERROR: insert or update on table "expenses" violates foreign key constraint
+DETAIL: Key (user_id)=(999) is not present in table "users".
+```
+
+You're trying to reference a row that doesn't exist.
+
+## Common mistakes
+
+### `NULL` comparisons
+
+```sql
+-- ❌ Wrong: NULL comparisons don't work with =
+SELECT * FROM users WHERE middle_name = NULL;
+-- Returns no rows (NULL = NULL is NULL, not TRUE)
+
+-- ✅ Correct
+SELECT * FROM users WHERE middle_name IS NULL;
+```
+
+**Remember**: `NULL` is not equal to anything, including itself. Use `IS NULL` or `IS NOT NULL`.
+
+### Join explosions
+
+```sql
+-- This might return way more rows than expected
+SELECT users.*, expenses.*
+FROM users
+INNER JOIN expenses ON users.id = expenses.user_id;
+```
+
+If a user has 100 expenses, you'll get 100 rows for that user. If you just want user info, don't join:
+
+```sql
+-- Just get users
+SELECT * FROM users;
+```
+
+### Misplaced `WHERE`
+
+```sql
+-- ❌ Wrong: WHERE before aggregation
+SELECT category, COUNT(*)
+FROM expenses
+WHERE COUNT(*) > 5
+GROUP BY category;
+
+-- ✅ Correct: HAVING after aggregation
+SELECT category, COUNT(*)
+FROM expenses
+GROUP BY category
+HAVING COUNT(*) > 5;
+```
+
+**Rule**: `WHERE` filters rows, `HAVING` filters groups.
+
+### Forgetting `GROUP BY`
+
+```sql
+-- ❌ Error: mixing aggregated and non-aggregated columns
+SELECT category, COUNT(*)
+FROM expenses;
+
+-- ✅ Correct: group by category
+SELECT category, COUNT(*)
+FROM expenses
+GROUP BY category;
+```
+
+**Rule**: If you use aggregation functions, all non-aggregated columns must be in `GROUP BY`.
+
+### String case sensitivity
+
+```sql
+-- Most databases are case-sensitive
+SELECT * FROM users WHERE email = 'Alice@Example.com';
+-- Won't match 'alice@example.com'
+
+-- Use functions for case-insensitive matching
+SELECT * FROM users WHERE LOWER(email) = LOWER('Alice@Example.com');
+```
+
+## Formatting SQL for readability
+
+Well-formatted SQL is much easier to debug. Here's a consistent style:
+
+### Indentation
+
+```sql
+-- Hard to read
+SELECT u.name,e.amount,e.description FROM users u INNER JOIN expenses e ON u.id=e.user_id WHERE e.amount>50 ORDER BY e.amount DESC;
+
+-- Easy to read
+SELECT 
+  u.name,
+  e.amount,
+  e.description
+FROM users u
+INNER JOIN expenses e ON u.id = e.user_id
+WHERE e.amount > 50
+ORDER BY e.amount DESC;
+```
+
+### Align keywords
+
+```sql
+SELECT 
+  u.name,
+  e.amount
+FROM users u
+INNER JOIN expenses e ON u.id = e.user_id
+WHERE e.amount > 50
+ORDER BY e.amount DESC;
+```
+
+### One clause per line
+
+```sql
+-- Hard to scan
+SELECT u.name, e.amount FROM users u INNER JOIN expenses e ON u.id = e.user_id WHERE e.amount > 50;
+
+-- Easy to scan
+SELECT 
+  u.name,
+  e.amount
+FROM users u
+INNER JOIN expenses e ON u.id = e.user_id
+WHERE e.amount > 50;
+```
+
+### CTEs for complex queries
+
+```sql
+-- Hard to understand
+SELECT u.name, SUM(e.amount) as total FROM users u LEFT JOIN expenses e ON u.id = e.user_id WHERE e.created_at > (SELECT MAX(created_at) - INTERVAL '30 days' FROM expenses) GROUP BY u.id, u.name HAVING SUM(e.amount) > 100;
+
+-- Much clearer with CTEs
+WITH recent_expenses AS (
+  SELECT * FROM expenses 
+  WHERE created_at > NOW() - INTERVAL '30 days'
+),
+user_totals AS (
+  SELECT 
+    user_id,
+    SUM(amount) as total
+  FROM recent_expenses
+  GROUP BY user_id
+  HAVING SUM(amount) > 100
+)
+SELECT u.name, ut.total
+FROM users u
+INNER JOIN user_totals ut ON u.id = ut.user_id;
+```
+
+## Thinking step-by-step through a query
+
+When debugging, break the query into steps:
+
+```sql
+SELECT 
+  u.name,
+  COUNT(e.id) as expense_count,
+  SUM(e.amount) as total_spent
+FROM users u
+LEFT JOIN expenses e ON u.id = e.user_id
+WHERE u.created_at > '2024-01-01'
+GROUP BY u.id, u.name
+HAVING COUNT(e.id) > 5
+ORDER BY total_spent DESC
+LIMIT 10;
+```
+
+**Step 1**: Start with `FROM users u`
+- We have all users
+
+**Step 2**: Apply `LEFT JOIN expenses e ON u.id = e.user_id`
+- Each user now has their expenses attached (or NULL if no expenses)
+
+**Step 3**: Apply `WHERE u.created_at > '2024-01-01'`
+- Filter to users created after 2024-01-01
+
+**Step 4**: Apply `GROUP BY u.id, u.name`
+- Group by user (one row per user)
+
+**Step 5**: Calculate `COUNT(e.id)` and `SUM(e.amount)`
+- Count and sum expenses per user
+
+**Step 6**: Apply `HAVING COUNT(e.id) > 5`
+- Keep only users with more than 5 expenses
+
+**Step 7**: Apply `ORDER BY total_spent DESC`
+- Sort by total spent (highest first)
+
+**Step 8**: Apply `LIMIT 10`
+- Return only top 10
+
+## Testing queries incrementally
+
+Build complex queries step by step:
+
+```sql
+-- Step 1: Start simple
+SELECT * FROM users;
+
+-- Step 2: Add filtering
+SELECT * FROM users WHERE created_at > '2024-01-01';
+
+-- Step 3: Add join
+SELECT * FROM users u
+LEFT JOIN expenses e ON u.id = e.user_id
+WHERE u.created_at > '2024-01-01';
+
+-- Step 4: Add aggregation
+SELECT u.id, u.name, COUNT(e.id)
+FROM users u
+LEFT JOIN expenses e ON u.id = e.user_id
+WHERE u.created_at > '2024-01-01'
+GROUP BY u.id, u.name;
+
+-- Step 5: Add HAVING
+SELECT u.id, u.name, COUNT(e.id)
+FROM users u
+LEFT JOIN expenses e ON u.id = e.user_id
+WHERE u.created_at > '2024-01-01'
+GROUP BY u.id, u.name
+HAVING COUNT(e.id) > 5;
+```
+
+Test each step to make sure it works before adding complexity.
+
+## Using explain (brief mention)
+
+`EXPLAIN` shows how the database plans to execute your query:
+
+```sql
+EXPLAIN SELECT * FROM users WHERE email = 'alice@example.com';
+```
+
+This is useful for performance tuning, but we're keeping this guide focused on correctness, not performance.
+
+## Debugging checklist
+
+When a query doesn't work:
+
+1.  **Check syntax**: Are all keywords spelled correctly?
+2.  **Check table/column names**: Do they exist? Are they spelled correctly?
+3.  **Check NULL handling**: Using `IS NULL` instead of `= NULL`?
+4.  **Check WHERE vs HAVING**: Filtering rows or groups?
+5.  **Check GROUP BY**: All non-aggregated columns included?
+6.  **Check joins**: Are you getting more rows than expected?
+7.  **Test incrementally**: Build the query step by step
+8.  **Read the error message**: It usually tells you what's wrong
+
+## Next steps
+
+You now have the skills to debug SQL queries effectively. Finally, learn about [SQL dialects](./sql_dialects) to understand the differences between database systems.

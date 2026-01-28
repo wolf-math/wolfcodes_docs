@@ -1,0 +1,243 @@
+---
+title: Basic Queries (The Core Skill)
+sidebar_position: 3
+author:
+  name: Aaron Wolf
+  url: https://wolfcodes.dev
+license:
+  type: CC BY-NC 4.0
+  attribution_required: true
+source:
+  canonical_url: https://wolfcodes.dev
+---
+
+## Select: the foundation
+
+`SELECT` is how you retrieve data from a table. It's the most important SQL statement you'll learn.
+
+```sql
+SELECT * FROM users;
+```
+
+This reads: "Select all columns from the users table." The `*` means "all columns."
+
+## Selecting specific columns
+
+Instead of `*`, you can specify exactly which columns you want:
+
+```sql
+SELECT email, name FROM users;
+```
+
+This returns only the `email` and `name` columns for each row.
+
+## From: which table?
+
+`FROM` specifies which table to query:
+
+```sql
+SELECT * FROM expenses;
+SELECT name FROM users;
+SELECT amount, description FROM expenses;
+```
+
+## Where: filtering rows
+
+`WHERE` lets you filter rows based on conditions. This is where SQL gets powerful:
+
+```sql
+SELECT * FROM users WHERE age > 18;
+```
+
+This returns only users where the `age` column is greater than 18.
+
+## Comparison operators
+
+SQL supports standard comparison operators:
+
+- `=` (equals)
+- `!=` or `<>` (not equals)
+- `>` (greater than)
+- `<` (less than)
+- `>=` (greater than or equal)
+- `<=` (less than or equal)
+
+```sql
+SELECT * FROM expenses WHERE amount > 100;
+SELECT * FROM users WHERE email = 'alice@example.com';
+SELECT * FROM expenses WHERE amount != 0;
+```
+
+## `and`, `or`, `not`
+
+Combine conditions with logical operators:
+
+```sql
+-- Both conditions must be true
+SELECT * FROM expenses 
+WHERE amount > 50 AND category = 'food';
+
+-- Either condition can be true
+SELECT * FROM users 
+WHERE age < 18 OR age > 65;
+
+-- Negate a condition
+SELECT * FROM expenses 
+WHERE NOT category = 'subscription';
+```
+
+You can combine multiple conditions:
+
+```sql
+SELECT * FROM expenses 
+WHERE amount > 50 
+  AND category = 'food' 
+  AND created_at > '2024-01-01';
+```
+
+## Limit: controlling result size
+
+`LIMIT` restricts how many rows are returned:
+
+```sql
+SELECT * FROM users LIMIT 10;
+```
+
+This returns only the first 10 rows. Useful for:
+- Testing queries on large tables
+- Pagination
+- Top-N queries
+
+## Offset: Skipping rows
+
+`OFFSET` skips a number of rows before returning results:
+
+```sql
+SELECT * FROM users LIMIT 10 OFFSET 20;
+```
+
+This skips the first 20 rows, then returns the next 10. Common pattern for pagination:
+
+```sql
+-- Page 1: rows 1-10
+SELECT * FROM users LIMIT 10 OFFSET 0;
+
+-- Page 2: rows 11-20
+SELECT * FROM users LIMIT 10 OFFSET 10;
+
+-- Page 3: rows 21-30
+SELECT * FROM users LIMIT 10 OFFSET 20;
+```
+
+## Order by: Sorting results
+
+`ORDER BY` sorts the results. Remember: tables have no inherent order, so if you want sorted results, you must use `ORDER BY`.
+
+```sql
+SELECT * FROM users ORDER BY created_at;
+```
+
+By default, `ORDER BY` sorts ascending (lowest to highest). Use `DESC` for descending:
+
+```sql
+SELECT * FROM users ORDER BY created_at DESC;
+```
+
+Sort by multiple columns:
+
+```sql
+SELECT * FROM expenses 
+ORDER BY category, amount DESC;
+```
+
+This sorts by `category` first, then by `amount` (descending) within each category.
+
+## Putting it all together
+
+Here's a realistic query combining everything:
+
+```sql
+SELECT email, name 
+FROM users 
+WHERE age >= 18 
+  AND created_at > '2024-01-01'
+ORDER BY created_at DESC
+LIMIT 20;
+```
+
+This query:
+1. Selects `email` and `name` columns
+2. From the `users` table
+3. Where age is at least 18 AND created after 2024-01-01
+4. Sorted by creation date (newest first)
+5. Returns only the first 20 rows
+
+## Common mistakes
+
+### Forgetting `ORDER BY`
+
+```sql
+-- ❌ Don't assume order
+SELECT * FROM users;
+
+-- ✅ Explicitly order if order matters
+SELECT * FROM users ORDER BY created_at DESC;
+```
+
+### `NULL` comparisons
+
+```sql
+-- ❌ Wrong: NULL comparisons don't work with =
+SELECT * FROM users WHERE middle_name = NULL;
+
+-- ✅ Correct: Use IS NULL
+SELECT * FROM users WHERE middle_name IS NULL;
+```
+
+### String comparisons
+
+```sql
+-- SQL string comparisons are case-sensitive in most databases
+SELECT * FROM users WHERE email = 'Alice@Example.com';
+-- Won't match 'alice@example.com'
+
+-- Use functions for case-insensitive matching
+SELECT * FROM users WHERE LOWER(email) = LOWER('Alice@Example.com');
+```
+
+## Reading queries left-to-right
+
+When reading a SQL query, think of it as a pipeline:
+
+```
+SELECT    → What columns do I want?
+FROM      → Which table?
+WHERE     → Which rows? (filtering)
+ORDER BY  → How should they be sorted?
+LIMIT     → How many?
+```
+
+Each clause narrows down the result set.
+
+## Practice schema
+
+For the rest of this guide, we'll use this example schema:
+
+```sql
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  name TEXT,
+  age INTEGER,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE expenses (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),
+  amount DECIMAL(10, 2) NOT NULL,
+  description TEXT,
+  category TEXT,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+```

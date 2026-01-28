@@ -1,0 +1,397 @@
+---
+title: Inserting, Updating, Deleting
+sidebar_position: 4
+author:
+  name: Aaron Wolf
+  url: https://wolfcodes.dev
+license:
+  type: CC BY-NC 4.0
+  attribution_required: true
+source:
+  canonical_url: https://wolfcodes.dev
+---
+
+## Insert: Adding new rows
+
+`INSERT INTO` adds new rows to a table:
+
+```sql
+INSERT INTO users (email, name, age)
+VALUES ('alice@example.com', 'Alice', 30);
+```
+
+This inserts one row with the specified values.
+
+### Inserting multiple rows `INSERT INTO`
+
+You can insert multiple rows at once:
+
+```sql
+INSERT INTO users (email, name, age)
+VALUES 
+  ('alice@example.com', 'Alice', 30),
+  ('bob@example.com', 'Bob', 25),
+  ('carol@example.com', 'Carol', 35);
+```
+
+### Inserting with defaults
+
+If a column has a default value (or allows `NULL`), you can omit it:
+
+```sql
+-- created_at has DEFAULT NOW(), so it's automatic
+INSERT INTO users (email, name)
+VALUES ('dave@example.com', 'Dave');
+```
+
+### Inserting from a query
+
+You can insert rows from the result of a SELECT query:
+
+```sql
+-- Copy users from an old table
+INSERT INTO users (email, name)
+SELECT email, name FROM old_users;
+```
+
+## Update: Modifying existing rows
+
+`UPDATE` changes values in existing rows:
+
+```sql
+UPDATE users
+SET name = 'Alice Smith', age = 31
+WHERE email = 'alice@example.com';
+```
+
+**Critical**: Always use `WHERE` with `UPDATE`. Without it, you'll update **every row** in the table!
+
+```sql
+-- ❌ DANGEROUS: Updates ALL users
+UPDATE users SET age = 0;
+
+-- ✅ Safe: Updates only one user
+UPDATE users 
+SET age = 31 
+WHERE email = 'alice@example.com';
+```
+
+### Updating multiple columns `UPDATE`
+
+```sql
+UPDATE users
+SET 
+  name = 'Alice Smith',
+  age = 31,
+  email = 'alice.smith@example.com'
+WHERE id = 1;
+```
+
+### Updating based on conditions `UPDATE`
+
+```sql
+-- Give everyone a birthday (increment age by 1)
+UPDATE users
+SET age = age + 1
+WHERE age IS NOT NULL;
+
+-- Update expenses to a default category
+UPDATE expenses
+SET category = 'misc'
+WHERE category IS NULL;
+```
+
+## Delete: Removing rows
+
+`DELETE` removes rows from a table:
+
+```sql
+DELETE FROM users
+WHERE email = 'olduser@example.com';
+```
+
+**Critical**: Always use `WHERE` with `DELETE`. Without it, you'll delete **every row** in the table!
+
+```sql
+-- ❌ TERRIFYING: Deletes ALL users
+DELETE FROM users;
+
+-- ✅ Safe: Deletes only one user
+DELETE FROM users WHERE email = 'olduser@example.com';
+```
+
+### Deleting based on conditions `DELETE`
+
+```sql
+-- Delete old expenses
+DELETE FROM expenses
+WHERE created_at < '2020-01-01';
+
+-- Delete users with no expenses (using a subquery)
+DELETE FROM users
+WHERE id NOT IN (SELECT DISTINCT user_id FROM expenses WHERE user_id IS NOT NULL);
+```
+
+## Returning: Seeing what changed
+
+PostgreSQL (and some other databases) support `RETURNING`, which shows you the rows that were affected:
+
+```sql
+-- Insert and see what was created
+INSERT INTO users (email, name)
+VALUES ('eve@example.com', 'Eve')
+RETURNING *;
+
+-- Update and see what changed
+UPDATE users
+SET age = 32
+WHERE email = 'alice@example.com'
+RETURNING id, name, age;
+
+-- Delete and see what was removed
+DELETE FROM users
+WHERE age < 18
+RETURNING email, name;
+```
+
+`RETURNING` is incredibly useful for:
+- Confirming what was changed
+- Getting generated IDs after insert
+- Logging what was deleted
+
+## Why delete without `WHERE` is terrifying
+
+```sql
+-- This deletes EVERYTHING
+DELETE FROM users;
+```
+
+There's no undo in SQL (unless you're using transactions, which we're not covering here). Once you delete, the data is gone. Always test your `DELETE` queries with `SELECT` first:
+
+```sql
+-- 1. First, see what would be deleted
+SELECT * FROM users WHERE age < 18;
+
+-- 2. If it looks right, then delete
+DELETE FROM users WHERE age < 18;
+```
+
+## Common mistakes
+
+### Forgetting `WHERE`
+
+We've said it twice, but it's worth repeating:
+
+```sql
+-- ❌ Updates everything
+UPDATE users SET age = 0;
+
+-- ❌ Deletes everything
+DELETE FROM users;
+```
+
+Always test with `SELECT` first, then add `WHERE`.
+
+### Updating with wrong conditions `UPDATE`
+
+```sql
+-- ❌ Might update more than intended
+UPDATE expenses SET category = 'food' WHERE category = 'groceries';
+
+-- ✅ Be specific
+UPDATE expenses 
+SET category = 'food' 
+WHERE category = 'groceries' 
+  AND user_id = 1;
+```
+
+### `NULL` in `WHERE` clauses
+
+Remember: `NULL` comparisons need `IS NULL`, not `=`:
+
+```sql
+-- ❌ Won't match NULL values
+UPDATE expenses SET category = 'misc' WHERE category = NULL;
+
+-- ✅ Correct
+UPDATE expenses SET category = 'misc' WHERE category IS NULL;
+```
+
+## Practical patterns
+
+### Soft deletes
+
+Instead of actually deleting, many applications use "soft deletes"—marking rows as deleted:
+
+```sql
+-- Add a deleted_at column
+ALTER TABLE users ADD COLUMN deleted_at TIMESTAMP;
+
+-- "Delete" by setting deleted_at
+UPDATE users 
+SET deleted_at = NOW() 
+WHERE email = 'olduser@example.com';
+
+-- Query only active users
+SELECT * FROM users WHERE deleted_at IS NULL;
+```
+
+### Bulk updates
+
+```sql
+-- Update all expenses in a category
+UPDATE expenses
+SET category = 'food'
+WHERE category IN ('groceries', 'restaurant', 'takeout');
+```
+
+### Conditional inserts (upsert)
+
+Some databases support "upsert" (update if exists, insert if not):
+
+```sql
+-- PostgreSQL: ON CONFLICT
+INSERT INTO users (email, name)
+VALUES ('alice@example.com', 'Alice Updated')
+ON CONFLICT (email) 
+DO UPDATE SET name = EXCLUDED.name;
+```
+
+## Alter table: modifying table structure
+
+`ALTER TABLE` lets you change a table's structure after it's been created. This is useful when you need to add columns, remove columns, or modify existing ones.
+
+### Adding a column `ALTER TABLE`
+
+```sql
+-- Add a new column to an existing table
+ALTER TABLE users ADD COLUMN phone_number TEXT;
+
+-- Add a column with constraints
+ALTER TABLE users ADD COLUMN is_verified BOOLEAN NOT NULL DEFAULT FALSE;
+```
+
+### Dropping a column
+
+```sql
+-- Remove a column (and all its data!)
+ALTER TABLE users DROP COLUMN phone_number;
+```
+
+**Warning**: Dropping a column permanently deletes all data in that column. There's no undo.
+
+### Modifying a column
+
+You can change a column's data type or constraints, but be careful—this can fail if existing data doesn't fit the new type:
+
+```sql
+-- Change a column's data type (PostgreSQL)
+ALTER TABLE users ALTER COLUMN age TYPE INTEGER;
+
+-- Make a column NOT NULL (after ensuring no NULLs exist)
+ALTER TABLE users ALTER COLUMN email SET NOT NULL;
+
+-- Remove NOT NULL constraint
+ALTER TABLE users ALTER COLUMN name DROP NOT NULL;
+```
+
+### Renaming columns and tables
+
+```sql
+-- Rename a column
+ALTER TABLE users RENAME COLUMN email TO email_address;
+
+-- Rename a table
+ALTER TABLE users RENAME TO accounts;
+```
+
+## Drop table: Removing tables `DROP TABLE`
+
+`DROP TABLE` permanently deletes an entire table and all its data:
+
+```sql
+-- Delete a table (and all its data!)
+DROP TABLE old_users;
+```
+
+**Critical**: `DROP TABLE` is **permanent**. There's no undo. All data, indexes, and constraints are gone forever.
+
+### DROP TABLE IF EXISTS
+
+Use `IF EXISTS` to avoid errors if the table doesn't exist:
+
+```sql
+-- Safe: won't error if table doesn't exist
+DROP TABLE IF EXISTS old_users;
+```
+
+This is useful in migration scripts where you're not sure if a table exists.
+
+### Dropping multiple tables
+
+```sql
+-- Drop multiple tables at once
+DROP TABLE old_users, old_expenses, old_categories;
+```
+
+## When to alter vs recreate `ALTER TABLE` vs `CREATE TABLE`
+
+For major structural changes, sometimes it's easier to:
+
+1. Create a new table with the desired structure
+2. Copy data from the old table
+3. Drop the old table
+4. Rename the new table
+
+```sql
+-- Create new table with better structure
+CREATE TABLE users_new (
+  id SERIAL PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  name TEXT NOT NULL  -- Now required
+);
+
+-- Copy data (adjusting as needed)
+INSERT INTO users_new (email, name)
+SELECT email, COALESCE(name, 'Unknown') FROM users;
+
+-- Drop old table
+DROP TABLE users;
+
+-- Rename new table
+ALTER TABLE users_new RENAME TO users;
+```
+
+## Common mistakes
+
+### Altering production tables without testing
+
+Always test `ALTER TABLE` statements on a copy of your data first. Some alterations can:
+- Lock the table for a long time (blocking queries)
+- Fail if data doesn't fit the new structure
+- Cause data loss if done incorrectly
+
+### Dropping tables accidentally
+
+```sql
+-- ❌ DANGEROUS: No confirmation, no undo
+DROP TABLE users;
+
+-- ✅ Safer: Use IF EXISTS to avoid errors, but still permanent
+DROP TABLE IF EXISTS users;
+```
+
+**Best practice**: Always backup your database before running `DROP TABLE` or major `ALTER TABLE` operations.
+
+### Adding `NOT NULL` to existing columns
+
+```sql
+-- ❌ Will fail if any rows have NULL values
+ALTER TABLE users ALTER COLUMN name SET NOT NULL;
+
+-- ✅ First, update NULLs
+UPDATE users SET name = 'Unknown' WHERE name IS NULL;
+
+-- Then add NOT NULL
+ALTER TABLE users ALTER COLUMN name SET NOT NULL;
+```

@@ -1,0 +1,245 @@
+---
+title: Working with Multiple Rows
+sidebar_position: 5
+author:
+  name: Aaron Wolf
+  url: https://wolfcodes.dev
+license:
+  type: CC BY-NC 4.0
+  attribution_required: true
+source:
+  canonical_url: https://wolfcodes.dev
+---
+
+## Aggregation: Summarizing data
+
+So far, you've learned to retrieve individual rows. But often, you want to **summarize** data across multiple rows: "How many users do we have?" or "What's the total amount spent?"
+
+This is where aggregation functions come in.
+
+**Aggregation functions return a single value from multiple rows.**
+
+## Count: How many rows?
+
+`COUNT` returns the number of rows:
+
+```sql
+-- Count all rows
+SELECT COUNT(*) FROM users;
+
+-- Count non-NULL values in a column
+SELECT COUNT(email) FROM users;
+```
+
+**Important**: `COUNT(*)` counts all rows, including those with `NULL` values. `COUNT(column)` counts only non-NULL values.
+
+## Sum: Adding up numbers
+
+`SUM` adds up all values in a numeric column:
+
+```sql
+SELECT SUM(amount) FROM expenses;
+```
+
+This returns the total of all `amount` values.
+
+## Avg: Average values
+
+`AVG` calculates the average (mean) of a numeric column:
+
+```sql
+SELECT AVG(amount) FROM expenses;
+```
+
+## Min and max: Finding extremes
+
+```sql
+SELECT MIN(amount) FROM expenses;  -- Smallest amount
+SELECT MAX(amount) FROM expenses;  -- Largest amount
+```
+
+## Group by: Aggregating by groups
+
+`GROUP BY` lets you aggregate data **within groups**. Instead of one summary for the entire table, you get one summary per group.
+
+```sql
+SELECT category, COUNT(*)
+FROM expenses
+GROUP BY category;
+```
+
+This returns:
+```
+category      | count
+--------------|------
+food          | 15
+transport     | 8
+subscription  | 3
+```
+
+Each row represents one category and its count.
+
+## How `GROUP BY` works
+
+When you use `GROUP BY`, SQL:
+
+1. **Groups** rows that have the same value in the grouped column(s)
+2. **Applies** the aggregation function to each group
+3. **Returns** one row per group
+
+```sql
+SELECT category, SUM(amount)
+FROM expenses
+GROUP BY category;
+```
+
+This gives you the total amount spent in each category.
+
+## Multiple columns in `GROUP BY`
+
+You can group by multiple columns:
+
+```sql
+SELECT user_id, category, COUNT(*)
+FROM expenses
+GROUP BY user_id, category;
+```
+
+This groups by both `user_id` and `category`, giving you counts for each user-category combination.
+
+## Having: Filtering groups
+
+`WHERE` filters **rows** before grouping. `HAVING` filters **groups** after aggregation.
+
+```sql
+SELECT category, COUNT(*)
+FROM expenses
+GROUP BY category
+HAVING COUNT(*) > 5;
+```
+
+This returns only categories that have more than 5 expenses.
+
+**Key difference**:
+- `WHERE` filters rows (before aggregation)
+- `HAVING` filters groups (after aggregation)
+
+```sql
+-- WHERE: filter rows first
+SELECT category, COUNT(*)
+FROM expenses
+WHERE amount > 10          -- Filter rows
+GROUP BY category;
+
+-- HAVING: filter groups after
+SELECT category, COUNT(*)
+FROM expenses
+GROUP BY category
+HAVING COUNT(*) > 5;       -- Filter groups
+```
+
+## Complete example
+
+```sql
+SELECT category, COUNT(*), SUM(amount), AVG(amount)
+FROM expenses
+WHERE created_at > '2024-01-01'     -- Filter rows
+GROUP BY category
+HAVING COUNT(*) > 5                 -- Filter groups
+ORDER BY SUM(amount) DESC;          -- Sort results
+```
+
+This query:
+1. Filters to expenses after 2024-01-01
+2. Groups by category
+3. Calculates count, sum, and average for each category
+4. Keeps only categories with more than 5 expenses
+5. Sorts by total amount (highest first)
+
+## When aggregation happens
+
+Understanding the **order of operations** helps you write correct queries:
+
+```
+FROM          → Which table?
+WHERE         → Filter rows
+GROUP BY      → Group rows
+HAVING        → Filter groups
+SELECT        → Choose columns/aggregations
+ORDER BY      → Sort results
+LIMIT         → Limit results
+```
+
+Aggregation happens **after** `WHERE` but **before** `ORDER BY`.
+
+## Common mistakes
+
+### Forgetting `GROUP BY`
+
+```sql
+-- ❌ Wrong: mixing aggregated and non-aggregated columns
+SELECT category, COUNT(*)
+FROM expenses;
+-- Error: category must appear in GROUP BY
+
+-- ✅ Correct: group by category
+SELECT category, COUNT(*)
+FROM expenses
+GROUP BY category;
+```
+
+:::note 
+**Rule:** If you use an aggregation function (`COUNT`, `SUM`, etc.), all non-aggregated columns must be in `GROUP BY`.
+:::
+
+### Using WHERE instead of HAVING
+
+```sql
+-- ❌ Wrong: can't use WHERE with aggregations
+SELECT category, COUNT(*)
+FROM expenses
+WHERE COUNT(*) > 5
+GROUP BY category;
+
+-- ✅ Correct: use HAVING for group filters
+SELECT category, COUNT(*)
+FROM expenses
+GROUP BY category
+HAVING COUNT(*) > 5;
+```
+
+### `NULL` in `GROUP BY`
+
+`NULL` values form their own group:
+
+```sql
+SELECT category, COUNT(*)
+FROM expenses
+GROUP BY category;
+```
+
+If some expenses have `category = NULL`, they'll all be grouped together.
+
+## Practical patterns
+
+### Top `N` per group
+
+```sql
+-- Top 3 expenses per category
+SELECT category, amount, description
+FROM expenses
+ORDER BY category, amount DESC
+LIMIT 3;
+-- Note: This is simplified; true "top N per group" requires window functions
+```
+
+### Percentage calculations
+
+```sql
+SELECT 
+  category,
+  COUNT(*) as count,
+  COUNT(*) * 100.0 / (SELECT COUNT(*) FROM expenses) as percentage
+FROM expenses
+GROUP BY category;
+```

@@ -1,0 +1,127 @@
+---
+title: What SQL Is (and Isn't)
+sidebar_position: 1
+author:
+  name: Aaron Wolf
+  url: https://wolfcodes.dev
+license:
+  type: CC BY-NC 4.0
+  attribution_required: true
+source:
+  canonical_url: https://wolfcodes.dev
+---
+
+## What SQL does well
+
+SQL (Structured Query Language) is a language designed for one primary purpose: **working with relational data**. It excels at:
+
+- **Querying data**: Finding exactly what you need from potentially millions of rows
+- **Enforcing constraints**: Ensuring data integrity at the database level
+- **Managing relationships**: Connecting related data across multiple tables
+- **Aggregating data**: Counting, summing, averaging, and grouping information
+
+SQL is **declarative**. This meansyou describe *what* you want, not *how* to get it. The database engine figures out the most efficient way to execute your query.
+
+## SQL vs Python data structures
+
+If you're coming from a regular programming language like [Python](/docs/python/guides/intro/getting_started) or [JavaScript](/docs/javascript/guides/basics/intro), you might think of databases as giant dictionaries or lists. That mental model will trip you up.
+
+**[Python lists](/docs/python/guides/iterables/lists)** are ordered sequences. You access items by position (`my_list[0]`), iterate in order, and can have duplicates.
+
+**SQL tables** are **sets of rows**. They have no inherent order (unless you explicitly `ORDER BY`), and each row is unique (or should be, if you've designed your schema well). You access rows by describing their properties (`WHERE email = 'user@wolfcodes.dev'`), not by position.
+
+```python
+# Python: imperative, position-based
+users = [{"id": 1, "email": "alice@wolfcodes.dev"}, ...]
+first_user = users[0]
+alice = [u for u in users if u["email"] == "alice@wolfcodes.dev"][0]
+```
+
+```sql
+-- SQL: declarative, property-based
+SELECT * FROM users WHERE email = 'alice@wolfcodes.dev';
+```
+
+## SQL vs ORMs
+
+ORMs (Object-Relational Mappers) like Django ORM or SQLAlchemy are **abstractions** over SQL. They let you write [Python](/docs/python/guides/intro/getting_started) code that generates SQL. Learn more about [Python modules](/docs/python/guides/standard_library/modules) to understand how these tools work:
+
+```python
+# Django ORM
+User.objects.filter(email='alice@wolfcodes.dev')
+```
+
+This generates SQL behind the scenes. ORMs are powerful, but they have limits:
+
+- **Complex queries** often require raw SQL
+- **Performance tuning** requires understanding the SQL being generated
+- **Debugging** requires reading the generated SQL
+
+Learning SQL directly gives you:
+- The ability to write efficient queries ORMs can't express
+- Better debugging skills when ORM queries are slow
+- The confidence to drop down to raw SQL when needed
+
+## Tables as sets, not lists
+
+This is the most important mental shift: **think of tables as sets of rows**.
+
+In a set:
+- Order doesn't matter (unless you `ORDER BY`)
+- Duplicates don't make sense (enforced by primary keys)
+- You query by properties, not position
+- Operations are set-based (joins, unions, intersections)
+
+```sql
+-- This query doesn't guarantee order
+SELECT * FROM users;
+
+-- This one does
+SELECT * FROM users ORDER BY created_at DESC;
+```
+
+## Declarative vs imperative thinking
+
+**Imperative** ([Python](/docs/python/guides/intro/getting_started), [JavaScript](/docs/javascript/guides/basics/intro)): "Do this, then do that, then check this condition..."
+
+```python
+results = []
+for user in users:
+    if user['age'] > 18:
+        results.append(user['name'])
+```
+
+Learn more about [Python for loops](/docs/python/guides/iterables/for_loops) to understand this pattern.
+
+**Declarative** (SQL): "Give me all names where age is greater than 18"
+
+```sql
+SELECT name FROM users WHERE age > 18;
+```
+
+SQL forces you to think in terms of **what you want**, not **how to get it**. This is powerful because:
+
+1. The database engine can optimize your query
+2. Your code is more readable and maintainable
+3. You focus on the problem, not the implementation
+
+## Common mistake: treating SQL like Python
+
+Don't write SQL like you'd write Python loops:
+
+```sql
+-- ❌ Don't think: "for each user, check if..."
+-- ✅ Think: "give me all users where..."
+SELECT * FROM users WHERE age > 18;
+```
+
+SQL works on entire sets at once. Embrace that.
+
+## What SQL isn't
+
+SQL is **not**:
+- A general-purpose programming language (no loops, conditionals, or functions in the traditional sense)
+- A tool for complex business logic (that belongs in application code)
+- A replacement for application-level validation (though it can enforce data integrity)
+
+SQL is a **data manipulation language**. It's excellent at what it does, but it's not trying to be Python or JavaScript.

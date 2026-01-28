@@ -1,0 +1,8 @@
+{
+  "label": "SQL",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "SQL is a powerful language for querying and managing relational databases. Learn to think in queries and work with real schemas."
+  }
+}

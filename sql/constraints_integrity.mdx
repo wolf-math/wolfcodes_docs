@@ -1,0 +1,250 @@
+---
+title: Constraints & Data Integrity
+sidebar_position: 7
+author:
+  name: Aaron Wolf
+  url: https://wolfcodes.dev
+license:
+  type: CC BY-NC 4.0
+  attribution_required: true
+source:
+  canonical_url: https://wolfcodes.dev
+---
+
+## Why constraints matter
+
+Constraints are rules that the database enforces on your data. They prevent invalid data from entering your database, catching bugs **at the database level** instead of in your application code.
+
+Think of constraints as **safety nets**. They ensure that:
+- Required fields are always filled
+- Email addresses are unique
+- Foreign keys reference valid rows
+- Data values make sense
+
+## `NOT NULL`: Required fields
+
+`NOT NULL` ensures a column always has a value (cannot be `NULL`):
+
+```sql
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email TEXT NOT NULL,  -- Email is required
+  name TEXT             -- Name is optional (can be NULL)
+);
+```
+
+If you try to insert a row without an email:
+
+```sql
+-- ❌ Error: email cannot be NULL
+INSERT INTO users (name) VALUES ('Alice');
+```
+
+**When to use**: Any field that's essential for a row to be meaningful. Email addresses, user IDs, amounts in financial transactions, etc.
+
+## Unique: Preventing duplicates
+
+`UNIQUE` ensures no two rows have the same value in that column:
+
+```sql
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,  -- No duplicate emails
+  username TEXT UNIQUE          -- No duplicate usernames
+);
+```
+
+If you try to insert a duplicate:
+
+```sql
+INSERT INTO users (email) VALUES ('alice@example.com');
+-- ✅ Success
+
+INSERT INTO users (email) VALUES ('alice@example.com');
+-- ❌ Error: duplicate key value violates unique constraint
+```
+
+**When to use**: Email addresses, usernames, social security numbers, or any field that should be unique across all rows.
+
+## Primary key: Unique identifier
+
+A `PRIMARY KEY` is a column (or set of columns) that uniquely identifies each row. It's automatically `NOT NULL` and `UNIQUE`.
+
+```sql
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,  -- Primary key
+  email TEXT NOT NULL UNIQUE
+);
+```
+
+Every table should have a primary key. It's how you:
+- Uniquely identify rows
+- Reference rows from other tables (foreign keys)
+- Ensure data integrity
+
+**Common patterns**:
+- Auto-incrementing integer: `id SERIAL PRIMARY KEY`
+- UUID: `id UUID PRIMARY KEY DEFAULT gen_random_uuid()`
+- Natural key: `email TEXT PRIMARY KEY` (if email is truly unique)
+
+## Foreign key: Referential integrity
+
+A `FOREIGN KEY` ensures that a value in one table references a valid row in another table:
+
+```sql
+CREATE TABLE expenses (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),  -- Foreign key
+  amount DECIMAL(10, 2) NOT NULL
+);
+```
+
+This ensures:
+- Every `expenses.user_id` must exist in `users.id`
+- You can't delete a user if they have expenses (unless you handle cascades)
+
+```sql
+-- ✅ Valid: user_id 1 exists
+INSERT INTO expenses (user_id, amount) VALUES (1, 50.00);
+
+-- ❌ Error: user_id 999 doesn't exist
+INSERT INTO expenses (user_id, amount) VALUES (999, 50.00);
+
+-- ❌ Error: Can't delete user if they have expenses
+DELETE FROM users WHERE id = 1;
+-- (Assuming expenses exist for user 1)
+```
+
+**Foreign keys prevent orphaned data**: expenses pointing to non-existent users.
+
+## Check: Custom validation
+
+`CHECK` constraints enforce custom rules on column values:
+
+```sql
+CREATE TABLE expenses (
+  id SERIAL PRIMARY KEY,
+  amount DECIMAL(10, 2) NOT NULL CHECK (amount > 0),  -- Amount must be positive
+  category TEXT CHECK (category IN ('food', 'transport', 'subscription'))
+);
+```
+
+```sql
+-- ✅ Valid
+INSERT INTO expenses (amount, category) VALUES (50.00, 'food');
+
+-- ❌ Error: negative amount
+INSERT INTO expenses (amount, category) VALUES (-10.00, 'food');
+
+-- ❌ Error: invalid category
+INSERT INTO expenses (amount, category) VALUES (50.00, 'invalid');
+```
+
+**When to use**: Business rules that should be enforced at the database level (positive amounts, valid status values, date ranges, etc.).
+
+## Combining constraints
+
+You can combine multiple constraints:
+
+```sql
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE CHECK (email LIKE '%@%'),  -- Not null, unique, and must contain @
+  age INTEGER CHECK (age >= 0 AND age <= 150),          -- Reasonable age range
+  created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+```
+
+## Why bugs belong in the db too
+
+Many developers think: "I'll validate in my application code, I don't need database constraints."
+
+**This is a mistake.** Here's why:
+
+1. **Multiple applications** might write to the same database
+2. **Direct database access** (admin tools, migrations, scripts) bypasses application validation
+3. **Data migrations** can introduce invalid data
+4. **Defense in depth**: Application validation + database constraints = safer data
+
+Constraints are your **last line of defense**. They catch bugs that slip through application code.
+
+## Common mistakes
+
+### Forgetting constraints
+
+```sql
+-- ❌ No constraints: anything goes
+CREATE TABLE users (
+  id INTEGER,
+  email TEXT,
+  age INTEGER
+);
+
+-- ✅ Better: enforce rules
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  age INTEGER CHECK (age >= 0)
+);
+```
+
+### Over-constraining
+
+```sql
+-- ❌ Too strict: might break legitimate use cases
+CREATE TABLE expenses (
+  amount DECIMAL(10, 2) CHECK (amount > 0 AND amount < 1000)
+);
+-- What if someone spends $1500 on rent?
+
+-- ✅ Reasonable: positive amounts only
+CREATE TABLE expenses (
+  amount DECIMAL(10, 2) CHECK (amount > 0)
+);
+```
+
+### `NULL` in unique constraints
+
+In most databases, `UNIQUE` allows multiple `NULL` values (because `NULL != NULL`):
+
+```sql
+CREATE TABLE users (
+  email TEXT UNIQUE  -- Multiple NULLs are allowed!
+);
+
+INSERT INTO users (email) VALUES (NULL);  -- ✅
+INSERT INTO users (email) VALUES (NULL);  -- ✅ Also works!
+```
+
+If you want to prevent duplicates including `NULL`, use a unique index or handle it in application code.
+
+## Practical example
+
+Here's a well-constrained schema:
+
+```sql
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE CHECK (email LIKE '%@%.%'),
+  name TEXT NOT NULL,
+  age INTEGER CHECK (age >= 0 AND age <= 150),
+  created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE expenses (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  amount DECIMAL(10, 2) NOT NULL CHECK (amount > 0),
+  description TEXT,
+  category TEXT CHECK (category IN ('food', 'transport', 'subscription', 'other')),
+  created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+```
+
+This schema ensures:
+- Every user has an email and name
+- Emails are unique and look valid
+- Ages are reasonable
+- Every expense belongs to a valid user
+- Amounts are positive
+- Categories are from a fixed list

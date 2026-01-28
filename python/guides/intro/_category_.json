@@ -1,0 +1,8 @@
+{
+  "label": "Intro to Python",
+  "position": 0,
+  "link": {
+    "type": "generated-index",
+    "description": "Get started with Python programming."
+  }
+}

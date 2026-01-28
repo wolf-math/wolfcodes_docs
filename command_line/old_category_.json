@@ -1,0 +1,10 @@
+{
+  "label": "Command line",
+  "position": 3,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "description": "The Command Line is a text-based interface for interacting with your computer. It is a powerful tool for developers and system administrators."
+  }
+}
