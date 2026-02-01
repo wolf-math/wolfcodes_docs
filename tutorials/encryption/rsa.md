@@ -15,7 +15,7 @@ source:
 
 Public-key cryptography was independently developed by researchers at GCHQ in the early 1970s but remained classified. A few years later in 1977, Ron **R**ivest, Adi **S**hamir and Leonard **A**dleman independantly invented the exact same process for encryption and called it RSA. RSA is one of the most widely deployed public-key cryptosystems in history. 
 
-It shares many mathematical similarities with [Diffie-Hellman](/tutorials/encryption/dh) encryption, but it's conceptually a little different. Instead of thinking in terms of shared secrets, RSA can be thought of as sending an unlocked padlock. Anyone can use it to lock a message, but only the owner of the key can unlock it.
+It shares many mathematical similarities with [Diffie-Hellman](/docs/tutorials/encryption/diffie-hellman-key-exchange) encryption, but it's conceptually a little different. Instead of thinking in terms of shared secrets, RSA can be thought of as sending an unlocked padlock. Anyone can use it to lock a message, but only the owner of the key can unlock it.
 
 The problem RSA solves compared to Diffie-Hellman is that of key storage. With Diffie-Hellman, a new shared secret must be established for each communicating party. This can be unwieldy for a large organizaion like a bank with many customers- the bank would need a different key for each customer. RSA addresses this problem by allowing a single public key to be shared widely. The bank can send the same lock, that they alone have keys for, out to many customers who can send encrypted messages back.
 
