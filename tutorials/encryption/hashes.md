@@ -1,7 +1,8 @@
 ---
 slug: hashes
 title: "Hashes"
-authors: Aaron Wolf
+author: Aaron Wolf
+description: An introduction to cryptographic hash functions, their properties, and how they are used in practice.
 sidebar_position: 3
 license:
   type: CC BY-NC 4.0
@@ -12,29 +13,36 @@ source:
 
 ## Introduction
 
-Hashing is a one way function that's used in encryption scenarios where the goal is secure storage, data integrity, and verification. The original use that led to the creation of hashing functions was digital signatures. It's basically a function that creates a summary of the whole, but the whole cannot be extrapolated from the hash. 
+Hashing is a one-way function used in encryption scenarios where the goal is secure storage, data integrity, and verification. One of the earliest and most important uses of cryptographic hash functions was in digital signatures. Basically, a hash function produces a compact summary of the input, but the original data cannot be reconstructed from that summary.
 
-Any website you've logged into with a password should be storing your password as a hash, meaning the maintainers of the website couldn't extrapolate your password even if they wanted to. It's just saved as a hash which is represented by a random string. When you log into the website your password is sent securely (over `HTTPS`) from your computer to the server where it is hashed and compared against the server's hash of the password. If they match, you get authenticated, if not, try again.
+Any website you've logged into with a password should be storing your password as a hash, meaning the maintainers of the website cannot recover your original password, even if the database is compromised. The password is stored only as a hash which is a fixed-length value that appears random. When you log into the website your password is sent securely (over `HTTPS`) from your computer to the server where it is hashed and compared against the server's hash of the password. If they match, you get authenticated, if not, try again.
 
-Hashing can also work to verify data. If you've ever downloaded a Linux `.iso` and the instructions tell you to run `sha256sum <linux_distro_of_your_choice>.iso`, the output will be a hash and it should match what the Linux website says, otherwise someone may have tampered with it or it could be corrupt. 
+:::note
+In practice, secure systems also use **salts** and **slow hashing algorithms** (such as bcrypt, scrypt, or Argon2) to protect against precomputed and brute-force attacks.
+:::
+
+
+Hashing can also work to verify data. If you've ever downloaded a Linux `.iso` and the instructions tell you to run `sha256sum <linux_distro_of_your_choice>.iso`, the output will be a hash and it should match what the Linux website says, otherwise the file may be corrupted or may have been tampered with.
 
 You can clone my [encryption demo repo](https://github.com/wolf-math/encryption-demo) and run the code from this article on your own machine.
 
 ## Hashing algorithms
 
-There are many different hashing algorithms but most of them follow the same basic process. It is a mathematical function that takes a particular input (a password for instance) and converts it through some mathematical means into a digest, also sometimes referred to as tags or just hashes. 
+There are many different hashing algorithms but most of them follow the same basic process. It is a mathematical function that takes a particular input (a password for instance) and converts it through some mathematical means into a fixed-size output called a digest (also referred to as a hash).
 
 There are a few commonalities that good hashing algorithms share:
 
 1. **It's deterministic**: This means that an input will always result in the same output.
-2. **Fixed length**: The input can be as large as the user wants, however, the output will always be a fixed length. For instance `sah256sum` always produces a hash that is 256 bits. 
-3. **It's fast**, but also not too fast: It needs to be fast for performance, but if it's too fast that indicates that it's not performing enough computation to create a _good_ hash.
-4. **The avalanche principal**: If even a single bit of data has changed, no matter where in the file, the resulting hash will be drastically different.
+2. **Fixed length**: The input can be as large as the user wants, however, the output will always be a fixed length. For instance `sha256sum` always produces a hash that is 256 bits. 
+3. **Fast, but not too fast**: Hashing should be efficient, but password hashing in particular should be intentionally slow to resist brute-force attacks.
+4. **The avalanche principle**: A single-bit change in the input should produce a completely different hash.
 5. **Collision resistant**: Two inputs never create the same output. While there are an incredible number of possible hashes out there, there are still only a finite number of them. Therefore in the natural course of using a hash function it's possible that two files can create the same hash. However the function should be collision resistant enough that intentionally creating two files that generate the same hash is unlikely and virtually impossible. If this was possible, forging documents would be easy. Due to their extensive use and known collision resistance issues, there are a few hashing algorithms that are considered broken including SHA1 and MD5.
 
 ## SHA-1 in action
 
-SHA stands for **S**ecure **H**ash **A**lgorithm, even though, ironically, it's no longer secure. However, it takes any size input and returns a 160-bit (20-byte) fixed-length hash value.
+SHA stands for **S**ecure **H**ash **A**lgorithm, even though it's no longer secure by modern standards. However, it takes any size input and returns a 160-bit (20-byte) fixed-length hash value. 
+
+The SHA-1 algorithm processes input data in several stages:
 
 1. **Padding the message:**
 The input message is padded so that its total length (in bits) is congruent to 448 mod 512.
@@ -54,9 +62,13 @@ When all blocks are processed, the five 32-bit words are concatenated to form th
 
 ## Python for SHA-1
 
-Let's write some Python to create a SHA-1 hash. **Note** that as stated above SHA-1 is no longer considered safe. **Don't use it in production!!!** 
+Let’s write some Python to generate a SHA-1 hash using the standard library. 
 
-Using the hashlib library, it's easy to generate a hash from a number of different algorithms. Feel free to try them all. Creating a hash function is beyond the scope of this write up.
+:::note 
+As stated above SHA-1 is no longer considered safe. **Do not use SHA-1 in production systems.** 
+:::
+
+Using the hashlib library, it's easy to generate a hash from a number of different algorithms. Feel free to try them all. Creating a hash function is beyond the scope of this write up, and generally a bad idea.
 
 
 ```python
@@ -83,3 +95,14 @@ result = sha1_hash(input_string)
 print(f"The SHA-1 hash of '{input_string}' is: {result}")
 
 ```
+
+## Hashes in the bigger picture
+
+Hash functions are a foundational building block in modern cryptography. While they don’t encrypt data themselves, they are essential for:
+
+- password storage,
+- data integrity verification,
+- digital signatures,
+- and many authentication protocols.
+
+Together with key exchange algorithms like Diffie-Hellman and public-key systems like RSA, hashing completes the core toolkit used to secure modern communication.

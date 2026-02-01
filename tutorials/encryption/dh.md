@@ -1,7 +1,8 @@
 ---
 slug: diffie-hellman-key-exchange
 title: "Diffie-Hellman Key Exchange"
-authors: Aaron Wolf
+description: A conceptual and hands-on introduction to the Diffie-Hellman key exchange algorithm.
+author: Aaron Wolf
 sidebar_position: 1
 license:
   type: CC BY-NC 4.0
@@ -12,31 +13,31 @@ source:
 
 ## History
 
-The most advanced method of encryption during WWII (the enigma machine) was broken by a guy who built a computer (Alan Turing). 
+The Enigma Machine was the most advanced encryption system used during World War. It was ultimately broken by Alan Turing and his team, who built some of the earliest electromechanical computers.
 
-In the decades following WWII the US was in a cold war with the USSR. Computers were being built in order to gain intelligence and monitor what the Soviets were doing. NORAD (part of the US and Canada's military complex) created the first networked computer system and they wanted secure communication so that no bad actors could eavesdrop on secret military communication.
+In the decades following WWII the US was in a cold war with the USSR. Computers were being built in order to gain intelligence and monitor what the Soviets were doing. During the Cold War, organizations such as NORAD (a joint U.S.–Canadian military command) developed early networked computer systems and required secure communication channels resistant to eavesdropping.
 
-## Diffie-hellman
+## Diffie–Hellman Key Exchange
 
-In 1976 Whitfield Diffie and Martin Hellman developed a method of key exchange where two parties could share **public keys** for encryption and decryption but nobody else would be able to see any messages because each party would also have a **private keys**
+In 1976 Whitfield Diffie and Martin Hellman developed a method of key exchange where two parties could exchange public keys while keeping private keys secret, allowing them to communicate securely even over an insecure channel.
 
-The Diffie-Hellman key exchange was the first ever devised _asymmetric cipher_. This means that a secret message can be sent from one party to another without the need to share the keys.
+The Diffie-Hellman key exchange was the first ever devised _asymmetric cipher_. This allows a shared secret to be established without ever transmitting the secret itself.
 
 :::note
-The basics of this methodology are still used today in many forms of communication, including SSH. Never **EVER** share your private key with anybody!
+The basics of this methodology are still used today in many forms of communication, including SSH. Never **EVER** share your private key with anybody because doing so completely breaks the security model!
 :::
 
 ## How does it work conceptually?
 
-Up until Diffie-Hellman all encryption was done with a _symmetric_ key exchange. This means that the sender and receiver had to share an agreed upon key before they can send messages to one another. But what if the 2 parties have never met? Or what if they're far away?
+Up until Diffie-Hellman all encryption was done with a _symmetric_ key exchange. This means that the sender and receiver had to share an agreed upon key before they can send messages to one another. But what if the 2 parties have never met? Or what if they're far away? Or what if they're communicating over an untrusted network?
 
 The solution is a public key exchange. This is called _asymmetric_ key exchange because each party has a different key. But how?
 
-Each party has a private key and a public key. The private key is never shared. Both parties agree (publicly) on a prime modulus and a generator to the modulus. The prime modulus is just a large prime number and the generator is a number that when raised to the power off all numbers up to the prime number _p_ (1, 2, 3, ... , p-1 , p), the solution set will include all numbers up to _p_ (1, 2, 3, ... , p-1 , p). This allows for the same character to be encrypted to different values. 
+Each party has a private key and a public key. The private key is never shared. Both parties agree (publicly) on a prime modulus and a generator to the modulus. The prime modulus is just a large prime number and the generator is a number that, when raised to successive powers modulo _p_ (1, 2, 3, ... , p-1 , p), the solution set produces every nonzero value modulo _p_ exactly once (1, 2, 3, ... , p-1 , p). This property ensures that the key space is sufficiently large and unpredictable.
 
 It's confusing- I know.
 
-But when the public keys are exchanged the individuals can calculate their private keys raised to the power of their partner's public key and everything unravels to decrypt itself!
+But when the public keys are exchanged the individuals can calculate their private keys raised to the power of their partner's public key and both parties independently arrive at the same shared secret.
 
 
 ## How does the math work?
@@ -45,7 +46,8 @@ The Diffie-Hellman key exchange algorithm is based on the difficulty of the disc
 
 1. Two parties agree on a large prime number _p_ and a base _g_, where _g_ is a primitive root modulo _p_. 
 
-2. Each party selects a private key (a secret number), let's say _a_ and _b_, and  computes their respective public keys as $A = g^{a} mod(p)$ and $B = g^{b} mod(p)$.
+2. Each party selects a private key (a secret number), let's say _a_ and _b_, and  computes their respective public keys as  
+$A = g^{a} \bmod p$ and $B = g^{b} \bmod p$.
 
 3. They then exchange their public keys.
 
@@ -55,13 +57,16 @@ Due to the properties of modular exponentiation, both parties arrive at the same
 
 ## Demonstration
 
-This is a MarkDown version of a Jupyter Notebook that I created for this demonstration. Feel free to [clone the repository](https://github.com/wolf-math/encryption-demo) and play with the key exchange yourself.
+:::warning
+This demonstration is intentionally simplified for educational purposes. Real-world cryptographic implementations rely on vetted libraries and much larger parameters.
+:::
 
+This is a MarkDown version of a Jupyter Notebook that I created for this demonstration. Feel free to [clone the repository](https://github.com/wolf-math/encryption-demo) and play with the key exchange yourself.
 
 
 ### Helper functions
 
-These are not the most performant functions but that's not their intention. They are here so that the user can gain an understanding of how the encryption takes place.
+These functions are intentionally not optimized for performance, but for clarity and readability.
 
 First we need a function that tells us if a number is prime or not. This is because our modulus must be a prime number
 
@@ -120,7 +125,7 @@ def create_pub_key(generator, private_key, prime):
     return pow(generator, private_key, prime)
 ```
 
-_Encoding_ is **not** _encryption_. It simply converts the letter to its computer numerical value. Any computer can make this conversion, so it's not scrambled in any way. This function takes a string as an argument and returns an array of the encoded characters.
+_Encoding_ is **not** _encryption_. It simply converts the letter to its computer numerical value. Encoding is reversible by design and provides no security on its own. This function takes a string as an argument and returns an array of the encoded characters.
 
 
 ```python
@@ -288,7 +293,3 @@ print(encrypted)
 decrypted = decrypt_message(super_key2, encrypted, prime)
 print(decode_string(decrypted))
 ```
-
-## Next step
-
-We learn how RSA encryption works!!!

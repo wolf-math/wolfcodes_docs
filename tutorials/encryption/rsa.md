@@ -1,7 +1,8 @@
 ---
 slug: rsa
 title: "RSA Encryption"
-authors: Aaron Wolf
+author: Aaron Wolf
+description: A conceptual and hands-on introduction to the RSA public-key encryption algorithm.
 sidebar_position: 2
 license:
   type: CC BY-NC 4.0
@@ -12,26 +13,46 @@ source:
 
 ## History and overview
 
-RSA was invented by NORAD in the early 1970's but was deemed top secret. A few years later in 1977, Ron **R**ivest, Adi **S**hamir and Leonard **A**dleman independantly invented the exact same process for encryption and called it RSA. RSA is the most used software in the world to date and every internet user has used RSA at some point whether they knew it or not. 
+Public-key cryptography was independently developed by researchers at GCHQ in the early 1970s but remained classified. A few years later in 1977, Ron **R**ivest, Adi **S**hamir and Leonard **A**dleman independantly invented the exact same process for encryption and called it RSA. RSA is one of the most widely deployed public-key cryptosystems in history. 
 
-<!-- truncate -->
+It shares many mathematical similarities with [Diffie-Hellman](/tutorials/encryption/dh) encryption, but it's conceptually a little different. Instead of thinking in terms of shared secrets, RSA can be thought of as sending an unlocked padlock. Anyone can use it to lock a message, but only the owner of the key can unlock it.
 
-It shares many mathematical similarities with Diffie-Hellman encryption, but it's conceptually a little different. Instead of thinking about public and private keys, RSA can be thought of as sending an unlocked padlock. It would be like someone who wants to receive a message sending an **unlocked** padlock to the sender who then locks his message and sends it back for decryption.
+The problem RSA solves compared to Diffie-Hellman is that of key storage. With Diffie-Hellman, a new shared secret must be established for each communicating party. This can be unwieldy for a large organizaion like a bank with many customers- the bank would need a different key for each customer. RSA addresses this problem by allowing a single public key to be shared widely. The bank can send the same lock, that they alone have keys for, out to many customers who can send encrypted messages back.
 
-The problem RSA solves compared to Diffie-Hellman is that of key storage. When using Diffie-Hellman every key needs to be saved separately. This can be unwieldy for a large organizaion like a bank with many customers- the bank would need a different key for each customer. The solution to this is RSA! The bank can send the same lock, that they alone have keys for, out to many customers who can send encrypted messages back.
+## RSA vs Diffie-Hellman: What’s the difference?
+
+RSA and Diffie-Hellman are both **public-key cryptographic systems**, but they solve slightly different problems.
+
+| Feature | Diffie-Hellman | RSA |
+|------|-------------------|-----|
+| Primary purpose | Establish a shared secret | Encrypt data and authenticate identity |
+| Key exchange | Yes (main use) | Not its primary role |
+| Encryption | Not used directly for messages | Yes |
+| Public key reuse | Typically one-off per session | Same public key reused |
+| Private key storage | Ephemeral or session-based | Long-term private key |
+| Security basis | Discrete logarithm problem | Integer factorization problem |
+| Common modern use | TLS key exchange (ECDHE) | Authentication, signatures, legacy TLS |
+
+**In practice:**  
+- Diffie-Hellman is commonly used to **agree on a shared secret**.
+- RSA is commonly used to **prove identity and encrypt small pieces of data**, such as session keys.
+
+Modern secure systems often use **both together**, combining Diffie-Hellman’s forward secrecy with RSA’s authentication guarantees.
+
+
 
 ## Common uses of RSA encryption
 
 Some common uses of RSA encryption are:
 
-- **The Signal protocol**: An open source protocol for sending secure messages. Used by programs like Signal and WhatsApp. Though the signal protocol also uses a special version of Diffie-Hellman on top of RSA.
-- **HTTPS**: The encrypted connection between a computer and a server from the World Wide Web uses SSL or TLS which is based on RSA.
-- **VPN**: Like HTTPS, connecting to a VPN uses the SSL or TLS protocols.
+- **The Signal protocol**: A secure messaging protocol used by Signal and WhatsApp. RSA is used for authentication and key exchange, alongside elliptic-curve Diffie-Hellman.
+- **HTTPS**: TLS connections historically relied on RSA for key exchange, though modern configurations increasingly use elliptic-curve Diffie-Hellman.
+- **VPN**: Many VPNs use TLS, where RSA may be used for authentication.
 - **Encrypted file systems**: Many files and file systems are encrypted using RSA.
 
 ## RSA encryption process
 
-The entire process is based on Euler's theorem: $m^{φ(n)} \equiv 1 \mod n$, where $φ(n)$ is the product of two large prime numbers.
+RSA relies on properties of modular exponentiation and Euler’s theorem, where $φ(n)$ is Euler’s totient function.
 
 ### Key generation
 1. **Select two prime numbers**: Choose two large prime numbers, `p` and `q`.
@@ -54,7 +75,18 @@ The entire process is based on Euler's theorem: $m^{φ(n)} \equiv 1 \mod n$, whe
 
 ## Let's get coding: helper functions
 
-These functions are meant for demonstration, not performance. This is just to show how the process of RSA, but this would never be used in production. In modern applications this process is completely automated. 
+:::warning
+These examples are for educational purposes only. Real-world RSA implementations rely on hardened cryptographic libraries and much larger parameters.
+:::
+
+This section is a guided walkthrough, not a template for real-world cryptography. It's a demonstration to demystify what’s happening when those libraries do their work.
+
+By implementing RSA step by step, we can see:
+- how the mathematical pieces fit together,
+- why public and private keys behave the way they do,
+- and how encryption and decryption are actually performed under the hood.
+
+
 
 ```python
 # finds factors and determines if prime.
@@ -81,6 +113,7 @@ def factors(number):
     
     
 # determines greatest common divisor of 2 numbers
+# educational implementation; real systems use gcd() instead
 
 def gcd(a, b):
     while b:
@@ -126,13 +159,13 @@ def are_coprime(number1, number2):
 
 ### Selecting the public key
 
-$e$ should be an integer that is not only greater than 1 but also less than $φ(n)$, where $n = pq$ (the product of two distinct prime numbers $p$ and $q$).
+$e$ should be an integer that is not only greater than 1 but also less than $φ(n)$, where $n = p  q$ (the product of two distinct prime numbers $p$ and $q$).
 
-$e$ and $φ(n)$ should be coprime, meaning they should have no common factors other than 1. This ensures that $e$ has a multiplicative inverse $mod φ(n)$.
+$e$ and $φ(n)$ should be coprime, meaning they should have no common factors other than 1. This ensures that $e$ has a multiplicative inverse $\bmod φ(n)$.
 
 The private exponent `d` is the modular multiplicative inverse of `e modulo ϕ(n)`. 
 This means `d` is the number that satisfies the equation 
-$d × e ≡ 1 \ modϕ(n)$.
+$d × e ≡ 1 \ \bmod ϕ(n)$.
 
 
 ```python
@@ -194,7 +227,7 @@ def calculate_d(phi_n, e):
 ## Watch RSA in action
 
 ```python
-# alice picks 2 prime numbers of similar size to compute `n`
+# alice selects 2 prime numbers of similar size to compute `n`
 
 while True:
     p1 = int(input('Pick your first prime: '))
@@ -233,7 +266,7 @@ print(f'φ(n) = ({p1} - 1) x ({p2} - 1) = {totient}')
 
 # calculate exponent e, such that it is odd and coprime with φ(n)
 
-e = exponent(totient)
+e = find_suitable_e(totient)
 
 print(f'The exponent value is {e}')
 
@@ -264,11 +297,11 @@ print(f'Encoded and encrypted message is:\n {encrypted_message}')
 
 ## Send the encrypted message
 
-`encrypted_message` can now be sent from Bob to Alice without an eavesdropper (Eve) making any sense of the message. In practice this only works when large values of `p` and `q` are used, otherwise computers can still quite easily brute force the encryption.
+`encrypted_message` can now be sent from Bob to Alice without an eavesdropper (often called Eve) making any sense of the message. In practice this only works when large values of `p` and `q` are used, otherwise computers can still quite easily brute force the encryption.
 
 ## Alice uses her private key `d` to decrypt the message
 
-Since `d` is the multiplicative inverse of `e` in respect to `φ(n)`, decrypting the message is easy. Each letter is decrypted with the function $i^{d} mod (n)$, where `i` is the encrypted numerical value of the letter, `d` is our private key, and `n` is the product of our two primes.
+Since `d` is the multiplicative inverse of `e` in respect to `φ(n)`, decrypting the message is straightforward. Each letter is decrypted with the function $i^{d} \bmod (n)$, where `i` is the encrypted numerical value of the letter, `d` is our private key, and `n` is the product of our two primes.
 
 ```python
 # Alice decrypts the message using `d`
