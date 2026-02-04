@@ -1,7 +1,8 @@
 ---
 slug: async-await
-title: "async/await"
-authors: Aaron Wolf
+title: "Async / Await"
+author: Aaron Wolf
+description: A practical guide to writing readable, reliable asynchronous JavaScript using async and await.
 sidebar_position: 1
 license:
   type: CC BY-NC 4.0
@@ -11,11 +12,13 @@ source:
 ---
 
 
-`async` / `await` is a newer way of writing asynchronous code compared to promises. The main advantages of `async`/`await` are improved readability and the avoidance of _promise chaining_. Promises can become long, hard to read, and may contain deeply nested callbacks that can be difficult to debug.
+`async` / `await` is a modern syntax for writing asynchronous JavaScript that builds directly on top of Promises. It allows asynchronous code to be written in a style that closely resembles synchronous code, improving readability and making control flow easier to reason about.
+
+The primary advantages of `async` / `await` are clearer intent, simpler error handling, and the elimination of deeply nested `.then()` chains that can be difficult to debug and maintain.
 
 ## Example
 
-Recall our fetch from before.
+Recall our earlier `fetch` example written using [Promises](/docs/tutorials/javascript/promises-fetch).
 
 ```javascript
 fetch('https://jsonplaceholder.typicode.com/todos/1')
@@ -43,7 +46,7 @@ async function fetchData() {
 fetchData();
 ```
 
-While it may be a few more lines of code, this version is easier to read because it resembles a normal synchronous function. Additionally, if the functions inside the `.then()` statements were more complex, readability and debuggability would be even more impacted. The `async`/`await` example is far clearer.
+While this version may use a few more lines, it is easier to read because it follows a top-to-bottom, synchronous-looking flow. Additionally, if the functions inside the `.then()` statements were more complex, readability and debuggability would be even more impacted. The `async`/`await` example is far clearer.
 
 ---
 
@@ -104,7 +107,7 @@ This shows how async/await handles **dependent** operations cleanly and clearly.
 
 ---
 
-### **Example 3: Running async operations in parallel (`promise.all`)**
+### **Example 3: Running async operations in parallel (`Promise.all`)**
 
 When two tasks do **not** depend on each other, run them together.
 
@@ -115,7 +118,7 @@ const comments = await getComments(postId);
 const likes = await getLikes(postId);
 ```
 
-…which takes **twice as long**, use:
+…which runs sequentially and takes longer than necessary, use:
 
 ```js
 const [comments, likes] = await Promise.all([
@@ -142,7 +145,7 @@ async function getPostActivity(postId) {
 }
 ```
 
-Parallelism is one of the biggest advantages of Promises and async/await lets you use it cleanly without chaining.
+Parallelism is one of the biggest advantages of Promises, and `async` / `await` lets you take advantage of it without complex chaining.
 
 ---
 
@@ -158,7 +161,7 @@ ids.forEach(async id => {
 });
 ```
 
-This does **not** wait. The loop finishes immediately.
+`.forEach()` does not understand async functions and will not wait for them to resolve. This does **not** wait. The loop finishes immediately.
 
 **Correct (sequential):**
 
