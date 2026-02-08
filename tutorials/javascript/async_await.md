@@ -183,9 +183,9 @@ This runs all tasks simultaneously — ideal when operations don’t depend on e
 
 ---
 
-## **Example 5: Handling delays (the *only* good use of `new Promise`)**
+## **Example 5: Handling delays (one of the few valid uses of `new Promise`)**
 
-You should almost never write `new Promise()` yourself when using async/await.
+When using `async` / `await`, you should rarely need to construct Promises manually.
 
 The one valid exception is creating intentional delays:
 

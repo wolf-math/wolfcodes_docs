@@ -1,60 +1,71 @@
 ---
 slug: promises-fetch
 title: "Promises and Fetch"
-authors: Aaron Wolf
+author: Aaron Wolf
 sidebar_position: 3
 license:
   type: CC BY-NC 4.0
   attribution_required: true
 source:
   canonical_url: https://wolfcodes.dev
-
+description: An introduction to JavaScript Promises, the fetch API, and how asynchronous code is scheduled by the event loop.
 ---
 
 ## Restaurants
 
-A promise in JavaScript is just a **pending task**. It’s like ordering food at a restaurant: when you place your order, the server makes a _promise_ to bring the food you ordered. Once the food is brought to the table the promise has been fulfilled. If the food you ordered can’t be served because the kitchen is out of a key ingredient, then you can _catch_ a meal somewhere else. 
+A Promise in JavaScript represents a **value that will be available in the future**.
 
-This is all asynchronous. When you sit down at the table, you might be chatting with a friend or scrolling on your phone. You pause what you were doing so that you can give your order to the server, then return to doing what you were doing beforehand.
+A useful way to think about a Promise is ordering food at a restaurant. When you place your order, the server makes a *promise* to bring you the food. 
 
-JavaScript promises work similarly. Since JavaScript is single-threaded, promises allow the JavaScript engine to move on to other tasks while it waits for certain operations to complete.
+- As you wait for your food, the promise it **pending**.
+- If the food arrives, the promise is **fulfilled**.  
+- If the kitchen can’t prepare the meal, the promise is **rejected**.
 
-## JavaScript
+This entire process is asynchronous.
 
-A promise is a specific type of object. All promises begin in a pending state. The callback function inside the promise, called an _executor_, defines when to resolve or reject the promise. 
+You don’t sit idle while waiting for the food. You talk with a friend, scroll on your phone, or do something else, and only react when the food arrives. If the meal can’t be served, you *catch* the error and decide what to do next.
 
-### Creating a promise:
+JavaScript Promises work similarly. Since JavaScript is single-threaded, Promises allow the engine to continue executing other code while it waits for certain operations to complete.
 
-Here, we’re creating a new promise called order. If the promise is fulfilled, it resolves with the message "eat food". If it’s rejected, it returns "find another restaurant" instead.
+## JavaScript Promises
+
+A Promise is a specific type of object that represents the eventual result of an asynchronous operation. All Promises begin in a **pending** state.
+
+The function passed to the Promise constructor is called the *executor*. It runs immediately and determines when the Promise should resolve or reject.
+
+### Creating a Promise
+
+Here’s a simplified example to demonstrate how a Promise is constructed:
 
 ```javascript
 const order = new Promise((resolve, reject) => {
-  if ( foodDelivered) {
+  if (foodDelivered) {
     resolve('eat food');
   } else {
     reject('find another restaurant');
   }
-})
+});
 ```
 
-Once the promise is created, you can use .then() and .catch() to decide what should happen depending on the outcome.
+If the Promise is fulfilled, it resolves with `"eat food"`.
+If it is rejected, it returns `"find another restaurant"`.
 
-### Using a promise
+### Using a Promise
+
+Once a Promise is created, you can attach handlers that run when the Promise settles.
 
 ```javascript
 order
-  // wait for the asynchronous value to be fulfilled
-  .then(value => console.log(value))
-  // handle rejection
-  .catch(error => console.log(error))
-  .finally(() => console.log('all done'));
+  .then(value => console.log(value))       // handle fulfillment
+  .catch(error => console.log(error))      // handle rejection
+  .finally(() => console.log('all done')); // always runs
 ```
 
-# Fetch
+## Fetch
 
-`fetch` is a built-in function in JavaScript that _returns a promise_. It makes an HTTP request and allows you to handle the response asynchronously with `.then()` and `.catch()`. 
+`fetch()` is a built-in JavaScript function that **returns a Promise** representing an HTTP request. It allows you to make network requests and handle responses asynchronously using `.then()` and `.catch()`.
 
-## Using `fetch()`
+### Using `fetch()`
 
 ```javascript
 fetch('url')
@@ -64,40 +75,46 @@ fetch('url')
   .finally(() => console.log('all done'));
 ```
 
-# The Call Stack and Event Loop
+## The Call Stack and Event Loop
 
-The _call stack_ manages **synchronous** tasks, keeping track of the order in which they execute. This is fairly straightforward: tasks are executed in the order they're written.
+The **call stack** manages synchronous JavaScript execution, keeping track of function calls and the order in which they run.
 
-However, **asynchronous** tasks are handled by the event loop. The event loop allows asynchronous code to be executed out of order, letting the JavaScript engine continue working on other tasks without waiting.
+Asynchronous behavior is coordinated by the **event loop**. Rather than executing code “out of order,” the event loop determines *when* asynchronous callbacks are placed back onto the call stack, allowing the engine to remain responsive.
 
 ## Example
 
-How will this execute?
+How will this code execute?
 
 ```javascript
 console.log("console log first!");
-setTimeout( _ => console.log("set timeout second!"), 0);
+setTimeout(() => console.log("set timeout second!"), 0);
 Promise.resolve().then(() => console.log("promise third"));
 console.log("console log last!!!");
 ```
 
-You might expect that it would execute in order, but it doesn’t. The JavaScript event loop processes these instructions differently.
-The result is actually this:
+You might expect it to run top to bottom, but it doesn’t. The actual output is:
 
-```javascript
-> console log first!
-> console log last!!!
-> promise third
-> set timeout second!
+```text
+console log first!
+console log last!!!
+promise third
+set timeout second!
 ```
+
+Even though `setTimeout` is set to `0`, it does **not** run immediately.
 
 ## Why?
 
-The event loop rearranges the execution priority:
+The event loop schedules work using different queues:
 
-1. Synchronous tasks (like console.log("console log first!") and console.log("console log last!!!")) are executed immediately, in the order they appear.
-1. Microtasks (such as Promise callbacks) are given the next priority and are executed before any other asynchronous tasks.
-1. Macrotasks (like setTimeout) are handled last, even if the timeout is set to zero.
+1. **Synchronous tasks** run first, directly on the call stack.
+2. **Microtasks** (such as Promise callbacks) run next, immediately after the current call stack clears.
+3. **Macrotasks** (such as `setTimeout`) run last, even if their delay is set to zero.
 
-This allows the JavaScript engine to work asynchronously, performing other tasks without waiting for all operations to complete immediately.
+This scheduling model allows JavaScript to remain responsive while still handling asynchronous operations predictably.
 
+## Where this fits
+
+Promises are the foundation of modern asynchronous JavaScript. While `async` / `await` provides a cleaner syntax, it is built entirely on top of Promises.
+
+Understanding Promises, the event loop, and task scheduling makes async/await feel predictable instead of magical.

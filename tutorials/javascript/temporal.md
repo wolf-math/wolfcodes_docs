@@ -1,146 +1,124 @@
 ---
 slug: temporal-datetime
-title: "Temporal Datetime API"
-authors: Aaron Wolf
+title: "Temporal DateTime API"
+author: Aaron Wolf
 sidebar_position: 5
 license:
   type: CC BY-NC 4.0
   attribution_required: true
 source:
   canonical_url: https://wolfcodes.dev
+description: A practical introduction to JavaScript’s upcoming Temporal API, focusing on real-world use cases and mental models.
 ---
 
+Dates in JavaScript have a well-earned reputation for being frustrating. The **Temporal API** is the long-term replacement for the legacy `Date` object, designed to fix many of its conceptual and practical flaws.
 
-We all know that dates in JavaScript suck. Temporal is the API that we will come to succeed the legacy date API in JavaScript. This post is about my experience with the new [Temporal API](https://tc39.es/proposal-temporal/). 
+This article is based on my experience using Temporal and experimenting with how it fits into real-world applications. It is not as a comprehensive reference, but as a guide to how you might actually use it.
 
-At the moment (no pun intended), Temporal is still in stage 3 (out of 4) of development. This means that it should not be used in development, but if you're curious on how to use it you can still use the [Temporal polyfill](https://www.npmjs.com/package/@js-temporal/polyfill).
+At the time of writing, Temporal is still a **Stage 3 proposal** (out of 4). That means it is close to standardization, but **not yet available natively** in JavaScript runtimes. If you want to try it today, you can use the official [polyfill](https://www.npmjs.com/package/@js-temporal/polyfill):
 
+## A paradigm shift
 
-The reason why I'm writing this- despite there being a plethora of other tutorials- is because I haven't seen others showcase how Temporal might be used in the real world. However, this is not a comprehensive overview of the entire API. 
+To understand Temporal, you have to change how you think about dates.
 
-# The paradigm shift
+In legacy JavaScript, `Date` objects are ultimately just wrappers around **epoch milliseconds**. Every date represents a specific instant in time, whether you care about that or not.
 
-In order to understand Temporal dates one must think about dates differently. In Legacy JavaScript dates are ultimately wrappers for epoch milliseconds. While Temporal dates _can_ do this, they are not necessarily this. This means that you can have a Temporal Date object (or a time object) that is completely divorced from epoch milliseconds. 
+Temporal separates these ideas.
 
-# Most common use cases (for me at least)
+With Temporal, you can represent:
+- a **calendar date** with no time,
+- a **time of day** with no date,
+- a **date and time** with no timezone,
+- or a **fully qualified instant in time** tied to a location.
 
-As far as I understand the naming convention, anything that begins with `Plain` is disconnected from epoch milliseconds.
+Some Temporal objects can be converted to epoch milliseconds. Others are intentionally *disconnected* from them.
+
+That distinction is the core design improvement.
+
+## Common use cases (for me, at least)
+
+A useful naming rule of thumb:
+
+> Temporal types that start with `Plain` are **not tied to epoch milliseconds**.
 
 ### `PlainDate`
-One can create a plain date like so:
 
-input:
-```javascript
-// today can be an ISO string or an object
-const today = '2022-09-10'
-// or 
-// const today = { year: 2022, month: 9, day: 10 }
-const temporalToday = Temporal.PlainDate.from(today)
+A `PlainDate` represents a calendar date without time or timezone.
+
+```js
+const today = "2022-09-10";
+// or:
+// const today = { year: 2022, month: 9, day: 10 };
+
+const temporalToday = Temporal.PlainDate.from(today);
 ```
 
-`temporalToday` is an object with the following characteristics:
+The resulting object contains much more than just year, month, and day:
 
-```javascript
+```js
 {
-  calendar: Calendar {
-    id: 'iso8601'},
+  calendar: Calendar { id: "iso8601" },
+  year: 2022,
+  month: 9,
   day: 10,
   dayOfWeek: 6,
   dayOfYear: 253,
-  daysInMonth: 30,
-  daysInWeek: 7,
-  daysInYear: 365,
-  era: undefined,
-  eraYear: undefined,
-  inLeapYear: false,
-  month: 9,
-  monthCode: "M09",
-  monthsInYear: 12,
   weekOfYear: 36,
-  year: 2022
+  daysInMonth: 30,
+  daysInYear: 365,
+  inLeapYear: false
 }
 ```
 
-You can see that this provides a lot more information that simply the year, month, and date. Also, it's implied that the preferred calendar is iso8601, but there are other calendars that can be used, such as the Jewish or Chinese calendars.
+This information is available *without* extra libraries or manual calculations.
+
+The default calendar is `iso8601`, but Temporal supports others as well (for example, Hebrew or Chinese calendars).
 
 ### `PlainTime`
 
-Similar to `PlainDate` if the following is instantiated:
+`PlainTime` represents a time of day, independent of any date.
 
-```javascript
-const time = '13:55:14'
-const plainTimeNow = Temporal.PlainTime.from(time)
+```js
+const time = "13:55:14";
+const plainTimeNow = Temporal.PlainTime.from(time);
 ```
 
-The following object will be returned:
-
-```javascript
+```js
 {
-  calendar: Calendar {
-    id: 'iso8601'},
+  calendar: Calendar { id: "iso8601" },
   hour: 13,
-  microsecond: 0,
-  millisecond: 0,
   minute: 55,
-  nanosecond: 0,
-  second: 14
+  second: 14,
+  millisecond: 0,
+  microsecond: 0,
+  nanosecond: 0
 }
 ```
+
+This is ideal for schedules, business hours, or recurring daily events.
 
 ### `PlainDateTime`
 
-Like `PlainDate` and `PlainTime`, this returns an object, but with the attributes of both of them together. Remember that the input must be in ISO format or an object.
+`PlainDateTime` combines a date and a time—still with **no timezone**.
 
-```javascript
-const dateTime = '2022-09-10T13:55:14'
-// or
-// const dateTime = {
-//   year: 2022,
-//   month: 9,
-//   day: 10,
-//   hour: 13,
-//   minute: 55,
-//   second: 14
-// }
+```js
+const dateTime = "2022-09-10T13:55:14";
+// or an object with date + time fields
 
-const dateTimeNow = Temporal.PlainDateTime.from(dateTime)
+const dateTimeNow = Temporal.PlainDateTime.from(dateTime);
 ```
 
-```javascript
-{
-  ...
-  day: 10
-  dayOfWeek: 6
-  dayOfYear: 253,
-  daysInMonth: 30,
-  daysInWeek: 7,
-  daysInYear: 365,
-  era: undefined,
-  eraYear: undefined,
-  hour: 13,
-  inLeapYear: false,
-  microsecond: 0,
-  millisecond: 0,
-  minute: 55,
-  month: 9,
-  monthCode: "M09",
-  monthsInYear: 12,
-  nanosecond: 0,
-  second: 14,
-  weekOfYear: 36,
-  year: 2022
-}
-```
+It contains the combined fields you’d expect from `PlainDate` and `PlainTime` together.
 
-This is pretty self explanatory once the previous 2 sections are understood.
+This is useful when the *local date and time matter*, but the absolute instant does not.
 
 ### `ZonedDateTime`
 
-Notice that `ZonedDateTime` isn't preceded by the work "plain". This is because there is a full time _and_ location, and therefore epoch milliseconds can be calculated. 
+Notice that this type is **not** prefixed with `Plain`.
 
-Note that only an object or [epoch nanoseconds](https://tc39.es/proposal-temporal/docs/zoneddatetime.html#new-Temporal-ZonedDateTime) can be passed into `ZonedDateTime`. I don't have a sample of using epoch nanoseconds since it's outside of my use case. 
+`ZonedDateTime` represents a specific moment in time *at a specific location*, which means it **can** be converted to epoch values.
 
-```javascript
+```js
 const hereAndNow = {
   year: 2020,
   month: 9,
@@ -148,109 +126,124 @@ const hereAndNow = {
   hour: 13,
   minute: 55,
   second: 14,
-  timeZone: 'America/New_York'
-}
-const zonedDateTime = Temporal.ZonedDateTime.from(hereAndNow)
+  timeZone: "America/New_York"
+};
+
+const zonedDateTime = Temporal.ZonedDateTime.from(hereAndNow);
 ```
 
-This will produce:
-```javascript
+This produces a very rich object:
+
+```js
 {
+  year: 2020,
+  month: 9,
   day: 10,
-  dayOfWeek: 4,
-  dayOfYear: 254,
-  daysInMonth: 30,
-  daysInWeek: 7,
-  daysInYear: 366,
-  epochMicroseconds: 1599760514000000n,
+  hour: 13,
+  minute: 55,
+  second: 14,
+  timeZone: { id: "America/New_York" },
+  offset: "-04:00",
   epochMilliseconds: 1599760514000,
   epochNanoseconds: 1599760514000000000n,
-  epochSeconds: 1599760514,
-  era: undefined,
-  eraYear: undefined,
-  hour: 13,
-  hoursInDay: 24,
   inLeapYear: true,
-  microsecond: 0,
-  millisecond: 0,
-  minute: 55,
-  month: 9,
-  monthCode: "M09",
-  monthsInYear: 12,
-  nanosecond: 0,
-  offset: "-04:00",
-  offsetNanoseconds: -14400000000000,
-  second: 14,
-  timeZone: {
-    id: "America/New_York",
-  },
-  weekOfYear: 37,
-  year: 2020,
+  weekOfYear: 37
 }
 ```
 
-Look at all those attributes available to us! Notice that the `epochMilliseconds` are there along with `epochMircoseconds` and others. 
-
-This makes saving this information to the database extremely easy.
+This is the Temporal type you’ll most often use when persisting timestamps to a database or interacting with external systems.
 
 ### `Instant`
 
-`Instant` can be instantiated from _either_ a date string, or a number. The number can be epoch milliseconds, nanoseconds, or microseconds. Since I work with epoch milliseconds, that's what I'll show. Assume my timezone is UTC right now.
+An `Instant` represents **a single, absolute moment in time**, independent of timezone or calendar.
 
-```javascript
-const todayString = '2022-09-10T13:55Z'
-const todayMilliseconds = 1662818100000
+It can be created from:
+
+* an ISO string with a timezone, or
+* epoch milliseconds / microseconds / nanoseconds
+
+```js
+const todayString = "2022-09-10T13:55Z";
+const todayMilliseconds = 1662818100000;
+
+const fromString = Temporal.Instant.from(todayString);
+const fromMilliseconds =
+  Temporal.Instant.fromEpochMilliseconds(todayMilliseconds);
 ```
 
-Note: There is an added `Z` at the end of the string date to denote the timezone. 
+Both produce the same result:
 
-There's also a slight difference to how one interacts with the two different types of dates.
-
-Note: Objects cannot be passed in as an argument the way we did above with the `Plain` Temporal objects.
-
-```javascript
-const fromString = Temporal.Instant.from(todayString)
-const fromMilliseconds = 
-  Temporal.Instant.fromEpochMilliseconds(todayMilliseconds)
-```
-
-Both of these are the same date so they will output the same information.
-
-```javascript 
+```js
 {
-  epochMicroseconds: 1662818100000000n
-  epochMilliseconds: 1662818100000
+  epochSeconds: 1662818100,
+  epochMilliseconds: 1662818100000,
+  epochMicroseconds: 1662818100000000n,
   epochNanoseconds: 1662818100000000000n
-  epochSeconds: 1662818100
 }
 ```
 
-# Coercion
+`Instant` is the Temporal equivalent of a raw timestamp.
 
-The biggest frustration I had was figuring out how to coerce a `Plain` object into an `Instant` and vice versa. **This section is the reason I'm writing this piece**.
+## Coercion between Temporal types
 
-The problem I encountered was **how do I read epochMilliseconds and coerce them into other Temporal types?** 
+This was the **most confusing part** of Temporal for me—and the main reason I’m writing this article.
 
-The answer! `with` and `to`.
+The question I kept running into was:
 
-Let's say I had a value in the db called `createdAt` (really clever, I know) which is stored as a UTC timestamp. How could this be coerced into a Temporal object (PlainTime, PlainDate, or PlainDateTime)?
+> *How do I take epoch milliseconds from the database and turn them into usable Temporal objects?*
 
-The first step is to convert that into a `ZonedDateTime`. But before doing that a timezone is required. For this I'm going to use my local timezone.
+The answer lies in **`to`** and **`with`** methods.
 
-```javascript
-const myTZ = Temporal.timezone.from('America/New_York')
-const createdAt = 1662818100000
-const createdAtInstant = 
-  Temporal.Instant.fromEpochMilliseconds(createdAt)
-const zonedCreatedAt = createdAtInstant.toZonedDateTime({
-  timeZone: tz,
-  calendar: 'iso8601'
-})
+### From epoch milliseconds → Temporal types
+
+Let’s say your database stores a UTC timestamp:
+
+```js
+const createdAt = 1662818100000;
 ```
 
-It's a bit much, but now `zonedCreatedAt` is a Temporal `ZonedDateTime` created from an instant that was created from an epoch millisecond timestamp. 
+Step 1: Convert it to an `Instant`.
 
-If you wanted to convert the above to another Temporal type `toPlainDate` and `toPlainTime` can be used on `zonedCreatedAt`.
+```js
+const createdAtInstant =
+  Temporal.Instant.fromEpochMilliseconds(createdAt);
+```
 
-# Conclusion 
-This was a bit of a primer. If you go through the documentation there are other ways to do some of the things I showed above and there are more details to know.
+Step 2: Convert the `Instant` to a `ZonedDateTime` by supplying a timezone.
+
+```js
+const tz = "America/New_York";
+
+const zonedCreatedAt = createdAtInstant.toZonedDateTime({
+  timeZone: tz,
+  calendar: "iso8601"
+});
+```
+
+Now you have a fully qualified Temporal object tied to a location.
+
+From here, you can easily derive other Temporal types:
+
+```js
+const plainDate = zonedCreatedAt.toPlainDate();
+const plainTime = zonedCreatedAt.toPlainTime();
+const plainDateTime = zonedCreatedAt.toPlainDateTime();
+```
+
+This explicit conversion chain is intentional—and far safer than the implicit timezone behavior of `Date`.
+
+## Conclusion
+
+This article is meant as a **practical primer**, not a complete guide.
+
+Temporal has many more features:
+
+* duration arithmetic
+* calendar conversions
+* precise rounding
+* safe timezone handling
+
+But even at a basic level, it offers something legacy `Date` never did:
+**clear, explicit representations of time.**
+
+Once you internalize the difference between `Plain`, `Zoned`, and `Instant`, Temporal starts to feel less magical—and a lot more trustworthy.
