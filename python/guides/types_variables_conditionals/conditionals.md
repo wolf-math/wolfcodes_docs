@@ -287,7 +287,7 @@ if color in ["red", "green", "blue"]:
     print("Primary color")
 ```
 
-This checks if `color` is one of the values in the list. You'll learn more about lists and the `in` operator in the [iterables section](../iterables/lists).
+This checks if `color` is one of the values in the list. You'll learn more about lists and the `in` operator in the [data structures section](../data strcutures/lists).
 
 ### Checking type (with `isinstance`)
 

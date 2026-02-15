@@ -117,7 +117,7 @@ Collections are types that can hold multiple values:
 - **Mutable** types (like `list`) can be changed after you create them. You can add, remove, or modify items.
 - **Immutable** types (like `tuple` and `str`) cannot be changed after creation. If you need to change them, you create a new one.
 
-Don't worry if this seems abstract right now. You'll get lots of practice with these types in the coming sections: [lists](../iterables/lists), [dictionaries](../iterables/dictionaries), and [sets](../iterables/sets).
+Don't worry if this seems abstract right now. You'll get lots of practice with these types in the coming sections: [lists](../data_structures/lists), [dictionaries](../data_structures/dictionaries), and [sets](../data_structures/sets).
 
 ### Bytes (binary data)
 
