@@ -10,6 +10,7 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
 ## What are lists?
 
 Lists are one of Python's most versatile data structures. They let you store and organize multiple items in a single variable, making it easy to work with collections of data.
@@ -53,7 +54,7 @@ scores = [95, 87, 92, 78]
 
 ### Using the `list()` constructor
 
-You can also create lists using the [`list()`](../../language_reference/list) constructor:
+You can also create lists using the [`list()`](/docs/python/language_reference/list) constructor:
 
 ```python
 numbers = list([1, 2, 3])
@@ -292,7 +293,7 @@ print(repeated)  # [1, 2, 3, 1, 2, 3, 1, 2, 3]
 
 ### Iteration
 
-Loop through items with [`for`](./for_loops) loops:
+Loop through items with [`for`](/docs/python/guides/control_flow/for_loops) loops:
 
 ```python
 fruits = ['apple', 'banana', 'orange']

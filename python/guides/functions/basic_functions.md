@@ -104,7 +104,7 @@ greet("Charlie")  # "Hello, Charlie!"
 
 ## Parameters and arguments
 
-**Parameters** are the names listed in the function definition. **Arguments** are the values you pass to the function when you call it. Learn more about [variables](/docs/python/guides/types_variables_conditionals/variables) to understand how parameters work.
+**Parameters** are the names listed in the function definition. **Arguments** are the values you pass to the function when you call it. Learn more about [variables](/docs/python/guides/types_variables/variables) to understand how parameters work.
 
 ### Positional arguments
 

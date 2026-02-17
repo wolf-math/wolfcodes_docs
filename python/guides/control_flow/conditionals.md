@@ -103,7 +103,7 @@ In the example above, `score` is 85, so:
 
 ## Truthiness in conditionals
 
-Python evaluates conditions based on truthiness (which you learned about in the [truthiness guide](./truthiness)). This means you can use any value in a condition, not just `True` or `False`.
+Python evaluates conditions based on truthiness (which you learned about in the [truthiness guide](../types_variables/truthiness)). This means you can use any value in a condition, not just `True` or `False`.
 
 These values are **falsy** (treated as `False`):
 - `False`

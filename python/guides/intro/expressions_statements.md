@@ -26,7 +26,7 @@ Think of expressions as "questions" that Python answers with a value. When Pytho
 **Key idea:** Expressions have a value. You can use them anywhere you need a value.
 
 :::note
-You'll learn more about expressions when you study [operators](../types_variables_conditionals/operators). For now, just know that expressions produce values.
+You'll learn more about expressions when you study [operators](../types_variables/operators). For now, just know that expressions produce values.
 :::
 
 ### Statements
@@ -45,7 +45,7 @@ Statements:
 **Key idea:** Statements are "commands" that Python executes. They do work but don't give you a value back.
 
 :::note
-You'll see more examples of statements when you learn about [variables](../types_variables_conditionals/variables) and [conditionals](../types_variables_conditionals/conditionals). For now, just know that statements perform actions.
+You'll see more examples of statements when you learn about [variables](../types_variables/variables) and [conditionals](../control_flow/conditionals). For now, just know that statements perform actions.
 :::
 
 ### Why this matters
@@ -60,7 +60,7 @@ Understanding expressions vs statements helps you understand:
   - Expressions give you something you can use
   - Statements just do work
 
-This distinction will become clearer as you learn more about [operators](../types_variables_conditionals/operators) and other Python features. For now, just remember: expressions produce values, statements perform actions.
+This distinction will become clearer as you learn more about [operators](../types_variables/operators) and other Python features. For now, just remember: expressions produce values, statements perform actions.
 
 ## Summary
 

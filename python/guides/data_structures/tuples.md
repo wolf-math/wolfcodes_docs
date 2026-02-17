@@ -212,7 +212,7 @@ print(repeated)  # (1, 2, 1, 2, 1, 2)
 
 ### Iteration
 
-Loop through items with [`for`](./for_loops) loops:
+Loop through items with [`for`](/docs/python/guides/control_flow/for_loops) loops:
 
 ```python
 fruits = ('apple', 'banana', 'orange')

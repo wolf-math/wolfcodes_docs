@@ -96,7 +96,7 @@ Congratulations! You've written and run your first Python program!
 Let's break down what you did:
 
 - **`print()`** is a built-in Python function that displays text (or other values) on the screen
-- **`"Hello, World!"`** is a [string](../types_variables_conditionals/types), which is a piece of text enclosed in quotes
+- **`"Hello, World!"`** is a [string](../types_variables/types), which is a piece of text enclosed in quotes
 - When you ran the program, Python executed the `print()` function and displayed the message
 
 ## Next steps

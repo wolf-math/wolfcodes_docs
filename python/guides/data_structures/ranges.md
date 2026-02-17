@@ -322,7 +322,7 @@ If you need non-integer sequences, you'll need to create them differently (we'll
 
 ## Using ranges with loops
 
-Ranges are commonly used with [for loops](./for_loops) to repeat actions a specific number of times or to iterate through sequences. We'll explore loops in detail in the next section, but here's a brief preview:
+Ranges are commonly used with [for loops](/docs/python/guides/control_flow/for_loops) to repeat actions a specific number of times or to iterate through sequences. We'll explore loops in detail in the next section, but here's a brief preview:
 
 ```python
 # Ranges work perfectly with for loops

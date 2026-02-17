@@ -10,7 +10,7 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
-While loops repeat code as long as a condition remains true. Unlike [for loops](./for_loops) that iterate over a fixed collection, while loops continue until their condition becomes false, making them perfect for situations where you don't know in advance how many iterations you'll need.
+While loops repeat code as long as a condition remains true. Unlike [for loops](/docs/python/guides/control_flow/for_loops) that iterate over a fixed collection, while loops continue until their condition becomes false, making them perfect for situations where you don't know in advance how many iterations you'll need.
 
 ## What are while loops?
 
@@ -56,7 +56,7 @@ If we don't increment `count`, the loop can run [infinitely](#infinite-loops).
 
 Both loops repeat code, but they're used in different situations:
 
-- **[For loops](./for_loops)**: When you know what you're iterating over ([lists](./lists), [ranges](./ranges), etc.) or how many times to repeat
+- **[For loops](/docs/python/guides/control_flow/for_loops)**: When you know what you're iterating over ([lists](/docs/python/guides/data_structures/lists), [ranges](/docs/python/guides/data_structures/ranges), etc.) or how many times to repeat
 - **While loops**: When you need to repeat until a condition changes, and you don't know the exact number of iterations
 
 ```python
@@ -133,7 +133,7 @@ while age is None:
 # (loop exits, age is now 25)
 ```
 
-The [`isdigit`](../../language_reference/string#isdigit) method checks if a string can be cast into a number. If `user_input.isdigit()` returns `True`, then the user input a number, otherwise the loop repeats. 
+The [`isdigit`](/docs/python/language_reference/string#isdigit) method checks if a string can be cast into a number. If `user_input.isdigit()` returns `True`, then the user input a number, otherwise the loop repeats. 
 
 ### Processing until a value changes
 

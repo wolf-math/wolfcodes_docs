@@ -10,6 +10,7 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
 Sequences are a fundamental concept in Python. They represent ordered collections of items that you can access by position. This guide introduces the concept of sequences and sets the foundation for understanding lists, tuples, ranges, and other ordered data structures covered in this section.
 
 ## What are sequences?
@@ -88,7 +89,7 @@ The `in` operator checks for the presence of a single element (like a number or 
 
 ### Iteration
 
-You can loop through sequences to process each item. You'll learn about [for loops](./for_loops) in detail later, but here's a quick preview:
+You can loop through sequences to process each item. You'll learn about [for loops](/docs/python/guides/control_flow/for_loops) in detail later, but here's a quick preview:
 
 ```python
 for char in "abc":
@@ -146,8 +147,8 @@ The following guides will explore each sequence type in detail:
 - **[Tuples](./tuples)**: Discover when and why to use immutable sequences
 - **[Sets](./sets)**: Explore unordered collections (not sequences, but related)
 - **[Ranges](./ranges)**: Understand efficient numeric sequences
-- **[For loops](./for_loops)**: Learn to iterate over sequences and other iterables
-- **[While loops](./while_loops)**: Master conditional iteration
+- **[For loops](/docs/python/guides/control_flow/for_loops)**: Learn to iterate over sequences and other iterables
+- **[While loops](/docs/python/guides/control_flow/while_loops)**: Master conditional iteration
 - **[Dictionaries](./dictionaries)**: Work with key-value pairs (not sequences, but essential collections)
 - **[Comprehensions](./comprehensions)**: Create sequences concisely
 

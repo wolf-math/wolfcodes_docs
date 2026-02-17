@@ -39,7 +39,7 @@ Truthiness is fundamental to Python programming because:
 - **Common patterns**: Many Python code patterns rely on truthiness
 
 :::note
-You'll see truthiness in action when you learn about [conditionals](./conditionals) (making decisions in your code). For now, we'll focus on understanding which values are truthy and which are falsy.
+You'll see truthiness in action when you learn about [conditionals](/docs/python/guides/control_flow/conditionals) (making decisions in your code). For now, we'll focus on understanding which values are truthy and which are falsy.
 :::
 
 ## Falsy values
@@ -338,7 +338,7 @@ False
 - Use **explicit comparisons** (`value == 0`, `value is None`) when you need to check for a specific value
 
 :::note
-When you learn about [conditionals](./conditionals), you'll see that `if value:` uses truthiness, while `if value is not None:` uses explicit comparison. Both have their place, and you'll learn when to use each one.
+When you learn about [conditionals](/docs/python/guides/control_flow/conditionals), you'll see that `if value:` uses truthiness, while `if value is not None:` uses explicit comparison. Both have their place, and you'll learn when to use each one.
 :::
 
 ## Common pitfalls
@@ -426,4 +426,4 @@ Truthiness is a powerful Python feature that makes code more readable:
 - **Default values**: Use `or` to provide fallback values when something is falsy (e.g., `name or "Anonymous"`)
 - **Best practices**: Use `bool()` for explicit conversion, be explicit when you need to check for specific values
 
-Understanding truthiness helps you write cleaner, more readable code. You'll use this knowledge extensively when you learn about [conditionals](./conditionals) (making decisions in your code)!
+Understanding truthiness helps you write cleaner, more readable code. You'll use this knowledge extensively when you learn about [conditionals](/docs/python/guides/control_flow/conditionals) (making decisions in your code)!

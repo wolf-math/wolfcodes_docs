@@ -193,7 +193,7 @@ Dunder (double underscore) methods are a list of operations that can be made on 
 
 ## String methods
 
-### capitalize
+### `capitalize`
 
 Capitalizes the first letter in a string.
 

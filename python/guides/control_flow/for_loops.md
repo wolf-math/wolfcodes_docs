@@ -10,7 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
-For loops let you repeat code for each item in a sequence or iterable. They're one of the most powerful features in Python, allowing you to process collections of data efficiently. You've already seen sequences like [lists](./lists), [tuples](./tuples), strings, [sets](./sets), and [ranges](./ranges). Use `for loops` to work with all of them.
+
+For loops let you repeat code for each item in a sequence or iterable. They're one of the most powerful features in Python, allowing you to process collections of data efficiently. You've already seen sequences like [lists](../data_structures/lists), [tuples](../data_structures/tuples), strings, [sets](../data_structures/sets), and [ranges](../data_structures/ranges). Use `for loops` to work with all of them.
 
 ## What are for loops?
 
@@ -33,7 +34,7 @@ The loop variable takes on each value from the iterable in turn, and the indente
 
 ## Iterating over lists
 
-Loop through each item in a [list](./lists):
+Loop through each item in a [list](../data_structures/lists):
 
 ```python
 fruits = ['apple', 'banana', 'orange']
@@ -97,7 +98,7 @@ Strings are sequences of characters, so loops process them character by characte
 
 ## Iterating over ranges
 
-As we saw in the [ranges](./ranges) section, ranges are perfect for loops:
+As we saw in the [ranges](../data_structures/ranges) section, ranges are perfect for loops:
 
 ```python
 # Count from 0 to 4
@@ -128,7 +129,7 @@ Ranges are memory-efficient and commonly used when you need to repeat code a spe
 
 ## Iterating over sets
 
-Loop through items in a [set](./sets) (order may vary):
+Loop through items in a [set](../data_structures/sets) (order may vary):
 
 ```python
 colors = {'red', 'green', 'blue'}
@@ -143,7 +144,7 @@ Sets are unordered, so the iteration order may vary between runs. Don't rely on 
 
 ## Iterating over tuples
 
-[Tuples](./tuples) work just like lists in loops:
+[Tuples](../data_structures/tuples) work just like lists in loops:
 
 ```python
 coordinates = (3, 4)
@@ -168,7 +169,7 @@ for point in points:
 
 ## Getting indices with enumerate()
 
-Often you need both the index and the value. Use [`enumerate()`](../../language_reference/built-in#enumerate) instead of `range(len())`:
+Often you need both the index and the value. Use [`enumerate()`](/docs/python/language_reference/built-in#enumerate) instead of `range(len())`:
 
 ```python
 fruits = ['apple', 'banana', 'orange']
@@ -202,7 +203,7 @@ for i in range(len(fruits)):
 
 ## Iterating over dictionaries
 
-[Dictionaries](./dictionaries) have special iteration behavior. By default, you iterate over keys:
+[Dictionaries](/docs/python/guides/data_structures/dictionaries) have special iteration behavior. By default, you iterate over keys:
 
 ```python
 person = {'name': 'Alice', 'age': 30, 'city': 'Boston'}
@@ -497,16 +498,16 @@ squares = [num ** 2 for num in range(5)]
 # [0, 1, 4, 9, 16]
 ```
 
-List comprehensions will be covered in more detail in the [comprehensions guide](./comprehensions), but they're a powerful way to transform and filter data.
+List comprehensions will be covered in more detail in the [comprehensions guide](/docs/python/guides/data_structures/comprehensions), but they're a powerful way to transform and filter data.
 
 ## Best practices
 
 - **Use descriptive variable names**: `for fruit in fruits:` is better than `for x in fruits:`
-- **Use [`enumerate()`](../../language_reference/built-in#enumerate) instead of `range(len())`**: More Pythonic when you need indices
+- **Use [`enumerate()`](/docs/python/language_reference/built-in#enumerate) instead of `range(len())`**: More Pythonic when you need indices
 - **Don't modify collections while iterating**: Create new collections instead
 - **Use `break` and `continue` judiciously**: They can make code harder to follow if overused
 - **Consider list comprehensions**: For simple transformations and filtering
-- **Use [`zip()`](../../language_reference/built-in#zip) for parallel iteration**: When you need to process multiple sequences together. See the [built-in functions reference](../../language_reference/built-in) for more.
+- **Use [`zip()`](/docs/python/language_reference/built-in#zip) for parallel iteration**: When you need to process multiple sequences together. See the [built-in functions reference](/docs/python/language_reference/built-in) for more.
 - **Keep loops simple**: If a loop gets complex, consider breaking it into functions
 
 ```python
@@ -531,7 +532,7 @@ fruits = [f for f in fruits if f != 'banana']
 ## Summary
 
 For loops are essential for processing collections:
-- Iterate over any iterable ([lists](./lists), strings, [ranges](./ranges), [sets](./sets), [dictionaries](./dictionaries))
+- Iterate over any iterable ([lists](/docs/python/guides/data_structures/lists), strings, [ranges](/docs/python/guides/data_structures/ranges), [sets](/docs/python/guides/data_structures/sets), [dictionaries](/docs/python/guides/data_structures/dictionaries))
 - Use `enumerate()` to get indices
 - Control flow with `break` and `continue`
 - Use `else` clauses for search patterns
