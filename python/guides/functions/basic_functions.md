@@ -10,6 +10,7 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
 ## What are functions?
 
 **Functions** are reusable blocks of code that perform a specific task. They let you organize your code into logical units, avoid repetition, and make your programs easier to read and maintain. Once defined, a function can be called multiple times with different inputs.
