@@ -1,8 +1,7 @@
 ---
-id: development-setup
-title: Development Setup
+title: Development Setup on MacOS
 description: Set up your development environment with GitHub, VS Code, Node.js, Python, and essential tools.
-sidebar_label: Development Setup
+sidebar_label: MacOS Setup
 sidebar_position: 1
 tags:
   - development setup
@@ -12,13 +11,8 @@ tags:
 ---
 
 
-## 🚀 Setup Instructions (Python + JavaScript Bootcamp)
-
 Please **read carefully and execute all commands in order**.
 
-If something breaks, don’t grind blindly—ask for help early.
-
----
 
 ## 🧑‍💻 GitHub Account
 
@@ -30,9 +24,8 @@ If something breaks, don’t grind blindly—ask for help early.
     [https://docs.github.com/en/authentication/securing-your-account-with-two-factor-authentication-2fa](https://docs.github.com/en/authentication/securing-your-account-with-two-factor-authentication-2fa)
     
 
----
 
-## 🧠 Important macOS Note
+:::note 🧠 important note on macOS
 
 Closing a window ≠ quitting the app.
 
@@ -42,9 +35,8 @@ Use:
     or
     
 - Menu → Quit
-    
+:::    
 
----
 
 ## 🛠 Command Line Tools
 
@@ -54,7 +46,6 @@ xcode-select --install
 
 If already installed → continue.
 
----
 
 ## 🍺 Homebrew
 
@@ -91,7 +82,6 @@ brew upgrade jq || brew install jq
 brew upgrade openssl || brew install openssl
 ```
 
----
 
 ## 🧑‍💻 Visual Studio Code
 
@@ -107,7 +97,6 @@ Launch VS Code:
 code
 ```
 
----
 
 ## 🔌 VS Code Extensions
 
@@ -126,7 +115,6 @@ code --install-extension ms-python.vscode-pylance
 code --install-extension alexcvzz.vscode-sqlite
 ```
 
----
 
 ## 🤖 Disable AI Features (for now)
 
@@ -139,7 +127,6 @@ From the VS Code window:
 3. Enable **Disable and hide built-in AI features**
     
 
----
 
 ## 💻 Terminal Setup → iTerm2 (Recommended)
 
@@ -192,7 +179,6 @@ brew install font-meslo-lg-nerd-font
 
 
 
----
 
 ## 🐚 Oh My Zsh
 
@@ -202,7 +188,6 @@ sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.
 
 Press `Y` if prompted.
 
----
 
 ## 🔐 GitHub CLI (`gh`) Setup (SSH)
 
@@ -216,7 +201,7 @@ This lets you:
     
 ### 1. Login with `gh`
 
-Copy and paste the following into your terminal. **DO NOT edit the `email`**:
+Copy and paste the following into your terminal. **DO NOT edit the `email` field**:
 
 ```bash
 gh auth login -s 'user:email' --git-protocol ssh -w
@@ -279,7 +264,6 @@ You should see:
 ✓ Logged in to github.com as <your-username>
 ```
 
----
 
 ## 🐍 Python (pyenv)
 
@@ -314,7 +298,6 @@ Check:
 python --version
 ```
 
----
 
 ## 📦 Python Tools
 
@@ -331,7 +314,6 @@ Useful tools:
 pip install black flake8 pytest ipython
 ```
 
----
 
 ## 🟢 Node.js (nvm)
 
@@ -362,7 +344,6 @@ node -v
 npm -v
 ```
 
----
 
 ## 🗄 SQLite
 
@@ -372,7 +353,6 @@ brew install sqlite
 sqlite3 --version
 ```
 
----
 
 ## 🐘 PostgreSQL
 
@@ -396,7 +376,6 @@ Exit with:
 \q
 ```
 
----
 
 ## 🧪 Final Check
 
@@ -411,53 +390,14 @@ psql --version
 sqlite3 --version
 git --version
 ```
-
----
-
-## 💬 Slack
-
-Download: [https://slack.com/downloads/mac](https://slack.com/downloads/mac)
-
-- Join workspace
-    
-- Upload profile picture
-    
-- Test audio/video
     
 
----
-
-## ⚡ Keyboard Optimization
-
-Set:
-
-- Fast key repeat
-    
-- Short delay
-    
-
----
-
-## 📌 Pin to Dock
-
-Pin:
-
-- iTerm
-    
-- VS Code
-    
-- Browser
-    
-- Slack
-    
-
----
 
 ## 🎉 You’re Done!
 
 Your machine is now ready for:
 
-- 🐍 Python development (APIs, data, scripting)
-- ⚛️ JavaScript development (Node + frontend)
-- 🗄 Databases (Postgres + SQLite)
+* 🐍 [Python development](../../python/)
+* ⚛️ [JavaScript development](../../javascript/)
+* 🗄 [SQL Databases](../../sql/)
     
