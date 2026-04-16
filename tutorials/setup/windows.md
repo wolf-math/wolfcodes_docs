@@ -1,5 +1,4 @@
 ---
-id: development-setup-windows
 title: Development Setup for Windows
 description: Set up your development environment on Windows using WSL, GitHub, VS Code, Node.js, Python, and essential tools.
 sidebar_label: Windows Setup

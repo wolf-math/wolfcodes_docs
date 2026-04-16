@@ -1,5 +1,4 @@
 ---
-id: development-setup-linux
 title: Development Setup for Linux
 description: Set up your development environment on Linux using GitHub, VS Code, Node.js, Python, and essential tools.
 sidebar_label: Linux Setup
