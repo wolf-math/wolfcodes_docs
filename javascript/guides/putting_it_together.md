@@ -11,313 +11,406 @@ source:
   canonical_url: https://wolfcodes.dev
 ---
 
-## Congratulations!
+## What does "putting it together" mean?
 
-You've learned the fundamentals of JavaScript! This guide shows you how to combine everything you've learned to write real JavaScript programs.
+Learning JavaScript one concept at a time is useful.
 
-## Reading real JavaScript code
+Writing real JavaScript means combining those concepts:
 
-Let's look at a complete example that combines multiple concepts:
+- Variables hold values.
+- Objects group related data.
+- Arrays hold lists.
+- Functions name reusable behavior.
+- Conditionals make decisions.
+- Loops and array methods repeat work.
+- Classes model stateful things.
+- Modules organize code across files.
+- Async code handles work that finishes later.
+- Errors help you deal with failure.
+
+This guide shows how those pieces fit together in normal programs.
+
+## Why this matters
+
+Most real code is not "just arrays" or "just functions."
+
+You might use an array of objects, pass it into a function, validate it with a conditional, transform it with `map`, and handle an error if something goes wrong.
+
+The goal is not to use every feature at once.
+
+The goal is to choose the pieces that make the code clear.
+
+## A small data-processing program
+
+Start with a simple list of users.
 
 ```javascript
-// userService.js
-export class UserService {
-  constructor(apiUrl) {
-    this.apiUrl = apiUrl;
-    this.users = [];
+const users = [
+  { id: 1, name: "Maya", active: true, points: 42 },
+  { id: 2, name: "Nia", active: false, points: 18 },
+  { id: 3, name: "Ari", active: true, points: 31 },
+];
+```
+
+This uses an array to hold multiple users.
+
+Each user is an object with related data.
+
+Now add a function that answers one question.
+
+```javascript
+function getActiveUsers(users) {
+  return users.filter((user) => user.active);
+}
+
+const activeUsers = getActiveUsers(users);
+
+console.log(activeUsers);
+```
+
+`filter` creates a new array containing only the users where `user.active` is `true`.
+
+## Adding a derived value
+
+Programs often need to turn raw data into a useful result.
+
+```javascript
+function getTotalPoints(users) {
+  return users.reduce((total, user) => total + user.points, 0);
+}
+
+const totalPoints = getTotalPoints(activeUsers);
+
+console.log(totalPoints);
+```
+
+`reduce` combines the array into one value.
+
+In this case, it adds up the `points` values for all active users.
+
+## Formatting output
+
+A separate function can handle presentation.
+
+```javascript
+function formatUserSummary(users) {
+  const activeUsers = getActiveUsers(users);
+  const totalPoints = getTotalPoints(activeUsers);
+
+  return `${activeUsers.length} active users have ${totalPoints} total points.`;
+}
+
+console.log(formatUserSummary(users));
+```
+
+This function combines other functions instead of doing all the work itself.
+
+That is a common pattern in JavaScript: write small functions, then compose them into larger behavior.
+
+## Adding decisions
+
+Use conditionals when the program needs to branch.
+
+```javascript
+function getStatusMessage(user) {
+  if (!user.active) {
+    return `${user.name} is inactive.`;
   }
 
-  async fetchUsers() {
-    try {
-      const response = await fetch(`${this.apiUrl}/users`);
-      const data = await response.json();
-      this.users = data;
-      return this.users;
-    } catch (error) {
-      console.error("Failed to fetch users:", error);
-      throw error;
-    }
+  if (user.points >= 40) {
+    return `${user.name} is a top contributor.`;
   }
 
-  findUserById(id) {
-    return this.users.find(user => user.id === id);
+  return `${user.name} is active.`;
+}
+
+for (const user of users) {
+  console.log(getStatusMessage(user));
+}
+```
+
+The `for...of` loop reads each user.
+
+The function decides which message to return.
+
+## Grouping behavior with a class
+
+A class is useful when data and behavior belong together.
+
+```javascript
+class Scoreboard {
+  constructor(users) {
+    this.users = users;
   }
 
   getActiveUsers() {
-    return this.users.filter(user => user.isActive);
+    return this.users.filter((user) => user.active);
+  }
+
+  getTotalPoints() {
+    return this.getActiveUsers().reduce((total, user) => {
+      return total + user.points;
+    }, 0);
+  }
+
+  getSummary() {
+    return `${this.getActiveUsers().length} active users have ${this.getTotalPoints()} total points.`;
   }
 }
 
+const scoreboard = new Scoreboard(users);
+
+console.log(scoreboard.getSummary());
+```
+
+The `Scoreboard` class owns the list of users.
+
+Its methods describe the operations that belong to that list.
+
+## Organizing code with modules
+
+As a program grows, split related code into files.
+
+```javascript
+// scoreboard.js
+export class Scoreboard {
+  constructor(users) {
+    this.users = users;
+  }
+
+  getActiveUsers() {
+    return this.users.filter((user) => user.active);
+  }
+
+  getTotalPoints() {
+    return this.getActiveUsers().reduce((total, user) => {
+      return total + user.points;
+    }, 0);
+  }
+}
+```
+
+```javascript
 // main.js
-import { UserService } from './userService.js';
+import { Scoreboard } from "./scoreboard.js";
+
+const users = [
+  { id: 1, name: "Maya", active: true, points: 42 },
+  { id: 2, name: "Nia", active: false, points: 18 },
+  { id: 3, name: "Ari", active: true, points: 31 },
+];
+
+const scoreboard = new Scoreboard(users);
+
+console.log(scoreboard.getTotalPoints());
+```
+
+Modules help you keep each file focused.
+
+They also make code easier to reuse and test.
+
+## Handling async work
+
+Some work finishes later, such as reading from a database or calling an API.
+
+This example uses a promise to imitate loading data.
+
+```javascript
+function loadUsers() {
+  return Promise.resolve([
+    { id: 1, name: "Maya", active: true, points: 42 },
+    { id: 2, name: "Nia", active: false, points: 18 },
+    { id: 3, name: "Ari", active: true, points: 31 },
+  ]);
+}
+
+function getTotalPoints(users) {
+  return users.reduce((total, user) => total + user.points, 0);
+}
 
 async function main() {
-  const userService = new UserService("https://api.example.com");
-  
+  const users = await loadUsers();
+
+  console.log(getTotalPoints(users));
+}
+
+main();
+```
+
+`await` pauses the `main` function until the promise resolves.
+
+Then the rest of the code can use the loaded users like normal data.
+
+## Handling errors
+
+Real programs need to handle failure.
+
+```javascript
+function loadUsers() {
+  return Promise.reject(new Error("Could not load users"));
+}
+
+function getTotalPoints(users) {
+  return users.reduce((total, user) => total + user.points, 0);
+}
+
+async function main() {
   try {
-    const users = await userService.fetchUsers();
-    console.log(`Loaded ${users.length} users`);
-    
-    const activeUsers = userService.getActiveUsers();
-    console.log(`Found ${activeUsers.length} active users`);
-    
-    const user = userService.findUserById(1);
-    if (user) {
-      console.log(`User: ${user.name}`);
-    }
+    const users = await loadUsers();
+
+    console.log(getTotalPoints(users));
   } catch (error) {
-    console.error("Error in main:", error);
+    console.error(error.message);
   }
 }
 
 main();
 ```
 
-**What's happening here?**
+The `try` block contains the work that might fail.
 
-1. **Classes** — `UserService` is a class with methods and instance data
-2. **Modules** — code split across files with `export`/`import`
-3. **Async/await** — handling asynchronous API calls
-4. **Arrays** — using `find()` and `filter()` methods
-5. **Error handling** — `try/catch` blocks
-6. **Functions** — `main()` function to organize code
+The `catch` block decides what to do with the error.
 
-This is what real JavaScript code looks like—combining many concepts together.
+## A complete example
 
-## Combining functions, objects, and async
-
-Here's another example showing how different concepts work together:
+Here is a small program that combines the same ideas.
 
 ```javascript
-// utils.js
-export function formatCurrency(amount) {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD'
-  }).format(amount);
-}
-
-export function calculateTotal(items) {
-  return items.reduce((sum, item) => sum + item.price, 0);
-}
-
-// cart.js
-import { formatCurrency, calculateTotal } from './utils.js';
-
-export class ShoppingCart {
-  constructor() {
-    this.items = [];
+class TodoList {
+  constructor(todos) {
+    this.todos = todos;
   }
 
-  addItem(item) {
-    this.items.push(item);
+  addTodo(text) {
+    this.todos.push({
+      id: this.todos.length + 1,
+      text,
+      completed: false,
+    });
   }
 
-  removeItem(itemId) {
-    this.items = this.items.filter(item => item.id !== itemId);
-  }
+  completeTodo(id) {
+    const todo = this.todos.find((todo) => todo.id === id);
 
-  getTotal() {
-    return calculateTotal(this.items);
-  }
-
-  getFormattedTotal() {
-    return formatCurrency(this.getTotal());
-  }
-
-  async checkout() {
-    try {
-      const total = this.getTotal();
-      const response = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items: this.items,
-          total: total
-        })
-      });
-      
-      if (!response.ok) {
-        throw new Error('Checkout failed');
-      }
-      
-      const result = await response.json();
-      this.items = []; // Clear cart
-      return result;
-    } catch (error) {
-      console.error('Checkout error:', error);
-      throw error;
+    if (!todo) {
+      throw new Error("Todo not found");
     }
+
+    todo.completed = true;
+  }
+
+  getOpenTodos() {
+    return this.todos.filter((todo) => !todo.completed);
+  }
+
+  getSummary() {
+    const openCount = this.getOpenTodos().length;
+    return `${openCount} todos left.`;
   }
 }
 
-// main.js
-import { ShoppingCart } from './cart.js';
-
-const cart = new ShoppingCart();
-cart.addItem({ id: 1, name: 'Laptop', price: 999.99 });
-cart.addItem({ id: 2, name: 'Mouse', price: 29.99 });
-
-console.log(`Total: ${cart.getFormattedTotal()}`);
-
-cart.checkout()
-  .then(result => {
-    console.log('Order placed:', result);
-  })
-  .catch(error => {
-    console.error('Failed to checkout:', error);
-  });
-```
-
-**Key concepts demonstrated:**
-
-- **Functions** — `formatCurrency`, `calculateTotal` as utility functions
-- **Objects/Classes** — `ShoppingCart` class with state and methods
-- **Arrays** — `push`, `filter`, `reduce` methods
-- **Modules** — organized code across files
-- **Async/await** — handling checkout API call
-- **Error handling** — try/catch and promise rejection handling
-
-## Writing small scripts confidently
-
-You can now write scripts to solve real problems:
-
-### Example: Data processing script
-
-```javascript
-// processData.js
-const rawData = [
-  { name: "Alice", age: 30, active: true },
-  { name: "Bob", age: 25, active: false },
-  { name: "Charlie", age: 35, active: true }
-];
-
-function processUsers(users) {
-  // Filter active users
-  const activeUsers = users.filter(user => user.active);
-  
-  // Calculate average age
-  const totalAge = activeUsers.reduce((sum, user) => sum + user.age, 0);
-  const avgAge = totalAge / activeUsers.length;
-  
-  // Format results
-  return {
-    activeCount: activeUsers.length,
-    averageAge: Math.round(avgAge),
-    activeUsers: activeUsers.map(user => user.name)
-  };
+function loadTodos() {
+  return Promise.resolve([
+    { id: 1, text: "Review arrays", completed: true },
+    { id: 2, text: "Practice functions", completed: false },
+  ]);
 }
 
-const result = processUsers(rawData);
-console.log(result);
-// { activeCount: 2, averageAge: 33, activeUsers: ['Alice', 'Charlie'] }
-```
+async function main() {
+  try {
+    const todos = await loadTodos();
+    const todoList = new TodoList(todos);
 
-### Example: Configuration management
+    todoList.addTodo("Build a small project");
+    todoList.completeTodo(2);
 
-```javascript
-// config.js
-class Config {
-  constructor() {
-    this.settings = {
-      apiUrl: process.env.API_URL || 'https://api.example.com',
-      timeout: 5000,
-      retries: 3
-    };
-  }
-
-  get(key) {
-    return this.settings[key];
-  }
-
-  set(key, value) {
-    this.settings[key] = value;
-  }
-
-  validate() {
-    const required = ['apiUrl'];
-    const missing = required.filter(key => !this.settings[key]);
-    
-    if (missing.length > 0) {
-      throw new Error(`Missing required settings: ${missing.join(', ')}`);
-    }
-    
-    return true;
+    console.log(todoList.getSummary());
+  } catch (error) {
+    console.error(error.message);
   }
 }
 
-const config = new Config();
-config.validate();
-console.log(config.get('apiUrl'));
+main();
 ```
+
+This program uses:
+
+- **Objects** to represent todos
+- **An array** to store the todo list
+- **A class** to group state and behavior
+- **Methods** to change and read state
+- **A conditional** to handle a missing todo
+- **Array methods** such as `push`, `find`, and `filter`
+- **A promise** to represent async loading
+- **`async` / `await`** to read async code clearly
+- **`try` / `catch`** to handle errors
+
+## Choosing the right pieces
+
+Use variables for values you need to name.
+
+Use objects when values belong together.
+
+Use arrays when you have a list.
+
+Use functions when you can give a useful name to a reusable action.
+
+Use classes when state and behavior naturally belong together.
+
+Use modules when a file is doing too many jobs.
+
+Use async code when the result arrives later.
+
+Use errors when something cannot continue normally.
 
 ## What to learn next
 
-Now that you understand core JavaScript, here's what to explore next:
+After the JavaScript fundamentals, choose a direction based on what you want to build.
 
-### Web Development (DOM & Browser APIs)
+For browser projects, learn:
 
-JavaScript in the browser has access to powerful APIs:
+- DOM selection and updates
+- Events
+- Forms
+- Fetch requests
+- Local storage
 
-- **DOM manipulation** — changing HTML elements, handling events
-- **Fetch API** — making HTTP requests (you've seen this, but there's more to learn)
-- **Local Storage** — storing data in the browser
-- **Web APIs** — Geolocation, Canvas, WebSockets, and more
+For Node.js projects, learn:
 
-### Node.js
+- Reading and writing files
+- Working with packages from npm
+- Environment variables
+- HTTP servers
+- Command-line scripts
 
-JavaScript on the server with Node.js:
+For larger applications, learn:
 
-- **File system** — reading/writing files
-- **HTTP servers** — building web servers
-- **Streams** — handling large amounts of data efficiently
-- **npm** — package management and the JavaScript ecosystem
+- Testing
+- TypeScript
+- Frameworks such as React, Vue, Express, or Next.js
+- Debugging tools
+- Performance basics
 
-### Frameworks and libraries
+## Best practices
 
-Modern JavaScript development often uses frameworks:
+Build small programs that combine two or three concepts at a time.
 
-- **React** — building user interfaces
-- **Vue** — another popular UI framework
-- **Express** — web server framework for Node.js
-- **TypeScript** — JavaScript with static typing
+Read your own code out loud and ask whether each name explains its job.
 
-**Note:** These are built on JavaScript, so your foundation is solid. Learning them will be much easier now.
+Keep functions focused.
 
-### Advanced JavaScript topics
+Keep classes focused.
 
-Once you're comfortable, explore:
+Move repeated logic into functions or methods.
 
-- **Closures and advanced scope** — deeper understanding
-- **Prototypes** — JavaScript's inheritance system under the hood
-- **Event loop** — how JavaScript handles async operations
-- **Performance optimization** — making your code faster
-- **Testing** — writing tests for your JavaScript code
+Split files when one file becomes hard to scan.
 
-## Tips for continued learning
+Expect mistakes. Debugging is part of learning to write real programs.
 
-1. **Write code regularly** — practice is essential
-2. **Read other people's code** — see how others solve problems
-3. **Build projects** — apply what you've learned
-4. **Use documentation** — MDN Web Docs is your friend
-5. **Don't try to learn everything at once** — focus on one topic at a time
-6. **Ask questions** — the JavaScript community is welcoming
+## Summary
 
-## Final thoughts
+JavaScript programs are built by combining simple pieces.
 
-You've learned:
+Data structures hold information. Functions and methods organize behavior. Control flow makes decisions. Modules separate responsibilities. Async code handles work that finishes later.
 
-- ✅ Variables, types, and operators
-- ✅ Strings, arrays, and objects
-- ✅ Control flow (conditionals and loops)
-- ✅ Functions and scope
-- ✅ Error handling
-- ✅ Modules and code organization
-- ✅ Object-oriented programming
-- ✅ Asynchronous programming
-
-This is a **solid foundation**. JavaScript is a large language with many features, but you now understand the core concepts that make everything else possible.
-
-The best way to continue learning is to **build things**. Start small, write code, make mistakes, and learn from them. Every expert was once a beginner.
-
-Good luck on your JavaScript journey! 🚀
+The best way to keep improving is to build small projects, notice what gets messy, and use these tools to make the code clearer.

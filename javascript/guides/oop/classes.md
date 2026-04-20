@@ -11,94 +11,42 @@ source:
   canonical_url: https://wolfcodes.dev
 ---
 
-## What is a class?
+## What are classes and instances?
 
-A **class** is a blueprint; an **instance** is the object created from that blueprint. One class can produce many instances.
+A **class** is a blueprint for creating objects. An **instance** is an object created from that class.
 
 ```javascript
-class Car {
-  // empty class: valid, but does nothing yet
-}
+class Car {}
 
 const myCar = new Car();
+
 console.log(myCar); // Car {}
 ```
 
-- `Car` is the **class** (the blueprint).
-- `myCar` is an **instance** (a specific object created from the class).
-- Calling `new Car()` creates a new instance.
+`Car` is the class. `myCar` is an instance.
 
-## Creating instances
+## Why this matters
 
-You create an instance by calling the class with `new`. JavaScript allocates a new object and runs the class’s `constructor`.
+Classes are useful when you need many objects with the same shape and behavior. Instead of manually creating similar objects over and over, you define the structure once in a class and create instances with `new`.
+
+## Creating instances with `new`
+
+Use `new ClassName()` to create an instance:
 
 ```javascript
 class Car {}
 
 const car1 = new Car();
 const car2 = new Car();
+
+console.log(car1 === car2); // false
 ```
 
-Each call to `new` returns a fresh object with its own identity.
+Each call to `new Car()` creates a fresh object.
 
-## Adding properties manually
+## The `constructor`
 
-You can add properties after creation (JavaScript objects are open by default):
-
-```javascript
-class Car {}
-
-const myCar = new Car();
-myCar.color = "blue";
-myCar.make = "Toyota";
-myCar.model = "Camry";
-
-console.log(myCar.color); // "blue"
-```
-
-Each instance can hold different data:
-
-```javascript
-const car1 = new Car();
-car1.color = "blue";
-
-const car2 = new Car();
-car2.color = "red";
-
-console.log(car1.color); // "blue"
-console.log(car2.color); // "red"
-```
-
-Adding properties manually works, but it’s easy to forget or be inconsistent. Prefer setting them up in the constructor.
-
-## Using `constructor` to set up instances
-
-`constructor` runs automatically when you call `new`. It’s the right place to initialize instance state.
-
-```javascript
-class Car {
-  constructor(make, model, color) {
-    console.log("Vroom! A car was created!");
-    this.make = make;   // property on the instance
-    this.model = model; // property on the instance
-    this.color = color; // property on the instance
-  }
-}
-
-const myCar = new Car("Toyota", "Camry", "Blue");
-// Logs: Vroom! A car was created!
-
-const yourCar = new Car("Honda", "Civic", "Red");
-// Logs: Vroom! A car was created!
-```
-
-- `constructor` is a special method that runs when you create a new instance.
-- Arguments you pass to `new Car(...)` are passed into `constructor`.
-- `this` inside `constructor` refers to the instance being created.
-
-## Instance properties
-
-Instance properties live on each individual object created from the class.
+The `constructor` method runs automatically when you create a new instance. Use it to set up instance data.
 
 ```javascript
 class Car {
@@ -109,33 +57,72 @@ class Car {
   }
 }
 
-const myCar = new Car("Toyota", "Camry", "Blue");
-console.log(myCar.color); // "Blue"
-
-myCar.color = "Green";    // modify the property
-console.log(myCar.color); // "Green"
-```
-
-Changing one instance does **not** affect another:
-
-```javascript
-const car1 = new Car("Toyota", "Camry", "Blue");
-const car2 = new Car("Honda", "Civic", "Red");
-
-car1.color = "Green";
-
-console.log(car1.color); // "Green"
-console.log(car2.color); // "Red" (unchanged)
-```
-
-If you access a property that doesn’t exist, you get `undefined` (not an error):
-
-```javascript
 const car = new Car("Toyota", "Camry", "Blue");
-console.log(car.year); // undefined (property not set)
+
+console.log(car.make);  // "Toyota"
+console.log(car.model); // "Camry"
+console.log(car.color); // "Blue"
 ```
 
-You can check for a property with `"prop" in obj` or `Object.hasOwn(obj, "prop")`:
+Arguments passed to `new Car(...)` become arguments to `constructor`.
+
+## Instance properties
+
+Instance properties store data on each individual object:
+
+```javascript
+class Car {
+  constructor(make, model) {
+    this.make = make;
+    this.model = model;
+    this.mileage = 0;
+  }
+}
+
+const car1 = new Car("Toyota", "Camry");
+const car2 = new Car("Honda", "Civic");
+
+car1.mileage = 100;
+
+console.log(car1.mileage); // 100
+console.log(car2.mileage); // 0
+```
+
+Changing one instance does not change another instance.
+
+## Adding properties manually
+
+JavaScript objects are flexible, so you can add properties after creation:
+
+```javascript
+class Car {}
+
+const car = new Car();
+car.make = "Toyota";
+car.model = "Camry";
+
+console.log(car.make); // "Toyota"
+```
+
+This works, but it is easy to forget a property or create inconsistent objects. Prefer setting expected properties in the constructor.
+
+## Missing properties
+
+If you read a property that does not exist, JavaScript returns `undefined`:
+
+```javascript
+class Car {
+  constructor(make) {
+    this.make = make;
+  }
+}
+
+const car = new Car("Toyota");
+
+console.log(car.year); // undefined
+```
+
+Use `in` or `Object.hasOwn()` when you need to check for a property:
 
 ```javascript
 if ("year" in car) {
@@ -145,9 +132,9 @@ if ("year" in car) {
 }
 ```
 
-## Instance methods (preview)
+## Instance methods
 
-Instance methods are functions defined on the class that operate on each instance’s data:
+Methods are functions defined inside a class. They usually work with instance data through `this`.
 
 ```javascript
 class Car {
@@ -169,16 +156,67 @@ class Car {
 }
 
 const car = new Car("Toyota", "Camry", "Blue");
-car.drive(100);
-console.log(car.getInfo()); // "Blue Toyota Camry"
+
+console.log(car.drive(100)); // 100
+console.log(car.getInfo());  // "Blue Toyota Camry"
 ```
 
-Methods live on the prototype and share the same implementation across instances; `this` refers to the instance that called the method. (The next guide dives deeper into methods and `this`.)
+The next guide covers methods and `this` in more detail.
+
+## Common patterns
+
+### Default property values
+
+```javascript
+class Task {
+  constructor(title) {
+    this.title = title;
+    this.isComplete = false;
+  }
+}
+
+const task = new Task("Learn classes");
+
+console.log(task.isComplete); // false
+```
+
+### Creating multiple instances
+
+```javascript
+class User {
+  constructor(name) {
+    this.name = name;
+  }
+}
+
+const users = [
+  new User("Alice"),
+  new User("Bob"),
+  new User("Charlie")
+];
+
+console.log(users[0].name); // "Alice"
+```
+
+### Checking an instance's class
+
+```javascript
+class User {}
+
+const user = new User();
+
+console.log(user instanceof User); // true
+```
+
+## Best practices
+
+- **Use classes for repeated shapes**: Classes are useful when many objects share the same setup and behavior.
+- **Initialize expected properties in `constructor`**.
+- **Use `this` for instance data**.
+- **Avoid adding random properties later** unless the object is intentionally flexible.
+- **Keep constructors simple**: Heavy work usually belongs in methods or helper functions.
+- **Use clear class names**: Class names usually use PascalCase, like `UserAccount`.
 
 ## Summary
 
-- A **class** is a blueprint; an **instance** is an object created from it.
-- Create instances with `new`—JavaScript allocates an object and runs `constructor`.
-- Store instance data on `this`; each instance gets its own copy.
-- Missing properties return `undefined`; check with `"prop" in obj` or `Object.hasOwn`.
-- Methods let instances act on their own data; they’re defined on the class and shared across instances.
+Classes are blueprints, and instances are objects created from those blueprints. Use `new` to create an instance, `constructor` to initialize instance data, and `this` to store properties on the current instance. Each instance has its own state, while methods define shared behavior.

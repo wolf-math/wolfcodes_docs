@@ -11,65 +11,207 @@ source:
   canonical_url: https://wolfcodes.dev
 ---
 
-Inheritance lets you create new classes that build on existing ones. Use it to share behavior when classes have a clear **is-a** relationship.
+Inheritance lets one class build on another class.
 
-## What inheritance is
+The child class gets behavior from the parent class and can add or replace behavior of its own.
 
-- A child class extends a parent class.
-- The child **is a** more specific version of the parent.
+## Why inheritance matters
 
-## `extends`
+Inheritance can reduce duplication when several classes share the same core behavior.
 
-- Use `extends` to inherit behavior and state.
+It works best when the relationship is truly an **is-a** relationship.
 
-```javascript
-class Animal {
-  speak() {
-    console.log("Some sound");
-  }
-}
+A `Dog` is an `Animal`. A `SavingsAccount` is an `Account`. A `VideoLesson` is a `Lesson`.
 
-class Dog extends Animal {
-  speak() {
-    console.log("Woof");
-  }
-}
-```
+If the relationship feels more like **has-a**, composition is usually a better fit.
 
-## `super`
+## Extending a class
 
-- Call `super()` in the child constructor to run the parent constructor.
-- Use `super.methodName()` to reuse parent methods.
+Use `extends` to create a child class.
 
 ```javascript
 class Animal {
   constructor(name) {
     this.name = name;
   }
+
   speak() {
-    console.log(`${this.name} makes a noise`);
+    return `${this.name} makes a sound.`;
   }
 }
 
 class Dog extends Animal {
-  constructor(name) {
-    super(name);
-  }
-  speak() {
-    super.speak(); // optional: call parent behavior
-    console.log(`${this.name} barks`);
+  wagTail() {
+    return `${this.name} wags its tail.`;
   }
 }
+
+const dog = new Dog("Maple");
+
+console.log(dog.speak());
+console.log(dog.wagTail());
 ```
 
-## Method overriding
+`Dog` inherits the constructor and `speak` method from `Animal`.
 
-- Child classes can replace inherited methods.
-- Use overriding when behavior truly differs.
+It also adds its own `wagTail` method.
 
-## Inheritance cautions
+## Calling the parent constructor
 
-- Avoid deep hierarchies—they become hard to change.
-- Prefer composition over inheritance when:
-  - Behavior varies a lot between instances.
-  - You need to mix features (composition is more flexible).
+If a child class defines its own constructor, it must call `super()` before using `this`.
+
+```javascript
+class Lesson {
+  constructor(title) {
+    this.title = title;
+  }
+}
+
+class VideoLesson extends Lesson {
+  constructor(title, durationInMinutes) {
+    super(title);
+    this.durationInMinutes = durationInMinutes;
+  }
+}
+
+const lesson = new VideoLesson("Objects", 12);
+
+console.log(lesson.title);
+console.log(lesson.durationInMinutes);
+```
+
+`super(title)` runs the parent constructor.
+
+After that, the child constructor can set its own properties.
+
+## Overriding methods
+
+A child class can define a method with the same name as a parent method.
+
+This is called overriding.
+
+```javascript
+class Notification {
+  send() {
+    return "Sending notification.";
+  }
+}
+
+class EmailNotification extends Notification {
+  send() {
+    return "Sending email notification.";
+  }
+}
+
+const notification = new EmailNotification();
+
+console.log(notification.send());
+```
+
+The child version replaces the parent version for instances of the child class.
+
+## Calling a parent method
+
+Use `super.methodName()` when the child method should reuse the parent behavior.
+
+```javascript
+class Report {
+  print() {
+    return "Printing report";
+  }
+}
+
+class DetailedReport extends Report {
+  print() {
+    return `${super.print()} with details`;
+  }
+}
+
+const report = new DetailedReport();
+
+console.log(report.print());
+```
+
+This is useful when the child class wants to extend behavior instead of replacing it completely.
+
+## Inheritance chains
+
+A class can inherit from a class that already inherits from another class.
+
+```javascript
+class Shape {
+  describe() {
+    return "This is a shape.";
+  }
+}
+
+class Rectangle extends Shape {}
+
+class Square extends Rectangle {}
+
+const square = new Square();
+
+console.log(square.describe());
+```
+
+This works, but deep inheritance chains can become difficult to understand.
+
+Prefer shallow inheritance.
+
+## Composition as an alternative
+
+Composition means giving an object another object or function to use.
+
+```javascript
+class Logger {
+  log(message) {
+    console.log(message);
+  }
+}
+
+class OrderService {
+  constructor(logger) {
+    this.logger = logger;
+  }
+
+  createOrder(item) {
+    this.logger.log(`Creating order for ${item}`);
+  }
+}
+
+const service = new OrderService(new Logger());
+
+service.createOrder("coffee");
+```
+
+`OrderService` has a logger.
+
+It does not need to inherit from `Logger`.
+
+## Common patterns
+
+Use inheritance for specialized versions of a shared concept.
+
+Use method overriding when child classes need different behavior for the same action.
+
+Use `super` when the parent behavior is still useful.
+
+Use composition when behavior needs to be mixed, swapped, or reused across unrelated classes.
+
+## Best practices
+
+Keep inheritance trees shallow.
+
+Do not use inheritance only to share a helper method.
+
+Ask whether the child class truly is a kind of the parent class.
+
+If several subclasses override most of the parent methods, the inheritance model may be fighting the problem.
+
+## Summary
+
+Inheritance lets child classes reuse and specialize parent class behavior.
+
+Use `extends` to create a child class and `super` to call parent constructors or methods.
+
+Inheritance is useful for clear **is-a** relationships, but composition is often better for flexible behavior.
