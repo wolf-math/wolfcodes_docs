@@ -13,63 +13,7 @@ source:
 
 ## What are loops?
 
-**Loops** let you repeat code multiple times. They're essential for processing collections of data, repeating actions, and automating repetitive tasks.
-
-## `for` Loop
-
-The `for` loop is the most common loop in JavaScript:
-
-```javascript
-for (let i = 0; i < 5; i++) {
-  console.log(i);
-}
-// Output: 0, 1, 2, 3, 4
-```
-
-The `for` loop has three parts:
-1. **Initialization** (`let i = 0`) — runs once at the start
-2. **Condition** (`i < 5`) — checked before each iteration
-3. **Update** (`i++`) — runs after each iteration
-
-This is equivalent to:
-- Start with `i = 0`
-- While `i < 5`, run the code and then increment `i`
-
-## `while` Loop
-
-A `while` loop repeats as long as a condition is true:
-
-```javascript
-let count = 0;
-
-while (count < 5) {
-  console.log(count);
-  count++;
-}
-// Output: 0, 1, 2, 3, 4
-```
-
-**Warning:** Make sure the condition eventually becomes false, or you'll create an infinite loop!
-
-### `do...while` loop
-
-A `do...while` loop is similar to `while`, but it always executes at least once:
-
-```javascript
-let count = 0;
-
-do {
-  console.log(count);
-  count++;
-} while (count < 5);
-// Output: 0, 1, 2, 3, 4
-```
-
-The difference is that `do...while` checks the condition after executing the code, while `while` checks before.
-
-## `for...of` Loop
-
-The `for...of` loop iterates over iterable values (arrays, strings, etc.):
+**Loops** let you repeat code. Use loops when you need to process a list, count through numbers, search for a value, or keep doing something while a condition is true.
 
 ```javascript
 const names = ["Alice", "Bob", "Charlie"];
@@ -77,31 +21,135 @@ const names = ["Alice", "Bob", "Charlie"];
 for (const name of names) {
   console.log(name);
 }
-// Output: Alice, Bob, Charlie
 ```
 
-**Prefer `for...of`** over traditional `for` loops when iterating over arrays—it's cleaner and less error-prone.
+The loop runs once for each name in the array.
 
-### Iterating over strings
+## Why this matters
+
+Programs often need to do the same kind of work many times: display every item in a list, add up numbers, validate form fields, search results, or retry an action. Loops let you write that repeated behavior once instead of copying the same code over and over.
+
+## `for...of`
+
+Use `for...of` to loop over arrays, strings, and other iterable values:
 
 ```javascript
-const text = "Hello";
+const names = ["Alice", "Bob", "Charlie"];
 
-for (const char of text) {
-  console.log(char);
+for (const name of names) {
+  console.log(name);
 }
-// Output: H, e, l, l, o
+// Output:
+// Alice
+// Bob
+// Charlie
 ```
 
-## `for...in` Loop
+This is the clearest loop for most array iteration.
 
-The `for...in` loop iterates over object properties (use `Object.keys()` instead for arrays):
+### Looping over strings
+
+```javascript
+const text = "Hi";
+
+for (const character of text) {
+  console.log(character);
+}
+// Output:
+// H
+// i
+```
+
+## Traditional `for` loops
+
+Use a traditional `for` loop when you need an index or a specific number of repetitions:
+
+```javascript
+for (let i = 0; i < 5; i++) {
+  console.log(i);
+}
+// Output:
+// 0
+// 1
+// 2
+// 3
+// 4
+```
+
+A `for` loop has three parts:
+
+1. **Initialization**: `let i = 0` runs once at the start.
+2. **Condition**: `i < 5` is checked before each iteration.
+3. **Update**: `i++` runs after each iteration.
+
+Use the index when you need positions:
+
+```javascript
+const names = ["Alice", "Bob", "Charlie"];
+
+for (let i = 0; i < names.length; i++) {
+  console.log(`${i}: ${names[i]}`);
+}
+// Output:
+// 0: Alice
+// 1: Bob
+// 2: Charlie
+```
+
+## `while` loops
+
+Use `while` when you do not know ahead of time how many times the loop should run:
+
+```javascript
+let count = 0;
+
+while (count < 3) {
+  console.log(count);
+  count++;
+}
+// Output:
+// 0
+// 1
+// 2
+```
+
+**Important:** Make sure the condition eventually becomes falsy. Otherwise, you create an infinite loop.
+
+```javascript
+// This would run forever:
+// while (true) {
+//   console.log("still running");
+// }
+```
+
+## `do...while`
+
+A `do...while` loop always runs at least once because it checks the condition after the loop body:
+
+```javascript
+let count = 0;
+
+do {
+  console.log(count);
+  count++;
+} while (count < 3);
+// Output:
+// 0
+// 1
+// 2
+```
+
+Use `do...while` only when the body should run before the first condition check.
+
+## `for...in`
+
+`for...in` loops over object property names:
 
 ```javascript
 const person = {
   name: "Alice",
   age: 30,
-  city: "NYC"
+  city: "New York"
 };
 
 for (const key in person) {
@@ -110,65 +158,85 @@ for (const key in person) {
 // Output:
 // name Alice
 // age 30
-// city NYC
+// city New York
 ```
 
-:::note
 `for...in` can iterate over inherited properties. For objects, prefer `Object.keys()`, `Object.values()`, or `Object.entries()` as shown in the [objects guide](../data_structures/objects#looping-over-objects).
-:::
 
-## `break` And `continue`
+Do not use `for...in` for arrays. Use `for...of`, a traditional `for` loop, or array methods instead.
 
-### `break` — exit loop early
+## `break` and `continue`
 
-`break` exits the loop immediately:
+### `break`
+
+Use `break` to exit a loop early:
 
 ```javascript
-for (let i = 0; i < 10; i++) {
-  if (i === 5) {
-    break;  // Exit loop when i is 5
+const names = ["Alice", "Bob", "Charlie"];
+
+for (const name of names) {
+  if (name === "Bob") {
+    break;
   }
-  console.log(i);
+
+  console.log(name);
 }
-// Output: 0, 1, 2, 3, 4
+// Output:
+// Alice
 ```
 
-### `continue` — skip to next iteration
+Once JavaScript reaches `break`, the loop stops.
 
-`continue` skips the rest of the current iteration and moves to the next:
+### `continue`
+
+Use `continue` to skip the rest of the current iteration:
 
 ```javascript
 for (let i = 0; i < 5; i++) {
   if (i === 2) {
-    continue;  // Skip when i is 2
+    continue;
   }
+
   console.log(i);
 }
-// Output: 0, 1, 3, 4
+// Output:
+// 0
+// 1
+// 3
+// 4
 ```
+
+The loop continues with the next value.
+
+## Loops vs array methods
+
+Loops are great for general repetition. Array methods are often clearer when transforming or filtering arrays:
+
+```javascript
+const numbers = [1, 2, 3, 4];
+const doubled = numbers.map(number => number * 2);
+
+console.log(doubled); // [2, 4, 6, 8]
+```
+
+Use `map()`, `filter()`, `find()`, and `reduce()` when they clearly describe the operation. Use a loop when the logic has multiple steps or side effects.
 
 ## Common patterns
 
-### Looping through arrays
+### Accumulating a total
 
 ```javascript
 const numbers = [1, 2, 3, 4, 5];
+let total = 0;
 
-// Using for...of (preferred)
-for (const num of numbers) {
-  console.log(num);
+for (const number of numbers) {
+  total += number;
 }
 
-// Using traditional for loop
-for (let i = 0; i < numbers.length; i++) {
-  console.log(numbers[i]);
-}
-
-// Using array methods (often preferred for transformations)
-numbers.forEach(num => console.log(num));
+console.log(total); // 15
 ```
 
-### Finding elements with loops
+### Finding an item
 
 ```javascript
 const names = ["Alice", "Bob", "Charlie"];
@@ -177,82 +245,79 @@ let found = null;
 for (const name of names) {
   if (name.length > 4) {
     found = name;
-    break;  // Found it, exit early
+    break;
   }
 }
 
-console.log(found);  // "Alice"
+console.log(found); // "Alice"
 ```
 
-### Nested loops
-
-You can nest loops inside other loops:
+You can also use `find()` for this:
 
 ```javascript
-for (let i = 0; i < 3; i++) {
-  for (let j = 0; j < 3; j++) {
-    console.log(i, j);
-  }
-}
-// Output:
-// 0 0, 0 1, 0 2
-// 1 0, 1 1, 1 2
-// 2 0, 2 1, 2 2
+const found = names.find(name => name.length > 4);
+
+console.log(found); // "Alice"
 ```
 
-Be careful with nested loops—they can be slow for large datasets.
+### Looping with an index
 
-### Conditional loops
-
-Combine loops with conditionals:
-
-```javascript
-const numbers = [1, 2, 3, 4, 5];
-
-for (const num of numbers) {
-  if (num % 2 === 0) {
-    console.log(`${num} is even`);
-  } else {
-    console.log(`${num} is odd`);
-  }
-}
-```
-
-### Accumulating values
-
-```javascript
-const numbers = [1, 2, 3, 4, 5];
-let sum = 0;
-
-for (const num of numbers) {
-  sum += num;
-}
-
-console.log(sum);  // 15
-```
-
-### Looping with index
-
-If you need the index when using `for...of`, use `entries()`:
+Use `.entries()` with `for...of` when you want both index and value:
 
 ```javascript
 const names = ["Alice", "Bob", "Charlie"];
 
 for (const [index, name] of names.entries()) {
-  console.log(index, name);
+  console.log(`${index}: ${name}`);
 }
 // Output:
-// 0 Alice
-// 1 Bob
-// 2 Charlie
+// 0: Alice
+// 1: Bob
+// 2: Charlie
 ```
+
+### Nested loops
+
+Use nested loops when you need every combination of two sets of values:
+
+```javascript
+const rows = ["A", "B"];
+const columns = [1, 2, 3];
+
+for (const row of rows) {
+  for (const column of columns) {
+    console.log(`${row}${column}`);
+  }
+}
+// Output:
+// A1
+// A2
+// A3
+// B1
+// B2
+// B3
+```
+
+Nested loops can get slow with large data sets, so use them carefully.
 
 ## Choosing the right loop
 
-- **Use `for`** when you know how many times to loop or need the index
-- **Use `while`** when you don't know how many times to loop
-- **Use `for...of`** for iterating over arrays or other iterables (preferred)
-- **Use `for...in`** for iterating over object properties (but prefer `Object.keys()`)
-- **Use array methods** (`forEach`, `map`, `filter`) when transforming arrays
-- **Use `break`** to exit a loop early when you find what you're looking for
-- **Use `continue`** to skip the current iteration and move to the next
+- **Use `for...of`** for arrays and other iterable values.
+- **Use a traditional `for` loop** when you need an index or exact repetition count.
+- **Use `while`** when the number of iterations depends on a changing condition.
+- **Use `do...while`** when the loop body must run at least once.
+- **Avoid `for...in` for arrays**. For objects, usually prefer `Object.keys()`, `Object.values()`, or `Object.entries()`.
+- **Use array methods** when they make the data transformation clearer.
+
+## Best practices
+
+- **Prefer `for...of` for arrays** when you do not need the index.
+- **Make loop conditions change** so loops eventually stop.
+- **Use clear variable names** like `user`, `item`, `index`, or `total`.
+- **Use `break` intentionally** when you have found what you need.
+- **Keep nested loops small and readable**.
+- **Choose array methods for transformations** such as mapping and filtering.
+
+## Summary
+
+Loops repeat code. Use `for...of` for most array iteration, traditional `for` loops when you need an index, `while` loops when repetition depends on a condition, and array methods when transforming data. Always make sure loop conditions can end, and choose the loop form that makes the repeated work easiest to understand.

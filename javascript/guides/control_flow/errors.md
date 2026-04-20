@@ -13,192 +13,178 @@ source:
 
 ## What are errors?
 
-**Errors** occur when something goes wrong in your program. JavaScript has several types of errors, and understanding how to handle them is crucial for writing robust code.
-
-In JavaScript, errors are not just problems, they're also a **control flow mechanism**. When an error occurs, it interrupts normal execution and jumps to error-handling code.
-
-## Runtime errors
-
-Errors that occur while your program is running are **runtime errors**:
+**Errors** are objects that represent something going wrong. In JavaScript, errors also affect control flow: when an error is thrown, normal execution stops and JavaScript looks for error-handling code.
 
 ```javascript
-const x = undefined;
-console.log(x.name);  // TypeError: Cannot read property 'name' of undefined
-
-const arr = [1, 2, 3];
-console.log(arr[10]);  // undefined (not an error, but probably not what you want)
+throw new Error("Something went wrong");
 ```
 
-### Common error types
+You usually throw errors when your code cannot continue safely, and you catch errors when you can respond to the problem.
 
-- **`ReferenceError`** — variable doesn't exist
-- **`TypeError`** — wrong type or trying to use something that doesn't exist
-- **`SyntaxError`** — invalid JavaScript syntax (usually caught before runtime)
-- **`RangeError`** — value is out of range
+## Why this matters
+
+Real programs deal with missing data, invalid input, network failures, broken JSON, and unexpected states. Error handling lets you fail clearly, recover when possible, and avoid silent bugs.
+
+Good error handling answers three questions:
+
+- What went wrong?
+- Where can this be handled?
+- Should the program recover, return a fallback, or stop?
+
+## Common error types
+
+JavaScript has several built-in error types.
+
+### `ReferenceError`
+
+A `ReferenceError` happens when you use a variable that does not exist:
 
 ```javascript
-// ReferenceError
-console.log(nonExistentVar);  // ReferenceError: nonExistentVar is not defined
-
-// TypeError
-const x = null;
-x.someMethod();  // TypeError: Cannot read property 'someMethod' of null
-
-// RangeError
-const arr = new Array(-1);  // RangeError: Invalid array length
+// This would cause a ReferenceError:
+// console.log(missingValue);
 ```
 
-## `try` / `catch`
+### `TypeError`
 
-The `try/catch` statement lets you handle errors gracefully:
+A `TypeError` happens when a value is not the type or shape your code expected:
 
 ```javascript
-try {
-  // Code that might throw an error
-  const result = riskyOperation();
-  console.log(result);
-} catch (error) {
-  // Code to run if an error occurs
-  console.log("Something went wrong:", error.message);
-}
+const user = null;
+
+// This would cause a TypeError:
+// console.log(user.name);
 ```
 
-### Basic structure
+### `SyntaxError`
+
+A `SyntaxError` happens when JavaScript code is not valid syntax. These are usually caught before the code runs:
 
 ```javascript
-try {
-  // Try to execute this code
-  const data = JSON.parse(invalidJson);
-} catch (error) {
-  // Handle any errors that occur
-  console.error("Error parsing JSON:", error.message);
-}
-
-// Code continues here even if an error occurred
-console.log("Program continues...");
+// This would cause a SyntaxError:
+// if (true {
+//   console.log("missing parenthesis");
+// }
 ```
 
-### Accessing error information
+### `RangeError`
 
-The `catch` block receives an error object with useful information:
-
-```javascript
-try {
-  const x = undefined;
-  console.log(x.name);
-} catch (error) {
-  console.log(error.name);     // "TypeError"
-  console.log(error.message);  // "Cannot read property 'name' of undefined"
-  console.log(error.stack);    // Stack trace (where the error occurred)
-}
-```
-
-### Catching specific errors
-
-You can check error types in the `catch` block:
+A `RangeError` happens when a value is outside an allowed range:
 
 ```javascript
-try {
-  riskyOperation();
-} catch (error) {
-  if (error instanceof TypeError) {
-    console.log("Type error occurred");
-  } else if (error instanceof ReferenceError) {
-    console.log("Reference error occurred");
-  } else {
-    console.log("Some other error:", error.message);
-  }
-}
+// This would cause a RangeError:
+// const items = new Array(-1);
 ```
 
 ## Throwing errors
 
-You can create and throw your own errors using the `throw` statement:
+Use `throw` when a function cannot continue safely:
 
 ```javascript
 function divide(a, b) {
   if (b === 0) {
-    throw new Error("Division by zero is not allowed");
+    throw new Error("Cannot divide by zero");
   }
+
   return a / b;
 }
-
-try {
-  const result = divide(10, 0);
-} catch (error) {
-  console.log(error.message);  // "Division by zero is not allowed"
-}
 ```
 
-### Throwing different error types
-
-You can throw specific error types:
+Throwing an error stops the function immediately:
 
 ```javascript
-function getValue(obj, key) {
-  if (!obj) {
-    throw new TypeError("Object cannot be null or undefined");
-  }
-  if (!(key in obj)) {
-    throw new ReferenceError(`Property '${key}' does not exist`);
-  }
-  return obj[key];
-}
-```
-
-### Creating custom errors
-
-You can create custom error classes:
-
-```javascript
-class ValidationError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = "ValidationError";
-  }
-}
-
-function validateEmail(email) {
-  if (!email.includes("@")) {
-    throw new ValidationError("Invalid email format");
-  }
-}
-```
-
-## Why errors are control flow
-
-This is an important mental model: **errors are a form of control flow**, not just problems to avoid.
-
-### Error-based control flow
-
-Errors let you exit functions early and jump to error-handling code:
-
-```javascript
-function processUser(user) {
+function getUserName(user) {
   if (!user) {
     throw new Error("User is required");
   }
-  if (!user.email) {
-    throw new Error("User email is required");
-  }
-  // Continue processing only if we get here
-  return `Processing ${user.email}`;
-}
 
-try {
-  const result = processUser(null);
-  console.log(result);
-} catch (error) {
-  console.log("Validation failed:", error.message);
-  // Handle the error gracefully
+  return user.name;
 }
 ```
 
-This is similar to early returns in functions, but for exceptional cases.
+The `return` line only runs if `user` exists.
 
-### Error propagation
+## `try` / `catch`
 
-If an error isn't caught, it propagates up the call stack:
+Use `try/catch` when code might throw and you can handle the failure:
+
+```javascript
+try {
+  const data = JSON.parse("{ bad json }");
+  console.log(data);
+} catch (error) {
+  console.log("Could not parse JSON:", error.message);
+}
+
+console.log("Program continues");
+```
+
+**What happens:**
+
+1. JavaScript tries to run the code in `try`.
+2. `JSON.parse()` throws an error.
+3. JavaScript jumps to `catch`.
+4. Code after the `try/catch` continues.
+
+## The error object
+
+The `catch` block receives the thrown error:
+
+```javascript
+try {
+  JSON.parse("{ bad json }");
+} catch (error) {
+  console.log(error.name);    // "SyntaxError"
+  console.log(error.message); // Error message
+}
+```
+
+Common properties include:
+
+- `name`: the error type name
+- `message`: the human-readable message
+- `stack`: where the error happened
+
+`stack` is useful for debugging, but it is usually too detailed for beginner-facing output.
+
+## Catching specific errors
+
+Use `instanceof` when you need different handling for different error types:
+
+```javascript
+try {
+  JSON.parse("{ bad json }");
+} catch (error) {
+  if (error instanceof SyntaxError) {
+    console.log("Invalid JSON");
+  } else {
+    throw error;
+  }
+}
+```
+
+If you cannot handle an error, rethrow it. Do not silently swallow it.
+
+## `finally`
+
+A `finally` block always runs, whether an error happened or not:
+
+```javascript
+let isLoading = true;
+
+try {
+  runOperation();
+} catch (error) {
+  console.log("Operation failed:", error.message);
+} finally {
+  isLoading = false;
+}
+```
+
+Use `finally` for cleanup: resetting loading state, releasing resources, closing connections, or clearing temporary state.
+
+## Error propagation
+
+If an error is not caught, it moves up the call stack:
 
 ```javascript
 function level1() {
@@ -210,139 +196,163 @@ function level2() {
 }
 
 function level3() {
-  throw new Error("Error in level3");
+  throw new Error("Failed in level3");
 }
 
 try {
-  level1();  // Error propagates through level1 -> level2 -> level3
+  level1();
 } catch (error) {
-  console.log("Caught error:", error.message);  // Caught here
+  console.log(error.message); // "Failed in level3"
 }
 ```
 
-If no `try/catch` exists, the error eventually crashes your program (or logs to console in browsers).
+The error starts in `level3`, moves through `level2` and `level1`, and is caught by the `catch` block.
 
-## The `finally` block
+If no code catches the error, the program usually stops or logs the error to the console.
 
-The `finally` block always runs, whether an error occurred or not:
+## Errors vs normal control flow
 
-```javascript
-try {
-  riskyOperation();
-} catch (error) {
-  console.log("Error occurred");
-} finally {
-  console.log("This always runs");
-  // Useful for cleanup (closing files, clearing resources, etc.)
-}
-```
+Errors are useful for exceptional cases. Do not use them for ordinary decisions that are easy to check first.
 
-Common uses for `finally`:
-- Cleaning up resources
-- Closing connections
-- Resetting state
+Avoid this:
 
 ```javascript
-let fileOpen = true;
-
-try {
-  readFile();
-} catch (error) {
-  console.log("Error reading file");
-} finally {
-  fileOpen = false;  // Always close the file
-  console.log("File closed");
-}
-```
-
-## Best practices
-
-### 1. Don't catch errors you can't handle
-
-```javascript
-// Bad: catching but not handling
-try {
-  importantOperation();
-} catch (error) {
-  // Swallows the error silently (bad!)
-}
-
-// Better: handle or rethrow
-try {
-  importantOperation();
-} catch (error) {
-  console.error("Operation failed:", error);
-  throw error;  // Re-throw if you can't handle it
-}
-```
-
-### 2. Be specific with error messages
-
-```javascript
-// Bad: generic error
-throw new Error("Error");
-
-// Good: descriptive error
-throw new Error("Cannot divide by zero. Value received: " + value);
-```
-
-### 3. Validate inputs early
-
-```javascript
-function processData(data) {
-  // Validate early, throw errors clearly
-  if (!data) {
-    throw new Error("Data is required");
-  }
-  if (typeof data !== "object") {
-    throw new TypeError("Data must be an object");
-  }
-  // Continue processing...
-}
-```
-
-### 4. Use try/catch for expected errors
-
-```javascript
-// Good: handling expected errors
-function parseJSON(jsonString) {
+function getItem(array, index) {
   try {
-    return JSON.parse(jsonString);
+    return array[index].name;
   } catch (error) {
-    return null;  // Return null if parsing fails
+    return null;
   }
 }
 ```
 
-### 5. Don't use try/catch for control flow
+Prefer checking first:
 
 ```javascript
-// Bad: using try/catch as control flow
-try {
-  return array[index];
-} catch (error) {
-  return null;
-}
+function getItem(array, index) {
+  const item = array[index];
 
-// Good: check first
-if (index < array.length) {
-  return array[index];
+  if (!item) {
+    return null;
+  }
+
+  return item.name;
 }
-return null;
 ```
 
-## Errors in async code
+Use `if` statements for expected branches. Use errors when something violates the assumptions your code needs to continue.
 
-Errors in asynchronous code require special handling (covered in the [async guide](../async/asyncronous)):
+## Custom errors
+
+You can create custom error classes when a specific kind of failure matters:
 
 ```javascript
-async function fetchData() {
+class ValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "ValidationError";
+  }
+}
+
+function validateEmail(email) {
+  if (!email.includes("@")) {
+    throw new ValidationError("Email must include @");
+  }
+}
+```
+
+Custom errors are most useful in larger applications where callers need to respond differently to different failures.
+
+## Async errors
+
+Async code needs its own error handling. With `async` / `await`, use `try/catch`:
+
+```javascript
+async function loadUser(id) {
   try {
-    const response = await fetch(url);
+    const response = await fetch(`/api/users/${id}`);
     return await response.json();
   } catch (error) {
-    console.error("Failed to fetch:", error);
+    console.error("Failed to load user:", error);
     throw error;
   }
 }
 ```
+
+With promises, use `.catch()`:
+
+```javascript
+fetch("/api/users/1")
+  .then(response => response.json())
+  .then(user => console.log(user))
+  .catch(error => {
+    console.error("Failed to load user:", error);
+  });
+```
+
+Async patterns are covered in more detail in the [async guide](../async/asyncronous).
+
+## Common patterns
+
+### Parsing JSON safely
+
+```javascript
+function parseJSONOrNull(text) {
+  try {
+    return JSON.parse(text);
+  } catch (error) {
+    return null;
+  }
+}
+
+console.log(parseJSONOrNull('{"name":"Alice"}')); // { name: "Alice" }
+console.log(parseJSONOrNull("{ bad json }"));     // null
+```
+
+This is a good use of `try/catch` because invalid JSON is an expected possibility.
+
+### Validating inputs early
+
+```javascript
+function createUser(name, email) {
+  if (!name) {
+    throw new Error("Name is required");
+  }
+
+  if (!email.includes("@")) {
+    throw new Error("Email must include @");
+  }
+
+  return { name, email };
+}
+```
+
+Clear validation errors make bugs easier to find.
+
+### Handling and rethrowing
+
+```javascript
+try {
+  saveSettings(settings);
+} catch (error) {
+  console.error("Could not save settings:", error.message);
+  throw error;
+}
+```
+
+Log or add context when useful, then rethrow if this part of the program cannot recover.
+
+## Best practices
+
+- **Throw errors when code cannot continue safely**.
+- **Catch errors where you can respond**: recover, show a message, retry, or return a fallback.
+- **Do not swallow errors silently**: it hides bugs.
+- **Use descriptive messages**: include what was expected and what went wrong.
+- **Validate inputs early**: fail before doing deeper work.
+- **Use normal conditionals for expected branches**: do not use `try/catch` as a replacement for `if`.
+- **Rethrow errors you cannot handle**.
+- **Use `finally` for cleanup** when cleanup must happen either way.
+
+## Summary
+
+Errors represent failures and change control flow. Use `throw` when a function cannot continue, `try/catch` when you can handle a failure, and `finally` when cleanup must always run. Catch errors at the level that can respond meaningfully, avoid swallowing them silently, and use ordinary conditionals for normal expected decisions.

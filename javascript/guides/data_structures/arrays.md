@@ -13,196 +13,250 @@ source:
 
 ## What are arrays?
 
-**Arrays** are ordered collections of values. In JavaScript, arrays can contain values of any type, and you can mix different types in the same array (though this is usually not recommended).
+**Arrays** are ordered collections of values. Use an array when you have a list of items and the order matters.
 
 ```javascript
-const numbers = [1, 2, 3, 4, 5];
+const scores = [95, 87, 92];
 const names = ["Alice", "Bob", "Charlie"];
-const mixed = [1, "hello", true, null]; // Mixed types (not recommended)
+
+console.log(names[0]); // "Alice"
+console.log(scores.length); // 3
 ```
 
-Arrays are one of JavaScript's most important data structures. They're used constantly in real programs.
+Arrays can contain any JavaScript value, including strings, numbers, booleans, objects, and other arrays. In most real code, keep the items similar so the array is easy to reason about.
+
+## Why this matters
+
+Arrays are one of the most common data structures in JavaScript. You'll use them for lists of users, search results, shopping cart items, form fields, scores, messages, and many other collections.
+
+Arrays also come with useful methods like `map()`, `filter()`, `find()`, and `reduce()`. These methods let you process data clearly without writing every loop by hand.
 
 ## Creating arrays
 
 ### Array literals
 
-The most common way to create an array is using square brackets `[]`:
+The most common way to create an array is with square brackets:
 
 ```javascript
-const empty = [];                    // Empty array
-const numbers = [1, 2, 3];           // Array of numbers
-const names = ["Alice", "Bob"];      // Array of strings
-const nested = [[1, 2], [3, 4]];     // Array of arrays
+const empty = [];
+const numbers = [1, 2, 3];
+const names = ["Alice", "Bob"];
+const rows = [[1, 2], [3, 4]];
 ```
 
-### Array constructor
+Prefer this form in beginner code. It is short and clear.
 
-You can also use the `Array` constructor (less common):
+### The `Array` constructor
+
+JavaScript also has an `Array` constructor:
 
 ```javascript
-const arr1 = new Array();           // Empty array []
-const arr2 = new Array(1, 2, 3);    // [1, 2, 3]
-const arr3 = new Array(5);          // [empty × 5] (creates array with length 5, but empty slots)
+const values = new Array(1, 2, 3); // [1, 2, 3]
 ```
 
-**Prefer array literals** `[]` over the constructor. They're shorter and clearer.
+Avoid `new Array()` unless you have a specific reason. It has surprising behavior when you pass one number:
+
+```javascript
+const items = new Array(3);
+
+console.log(items); // [empty x 3]
+console.log(items.length); // 3
+```
+
+`new Array(3)` creates an array with three empty slots, not `[3]`.
 
 ## Accessing elements
 
-Arrays are **zero-indexed**, meaning the first element is at index `0`:
+Arrays are **zero-indexed**. The first item is at index `0`, the second item is at index `1`, and so on.
 
 ```javascript
 const names = ["Alice", "Bob", "Charlie"];
 
-// Bracket notation
-names[0];  // "Alice" (first element)
-names[1];  // "Bob" (second element)
-names[2];  // "Charlie" (third element)
-names[3];  // undefined (doesn't exist)
-
-// Using .at() method
-names.at(0);  // "Alice" (first element)
-names.at(1);  // "Bob" (second element)
-names.at(-1); // "Charlie" (last element, negative index counts from end)
-names.at(-2); // "Bob" (second from end)
-names.at(3);  // undefined (doesn't exist)
+console.log(names[0]); // "Alice"
+console.log(names[1]); // "Bob"
+console.log(names[2]); // "Charlie"
+console.log(names[3]); // undefined
 ```
 
-### Getting the length
+If you access an index that does not exist, JavaScript returns `undefined`.
+
+### Length
+
+Use `.length` to get the number of items:
 
 ```javascript
 const names = ["Alice", "Bob", "Charlie"];
-names.length;  // 3
+
+console.log(names.length); // 3
 ```
 
-### Accessing the last element
+### Last item
+
+Use `.at(-1)` to get the last item:
 
 ```javascript
 const names = ["Alice", "Bob", "Charlie"];
-names.at(-1); // "Charlie"
+
+console.log(names.at(-1)); // "Charlie"
+```
+
+You may also see the older pattern:
+
+```javascript
+const last = names[names.length - 1];
+
+console.log(last); // "Charlie"
 ```
 
 ## Mutating vs non-mutating methods
 
-This is a crucial distinction when working with arrays:
+A key array mental model: some methods **mutate** the original array, while others return a new array.
 
-### Mutating methods (change the original array)
+### Mutating methods
 
-Some array methods **modify the original array**:
-
-```javascript
-const arr = [1, 2, 3];
-arr.push(4);     // Mutates: arr is now [1, 2, 3, 4]
-arr.pop();       // Mutates: arr is now [1, 2, 3]
-arr.reverse();   // Mutates: arr is now [3, 2, 1]
-arr.sort();      // Mutates: arr is sorted
-```
-
-### Non-mutating methods (return a new array)
-
-Other methods **return a new array** without changing the original:
+Mutating methods change the original array:
 
 ```javascript
-const arr = [1, 2, 3];
-const doubled = arr.map(x => x * 2);  // Returns [2, 4, 6], arr is still [1, 2, 3]
-const filtered = arr.filter(x => x > 1); // Returns [2, 3], arr is still [1, 2, 3]
-const sliced = arr.slice(1, 3);       // Returns [2, 3], arr is still [1, 2, 3]
+const numbers = [1, 2, 3];
+
+numbers.push(4);
+
+console.log(numbers); // [1, 2, 3, 4]
 ```
 
-**Important:** When you want to keep the original array unchanged, use non-mutating methods or create a copy first:
+Common mutating methods include:
+
+- `push()`
+- `pop()`
+- `shift()`
+- `unshift()`
+- `splice()`
+- `sort()`
+- `reverse()`
+
+### Non-mutating methods
+
+Non-mutating methods return a new value and leave the original array unchanged:
+
+```javascript
+const numbers = [1, 2, 3];
+const doubled = numbers.map(number => number * 2);
+
+console.log(numbers); // [1, 2, 3]
+console.log(doubled); // [2, 4, 6]
+```
+
+Common non-mutating methods include:
+
+- `map()`
+- `filter()`
+- `slice()`
+- `concat()`
+- `find()`
+- `includes()`
+
+**Important:** If you want to keep the original array unchanged before using a mutating method, copy it first:
 
 ```javascript
 const original = [1, 2, 3];
-const reversed = [...original].reverse(); // Creates copy, then reverses
-// original is still [1, 2, 3]
+const reversed = [...original].reverse();
+
+console.log(original); // [1, 2, 3]
+console.log(reversed); // [3, 2, 1]
 ```
 
-## Common array methods
+## Adding and removing items
 
-### Adding and removing elements
+Use `push()` and `pop()` at the end of an array:
 
 ```javascript
-const arr = [1, 2, 3];
+const items = ["a", "b"];
 
-// Add to end
-arr.push(4);        // [1, 2, 3, 4] (mutates)
+items.push("c");
+console.log(items); // ["a", "b", "c"]
 
-// Remove from end
-arr.pop();          // Returns 4, arr is now [1, 2, 3] (mutates)
-
-// Add to beginning
-arr.unshift(0);     // [0, 1, 2, 3] (mutates)
-
-// Remove from beginning
-arr.shift();        // Returns 0, arr is now [1, 2, 3] (mutates)
+const last = items.pop();
+console.log(last); // "c"
+console.log(items); // ["a", "b"]
 ```
 
-### Finding elements
+Use `unshift()` and `shift()` at the beginning:
 
 ```javascript
-const names = ["Alice", "Bob", "Charlie"];
+const items = ["b", "c"];
 
-names.indexOf("Bob");        // 1 (returns index, or -1 if not found)
-names.includes("Bob");       // true
-names.find(name => name.length > 3); // "Alice" (first element matching condition)
-names.findIndex(name => name.length > 3); // 0 (index of first matching element)
+items.unshift("a");
+console.log(items); // ["a", "b", "c"]
+
+const first = items.shift();
+console.log(first); // "a"
+console.log(items); // ["b", "c"]
 ```
 
-### Slicing and splicing
+These methods mutate the original array.
 
-```javascript
-const arr = [1, 2, 3, 4, 5];
+## Finding items
 
-// slice() - non-mutating, extracts portion
-arr.slice(1, 4);    // [2, 3, 4] (from index 1 to 3, original unchanged)
-arr.slice(2);       // [3, 4, 5] (from index 2 to end)
-arr.slice(-2);      // [4, 5] (last 2 elements)
-
-// splice() - mutating, adds/removes elements
-const arr2 = [1, 2, 3, 4, 5];
-arr2.splice(2, 1, 99); // Remove 1 element at index 2, insert 99
-// arr2 is now [1, 2, 99, 4, 5]
-```
-
-### Transforming arrays
-
-```javascript
-const numbers = [1, 2, 3, 4];
-
-// map() - transform each element (non-mutating)
-const doubled = numbers.map(x => x * 2);  // [2, 4, 6, 8]
-
-// filter() - keep only matching elements (non-mutating)
-const evens = numbers.filter(x => x % 2 === 0);  // [2, 4]
-
-// reduce() - combine elements into a single value (non-mutating)
-const sum = numbers.reduce((acc, x) => acc + x, 0);  // 10
-```
-
-We'll explore `map`, `filter`, and `reduce` in more detail below.
-
-## Iteration patterns
-
-### `for` loop
-
-The classic way to iterate over arrays:
+Use `includes()` when you only need to know whether a value exists:
 
 ```javascript
 const names = ["Alice", "Bob", "Charlie"];
 
-for (let i = 0; i < names.length; i++) {
-  console.log(names[i]);
-}
-// Output:
-// Alice
-// Bob
-// Charlie
+console.log(names.includes("Bob")); // true
+console.log(names.includes("Dana")); // false
 ```
 
-### `for...of` loop
+Use `find()` when you need the first item that matches a condition:
 
-A cleaner way to iterate (preferred for arrays):
+```javascript
+const users = [
+  { id: 1, name: "Alice" },
+  { id: 2, name: "Bob" }
+];
+
+const user = users.find(user => user.id === 2);
+
+console.log(user); // { id: 2, name: "Bob" }
+```
+
+Use `findIndex()` when you need the matching item's index:
+
+```javascript
+const names = ["Alice", "Bob", "Charlie"];
+const index = names.findIndex(name => name.startsWith("C"));
+
+console.log(index); // 2
+```
+
+## Slicing and splicing
+
+`slice()` copies part of an array without changing the original:
+
+```javascript
+const numbers = [1, 2, 3, 4, 5];
+const middle = numbers.slice(1, 4);
+
+console.log(middle); // [2, 3, 4]
+console.log(numbers); // [1, 2, 3, 4, 5]
+```
+
+`splice()` changes the original array by removing or inserting items:
+
+```javascript
+const numbers = [1, 2, 3, 4, 5];
+
+numbers.splice(2, 1, 99);
+
+console.log(numbers); // [1, 2, 99, 4, 5]
+```
+
+**Rule of thumb:** Use `slice()` when you want a copy. Use `splice()` only when you intentionally want to mutate the array.
+
+## Iterating over arrays
+
+### `for...of`
+
+Use `for...of` when you want to do something with each item:
 
 ```javascript
 const names = ["Alice", "Bob", "Charlie"];
@@ -216,11 +270,27 @@ for (const name of names) {
 // Charlie
 ```
 
-**Prefer `for...of`** when you don't need the index. It's more readable and less error-prone.
+Prefer `for...of` when you do not need the index.
 
-### `forEach()` method
+### Traditional `for` loop
 
-Arrays also have a `forEach()` method:
+Use a traditional `for` loop when you need the index:
+
+```javascript
+const names = ["Alice", "Bob", "Charlie"];
+
+for (let i = 0; i < names.length; i++) {
+  console.log(`${i}: ${names[i]}`);
+}
+// Output:
+// 0: Alice
+// 1: Bob
+// 2: Charlie
+```
+
+### `forEach()`
+
+`forEach()` runs a function for each item:
 
 ```javascript
 const names = ["Alice", "Bob", "Charlie"];
@@ -228,148 +298,164 @@ const names = ["Alice", "Bob", "Charlie"];
 names.forEach((name, index) => {
   console.log(`${index}: ${name}`);
 });
-// Output:
-// 0: Alice
-// 1: Bob
-// 2: Charlie
 ```
 
-## Array methods deep dive
+Use `forEach()` for simple side effects, like logging or updating the page. Use `map()` when you want to create a new array.
 
-### `map()` — transform each element
+## Transforming arrays
 
-`map()` creates a new array by applying a function to each element:
+### `map()`
+
+`map()` creates a new array by transforming each item:
 
 ```javascript
 const numbers = [1, 2, 3, 4];
-const doubled = numbers.map(x => x * 2);
-// [2, 4, 6, 8]
+const doubled = numbers.map(number => number * 2);
 
-const names = ["alice", "bob", "charlie"];
-const capitalized = names.map(name => name.charAt(0).toUpperCase() + name.slice(1));
-// ["Alice", "Bob", "Charlie"]
+console.log(doubled); // [2, 4, 6, 8]
 ```
 
-**Use `map()` when:** You want to transform each element into something else.
+Use `map()` when the output array should have one new item for each original item.
 
-### `filter()` — keep matching elements
+### `filter()`
 
-`filter()` creates a new array with only elements that pass a test:
+`filter()` creates a new array with only the items that pass a test:
 
 ```javascript
 const numbers = [1, 2, 3, 4, 5, 6];
-const evens = numbers.filter(x => x % 2 === 0);
-// [2, 4, 6]
+const evens = numbers.filter(number => number % 2 === 0);
 
-const names = ["Alice", "Bob", "Charlie"];
-const longNames = names.filter(name => name.length > 3);
-// ["Alice", "Charlie"]
+console.log(evens); // [2, 4, 6]
 ```
 
-**Use `filter()` when:** You want to keep only some elements based on a condition.
+Use `filter()` when you want to keep some items and remove others.
 
-### `reduce()` — combine elements
+### `reduce()`
 
-`reduce()` combines all elements into a single value:
+`reduce()` combines all items into one value:
 
 ```javascript
 const numbers = [1, 2, 3, 4];
-const sum = numbers.reduce((accumulator, current) => accumulator + current, 0);
-// 10
+const sum = numbers.reduce((total, number) => total + number, 0);
 
-// Without initial value (uses first element as initial)
-const sum2 = numbers.reduce((acc, current) => acc + current);
-// 10
-
-// More complex example: counting occurrences
-const words = ["apple", "banana", "apple", "cherry", "banana", "apple"];
-const counts = words.reduce((acc, word) => {
-  acc[word] = (acc[word] || 0) + 1;
-  return acc;
-}, {});
-// { apple: 3, banana: 2, cherry: 1 }
+console.log(sum); // 10
 ```
 
-**Use `reduce()` when:** You need to combine all elements into a single value (sum, product, object, etc.).
+Use `reduce()` for totals, grouped objects, and other "combine everything" operations. If `reduce()` makes the code hard to read, a loop is fine.
 
 ### Chaining methods
 
-You can chain array methods together:
+You can chain array methods to process data step by step:
 
 ```javascript
 const numbers = [1, 2, 3, 4, 5, 6];
 
 const result = numbers
-  .filter(x => x % 2 === 0)  // [2, 4, 6]
-  .map(x => x * x)            // [4, 16, 36]
-  .reduce((acc, x) => acc + x, 0); // 56
+  .filter(number => number % 2 === 0)
+  .map(number => number * number)
+  .reduce((total, number) => total + number, 0);
 
 console.log(result); // 56
 ```
 
-This is a powerful pattern for processing data step by step.
+Keep chains short enough to read. If a chain gets confusing, split it into named intermediate variables.
 
-## Common array operations
+## Common patterns
 
-### Checking if array is empty
+### Checking if an array is empty
+
+Empty arrays are truthy, so check `.length`:
 
 ```javascript
-const arr = [];
+const items = [];
 
-if (arr.length === 0) {
+if (items.length === 0) {
   console.log("Array is empty");
-}
-
-// Note: Empty array is truthy, so this doesn't work:
-if (arr) {
-  console.log("This runs even for empty arrays!");
 }
 ```
 
 ### Copying arrays
 
+Use the spread operator for a shallow copy:
+
 ```javascript
 const original = [1, 2, 3];
+const copy = [...original];
 
-// Shallow copy using spread operator
-const copy1 = [...original];
-
-// Shallow copy using slice()
-const copy2 = original.slice();
-
-// Note: These are shallow copies. Nested arrays/objects are still shared.
+console.log(copy); // [1, 2, 3]
 ```
+
+This is a shallow copy. Nested objects and arrays are still shared.
 
 ### Combining arrays
 
-```javascript
-const arr1 = [1, 2];
-const arr2 = [3, 4];
-
-const combined = [...arr1, ...arr2];  // [1, 2, 3, 4] (spread operator)
-const combined2 = arr1.concat(arr2);   // [1, 2, 3, 4] (concat method)
-```
-
-### Sorting arrays
+Use spread syntax or `concat()`:
 
 ```javascript
-const numbers = [3, 1, 4, 1, 5];
-numbers.sort();  // [1, 1, 3, 4, 5] (mutates original)
+const first = [1, 2];
+const second = [3, 4];
 
-// For numbers, you need a compare function
-const nums = [10, 5, 40, 25];
-nums.sort((a, b) => a - b);  // [5, 10, 25, 40] (ascending)
-nums.sort((a, b) => b - a);  // [40, 25, 10, 5] (descending)
+const combined = [...first, ...second];
+
+console.log(combined); // [1, 2, 3, 4]
 ```
 
-## Arrays vs objects (when to use each)
+### Sorting numbers
 
-- **Use arrays** when:
-  - Order matters
-  - You need to iterate over all elements
-  - You have a list of similar items
+`sort()` mutates the original array and sorts values as strings by default. For numbers, pass a compare function:
 
-- **Use objects** (covered in the [next guide](./objects)) when:
-  - You need to look up values by name/key
-  - The data has a structure (properties with meaning)
-  - Order doesn't matter (usually)
+```javascript
+const numbers = [10, 5, 40, 25];
+
+numbers.sort((a, b) => a - b);
+
+console.log(numbers); // [5, 10, 25, 40]
+```
+
+To avoid mutating the original:
+
+```javascript
+const numbers = [10, 5, 40, 25];
+const sorted = [...numbers].sort((a, b) => a - b);
+
+console.log(numbers); // [10, 5, 40, 25]
+console.log(sorted);  // [5, 10, 25, 40]
+```
+
+## Arrays vs objects
+
+Use arrays when:
+
+- Order matters
+- You have a list of similar items
+- You want to iterate over every item
+- You want array methods like `map()`, `filter()`, and `reduce()`
+
+Use objects when:
+
+- You need to look up values by name
+- The data has meaningful properties
+- You are representing one structured thing, like a user or configuration
+
+```javascript
+const names = ["Alice", "Bob", "Charlie"];
+
+const user = {
+  name: "Alice",
+  age: 30
+};
+```
+
+## Best practices
+
+- **Prefer array literals**: Use `[]` instead of `new Array()`.
+- **Use `const` for arrays by default**: The array can still be mutated, but the variable cannot be reassigned.
+- **Check `.length` for emptiness**: Empty arrays are truthy.
+- **Know which methods mutate**: Be careful with `sort()`, `reverse()`, `splice()`, and push/pop methods.
+- **Use `map()` for transformation**: Do not use it just for side effects.
+- **Keep chains readable**: Split long chains into named steps.
+- **Use objects for named data**: If each value needs a label, an object may be clearer than an array.
+
+## Summary
+
+Arrays are ordered collections for lists of values. Use indexes to access items, `.length` to check size, and methods like `map()`, `filter()`, `find()`, and `reduce()` to process data. Remember the mutation rule: some methods change the original array, while others return a new value. When in doubt, choose the method that makes the data flow easiest to read.
