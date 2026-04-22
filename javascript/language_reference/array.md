@@ -10,13 +10,6 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
-<!-- ## Properties
-
-```javascript
-> Object.getOwnPropertyNames(Array.prototype)
-['length', 'constructor', 'at', 'concat', 'copyWithin', 'entries', 'every', 'fill', 'filter', 'find', 'findIndex', 'findLast', 'findLastIndex', 'flat', 'flatMap', 'forEach', 'includes', 'indexOf', 'join', 'keys', 'lastIndexOf', 'map', 'pop', 'push', 'reduce', 'reduceRight', 'reverse', 'shift', 'slice', 'some', 'sort', 'splice', 'toLocaleString', 'toString', 'unshift', 'values', 'toReversed', 'toSorted', 'toSpliced', 'with']
-``` -->
-
 ## Definition
 
 An `Array` is a collection of items defined with square brackets `[]`. These items are stored at locations within the array starting at index `0`. Items within an array can be modified, added, or removed, and can contain multiple types, including other arrays. Unlike many other programming languages, a JavaScript array can contain many different types: `['apple', 2, true, 'string cheese']`.

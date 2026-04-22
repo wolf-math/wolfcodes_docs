@@ -10,13 +10,6 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
-<!-- ## Properties
-
-```javascript
-> Object.getOwnPropertyNames(Function.prototype)
-['constructor', 'apply', 'bind', 'call', 'toString', 'name', 'length', Symbol.hasInstance]
-``` -->
-
 ## Definition
 
 A `Function` is a callable object that executes a block of code. Functions are first-class objects in JavaScript, meaning they can be assigned to variables, passed as arguments, and returned from other functions.

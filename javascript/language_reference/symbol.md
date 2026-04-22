@@ -10,13 +10,6 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
-<!-- ## Properties
-
-```javascript
-> Object.getOwnPropertyNames(Symbol.prototype)
-['constructor', 'toString', 'valueOf', 'description', Symbol.toPrimitive]
-``` -->
-
 ## Definition
 
 A `Symbol` is a unique and immutable primitive value that may be used as the key of an object property. Symbols are guaranteed to be unique—even if you create two symbols with the same description, they are different values.
@@ -199,9 +192,9 @@ class MyMatcher {
 "hello".match(new MyMatcher("ll"))  // 2
 ```
 
-## Common use cases
+## Behavioral notes
 
-### Private Properties
+### Private properties
 
 Symbols can be used to create "private" properties (though not truly private):
 
@@ -219,7 +212,7 @@ class MyClass {
 }
 ```
 
-### Avoiding Property Name Collisions
+### Avoiding property name collisions
 
 Symbols ensure unique property names:
 
@@ -278,4 +271,3 @@ const userId = Symbol("userId")
 // Less helpful
 const userId = Symbol()
 ```
-

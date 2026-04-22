@@ -10,594 +10,957 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
-<!-- ## Properties
-
-```javascript
-Object.getOwnPropertyNames(String.prototype)
-// ['length', 'constructor', 'anchor', 'big', 'blink', 'bold', 'charAt', 'charCodeAt', 'codePointAt', 'concat', 'endsWith', 'fontcolor', 'fontsize', 'includes', 'indexOf', 'italics', 'lastIndexOf', 'link', 'localeCompare', 'match', 'matchAll', 'normalize', 'padEnd', 'padStart', 'repeat', 'replace', 'replaceAll', 'search', 'slice', 'small', 'split', 'startsWith', 'strike', 'sub', 'substr', 'substring', 'sup', 'toLocaleLowerCase', 'toLocaleUpperCase', 'toLowerCase', 'toString', 'toUpperCase', 'trim', 'trimEnd', 'trimLeft', 'trimRight', 'trimStart', 'valueOf', 'at']
-``` -->
 
 ## Definition
 
-A `String` is a sequence of characters used to represent text. Strings in JavaScript are immutable, meaning, once created, they cannot be changed. Only new strings can be created.
+A `String` is a sequence of text characters. Strings are usually created with single quotes, double quotes, or backticks.
+
+Strings in JavaScript are **immutable**. A string method never changes the original string; methods such as `trim()`, `replace()`, and `toUpperCase()` return new strings instead.
 
 ```javascript
-typeof "hello"   // "string"
-typeof 'world'   // "string"
-typeof `template` // "string"
+> typeof "hello"
+"string"
+
+> typeof 'world'
+"string"
+
+> typeof `template`
+"string"
+```
+
+:::note
+JavaScript has string primitives, such as `"hello"`, and `String` objects, such as `new String("hello")`. Use string primitives in normal code. `String` objects are rarely needed and can make equality checks surprising.
+:::
+
+```javascript
+> "hello" === "hello"
+true
+
+> new String("hello") === "hello"
+false
+
+> new String("hello").valueOf() === "hello"
+true
 ```
 
 ## Using strings
 
-If a string does not have quotation marks it will be interpreted as a variable.
+### Creating strings
+
+Strings can be created with single quotes, double quotes, or template literals.
 
 ```javascript
-"this is a string"
-'this is also a string'
-this is not a string  // ReferenceError if not defined
+const single = 'hello'
+const double = "hello"
+const template = `hello`
 ```
 
-A multiline string can be created with template literals (backticks) or by escaping newlines.
+If text is not wrapped in quotes, JavaScript treats it as a variable name.
 
 ```javascript
-// Template literals (ES6+)
-`multi
-line
-string`
+const greeting = "hello"
 
-// Escaped newlines
-"multi\nline\nstring"
+greeting  // "hello"
+
+// This would cause an error if hello is not defined:
+// hello  // ReferenceError: hello is not defined
+```
+
+Use either single quotes or double quotes consistently within a file. Use template literals when you need interpolation or a multiline string.
+
+### Template literals
+
+Template literals use backticks. They can include variables and expressions inside `${}`.
+
+```javascript
+const language = "JavaScript"
+const year = 1995
+
+console.log(`${language} was first released in ${year}`)
+// JavaScript was first released in 1995
+```
+
+Expressions can run inside the placeholder.
+
+```javascript
+const price = 25
+const quantity = 4
+
+console.log(`Total: $${price * quantity}`)
+// Total: $100
+```
+
+Template literals can also span multiple lines.
+
+```javascript
+const message = `First line
+Second line`
+
+console.log(message)
+// First line
+// Second line
 ```
 
 ### Escape characters
 
-The backslash `\` can "escape" a quotation mark. When escaped, JavaScript will interpret the quotation mark as a character instead of the termination of the string.
+Use a backslash `\` to escape characters that would otherwise end the string or have special meaning.
 
 ```javascript
-"The cow says \"moo\""
-// "The cow says "moo""
+const quote = "The cow says \"moo\""
+console.log(quote)
+// The cow says "moo"
 
-'It\'s a string'
-// "It's a string"
+const contraction = 'It\'s a string'
+console.log(contraction)
+// It's a string
 ```
 
-A new line can be created within a string with `\n`.
+Common escape sequences:
+
+| Escape sequence | Meaning |
+| --------------- | ------- |
+| `\\` | Backslash |
+| `\"` | Double quote |
+| `\'` | Single quote |
+| `\n` | Newline |
+| `\r` | Carriage return |
+| `\t` | Tab |
+| `\uXXXX` | Unicode escape |
 
 ```javascript
-console.log("This string will print\non 2 lines")
-// This string will print
-// on 2 lines
-```
+console.log("This string prints\non two lines")
+// This string prints
+// on two lines
 
-Other common escape sequences:
-
-```javascript
-"Tab\tseparated"       // Tab    separated
-"Backslash\\"          // Backslash\
-"Carriage return\r"    // Carriage return
-"Single quote\'"       // Single quote'
-"Double quote\""       // Double quote"
-```
-
-### Template literals
-
-Template literals (backticks) allow values to be interpolated into a string. They can be used with expressions inside curly braces.
-
-```javascript
-const year = 1995
-console.log(`JavaScript was first released in ${year}`)
-// "JavaScript was first released in 1995"
-```
-
-Expressions can be executed inside of a template literal:
-
-```javascript
-console.log(`For computers, time began in the year ${2000 - 30}`)
-// "For computers, time began in the year 1970"
-```
-
-### Basic operations on strings
-
-Two or more strings can be added with a `+` operator or a string can be multiplied by a `number` with the `repeat()` method.
-
-```javascript
-"hello" + "world"
-// "helloworld"
-
-"hello".repeat(3)
-// "hellohellohello"
+console.log("Column 1\tColumn 2")
+// Column 1    Column 2
 ```
 
 ### Accessing characters
 
-String characters are accessed by their index. Indices start at `0`. A negative index can be used with the `at()` method (ES2022).
+String characters can be accessed by index. Indexes start at `0`.
 
 ```javascript
-const str = "hello"
+const word = "hello"
 
-str[0]        // "h"
-str[1]        // "e"
-str[4]        // "o"
-str[10]       // undefined (out of bounds)
-
-// Using at() method (ES2022)
-str.at(-1)    // "o" (last character)
-str.at(-2)    // "l" (second from end)
+console.log(word[0])  // "h"
+console.log(word[1])  // "e"
+console.log(word[4])  // "o"
+console.log(word[10]) // undefined
 ```
+
+Use `at()` when you want negative indexes.
+
+```javascript
+const word = "hello"
+
+console.log(word.at(0))  // "h"
+console.log(word.at(-1)) // "o"
+console.log(word.at(-2)) // "l"
+```
+
+:::note
+String indexes are based on UTF-16 code units, not always full user-visible characters. Emoji and some symbols may take more than one index.
+:::
+
+```javascript
+const smile = "😊"
+
+console.log(smile.length) // 2
+console.log(smile[0])     // "\ud83d"
+```
+
+### String length
+
+The `length` property returns the number of UTF-16 code units in the string.
+
+```javascript
+console.log("hello".length) // 5
+console.log("".length)      // 0
+console.log("😊".length)    // 2
+```
+
+`length` is a property, not a method.
+
+```javascript
+"hello".length   // correct
+// "hello".length()  // TypeError: "hello".length is not a function
+```
+
+### Combining strings
+
+Use `+` to concatenate strings. Use template literals when variables are involved.
+
+```javascript
+const firstName = "Ada"
+const lastName = "Lovelace"
+
+console.log(firstName + " " + lastName)
+// Ada Lovelace
+
+console.log(`${firstName} ${lastName}`)
+// Ada Lovelace
+```
+
+If one side of `+` is a string, JavaScript usually converts the other side to a string.
+
+```javascript
+console.log("Score: " + 10)
+// Score: 10
+```
+
+Use template literals when this conversion should be obvious to the reader.
 
 ### Slicing strings
 
-A substring can be extracted from a string by slicing using the syntax:
+Use `slice()` to extract part of a string. It returns a new string and does not change the original.
 
 ```javascript
-string.slice(start, end)
+const food = "chicken-nuggets"
+
+console.log(food.slice(0, 7)) // "chicken"
+console.log(food.slice(8))    // "nuggets"
+console.log(food.slice(-7))   // "nuggets"
+console.log(food)             // "chicken-nuggets"
 ```
 
-The `start` is the index of the first character of the slice. The slice continues up to but not including the index `end`. If no index is specified the respective beginning or end of the string is considered.
+The start index is included. The end index is excluded.
 
 ```javascript
-"chicken-nuggets".slice(0, 7)
-// "chicken"
-
-"chicken-nuggets".slice(3, 9)
-// "cken-n"
-
-"chicken-nuggets".slice(8)
-// "nuggets"
-
-"chicken-nuggets".slice(-7)
-// "nuggets" (from end)
+console.log("hello".slice(1, 4)) // "ell"
 ```
 
-### `includes()` and membership testing
+### Membership testing
 
-Existence of a substring within a string can be checked with `includes()`.
+Use `includes()` to check whether a string contains a substring.
 
 ```javascript
-"chicken nuggets".includes("gg")
-// true
+const sentence = "chicken nuggets"
 
-"chicken nuggets".includes("potatoes")
-// false
+console.log(sentence.includes("nug"))      // true
+console.log(sentence.includes("potatoes")) // false
+```
 
-"chicken nuggets".includes("chicken")
-// true
+Use `startsWith()` and `endsWith()` when the position matters.
+
+```javascript
+const filename = "report.pdf"
+
+console.log(filename.startsWith("report")) // true
+console.log(filename.endsWith(".pdf"))     // true
 ```
 
 ## Operations on strings
 
-JavaScript provides various operations that can be performed on strings through operators and built-in methods.
-
 | Operation | Syntax | Example | Result |
-| --- | --- | --- | --- |
+| --------- | ------ | ------- | ------ |
 | Concatenation | `+` | `"cat" + "fish"` | `"catfish"` |
+| Template interpolation | `` `${name}` `` | `` `Hi, ${"Ada"}` `` | `"Hi, Ada"` |
 | Index access | `[index]` | `"cat"[1]` | `"a"` |
+| Negative index access | `at(index)` | `"cat".at(-1)` | `"t"` |
 | Length | `.length` | `"hello".length` | `5` |
 | Equality | `===` | `"dog" === "dog"` | `true` |
 | Inequality | `!==` | `"dog" !== "cat"` | `true` |
-| Less than | `<` | `"ant" < "bat"` | `true` |
-| Less than or equal | `<=` | `"ant" <= "ant"` | `true` |
-| Greater than | `>` | `"bat" > "ant"` | `true` |
-| Greater than or equal | `>=` | `"bat" >= "bat"` | `true` |
+| Lexicographic comparison | `<` | `"ant" < "bat"` | `true` |
+| Membership | `includes()` | `"hello".includes("ell")` | `true` |
 
----
+String comparisons are based on Unicode code unit order. For human-language sorting, prefer `localeCompare()` or `Intl.Collator`.
+
+```javascript
+console.log("Z" < "a") // true
+```
 
 ## String methods
 
-### `at`
+String methods return new values. They do not mutate the original string.
 
-Returns the character at a specified index. Accepts negative indices to count from the end.
+:::note
+Some JavaScript runtimes also expose old HTML wrapper methods on `String.prototype`, such as `bold()`, `link()`, and `fontcolor()`. They are obsolete and should not be used in modern code.
+:::
+
+### `at()`
+
+Returns the character at a specified index. Accepts negative indexes to count backward from the end of the string. Returns `undefined` when the index is out of range.
 
 ```javascript
-"hello".at(0)
-// "h"
+const word = "hello"
 
-"hello".at(-1)
-// "o"
+console.log(word.at(0))  // "h"
+console.log(word.at(-1)) // "o"
+console.log(word.at(10)) // undefined
+```
 
-"hello".at(10)
-// undefined
+Use `at()` when negative indexing makes the code clearer.
+
+---
+
+### `charAt()`
+
+Returns the character at a specified index. Unlike bracket access and `at()`, `charAt()` returns an empty string when the index is out of range.
+
+```javascript
+const word = "hello"
+
+console.log(word.charAt(0))  // "h"
+console.log(word.charAt(10)) // ""
 ```
 
 ---
 
-### `charAt`
+### `charCodeAt()`
 
-Returns the character at a specified index.
+Returns the UTF-16 code unit at a specified index. Returns `NaN` when the index is out of range.
 
 ```javascript
-"hello".charAt(0)
-// "h"
+console.log("hello".charCodeAt(0)) // 104
+console.log("hello".charCodeAt(9)) // NaN
+```
 
-"hello".charAt(10)
-// "" (empty string, not undefined)
+Use `codePointAt()` when you need to work with full Unicode code points.
+
+---
+
+### `codePointAt()`
+
+Returns the Unicode code point at a specified index. Returns `undefined` when the index is out of range.
+
+```javascript
+console.log("A".codePointAt(0))  // 65
+console.log("😊".codePointAt(0)) // 128522
+console.log("A".codePointAt(5))  // undefined
+```
+
+This is usually better than `charCodeAt()` for characters outside the basic multilingual plane, such as many emoji.
+
+---
+
+### `concat()`
+
+Combines the string with one or more values and returns a new string.
+
+```javascript
+console.log("Hello".concat(" ", "world"))
+// Hello world
+```
+
+The `+` operator or template literals are usually easier to read.
+
+```javascript
+const name = "Ada"
+
+console.log("Hello, " + name)
+console.log(`Hello, ${name}`)
 ```
 
 ---
 
-### `charCodeAt`
+### `endsWith()`
 
-Returns the Unicode value of the character at a specified index.
+Returns `true` if the string ends with the specified substring. Otherwise, returns `false`.
 
 ```javascript
-"hello".charCodeAt(0)
-// 104 (Unicode for 'h')
+const filename = "photo.jpg"
+
+console.log(filename.endsWith(".jpg")) // true
+console.log(filename.endsWith(".png")) // false
+```
+
+An optional second argument limits the string length checked.
+
+```javascript
+console.log("JavaScript".endsWith("Java", 4)) // true
 ```
 
 ---
 
-### `codePointAt`
+### `includes()`
 
-Returns the Unicode code point value at a specified index.
+Returns `true` if the string contains the specified substring. Otherwise, returns `false`.
 
 ```javascript
-"😊".codePointAt(0)
-// 128522
+const message = "hello world"
+
+console.log(message.includes("world")) // true
+console.log(message.includes("WORLD")) // false
+```
+
+`includes()` is case-sensitive. Use `toLowerCase()` or `toLocaleLowerCase()` first when you need a case-insensitive check.
+
+```javascript
+const answer = "Yes"
+
+console.log(answer.toLowerCase().includes("yes")) // true
 ```
 
 ---
 
-### `concat`
+### `indexOf()`
 
-Combines two or more strings.
+Returns the index of the first occurrence of a substring. Returns `-1` if the substring is not found.
 
 ```javascript
-"Hello".concat(" ", "world")
-// "Hello world"
+const message = "hello world"
 
-"Hello" + " " + "world"
-// Same result (preferred)
+console.log(message.indexOf("o")) // 4
+console.log(message.indexOf("x")) // -1
+```
+
+An optional second argument sets the index where the search begins.
+
+```javascript
+console.log("hello world".indexOf("o", 5)) // 7
+```
+
+Use `includes()` when you only need a yes-or-no membership check.
+
+---
+
+### `lastIndexOf()`
+
+Returns the index of the last occurrence of a substring. Returns `-1` if the substring is not found.
+
+```javascript
+const phrase = "to be or not to be"
+
+console.log(phrase.lastIndexOf("be")) // 16
+console.log(phrase.lastIndexOf("to")) // 13
+console.log(phrase.lastIndexOf("x"))  // -1
 ```
 
 ---
 
-### `endsWith`
+### `localeCompare()`
 
-Returns `true` if a string terminates with a specified substring. Otherwise returns `false`.
+Compares two strings according to locale-aware sorting rules. Returns a negative number, `0`, or a positive number.
 
 ```javascript
-"friend".endsWith("end")
-// true
-
-"friend".endsWith("fri")
-// false
+console.log("a".localeCompare("b")) // negative number
+console.log("b".localeCompare("a")) // positive number
+console.log("a".localeCompare("a")) // 0
 ```
+
+Do not depend on the exact negative or positive value. Only the sign matters.
+
+```javascript
+const names = ["Zoe", "Ana", "Émile"]
+
+names.sort((a, b) => a.localeCompare(b))
+console.log(names)
+// ["Ana", "Émile", "Zoe"]
+```
+
+For repeated sorting, `Intl.Collator` can be clearer and more configurable.
 
 ---
 
-### `includes`
+### `match()`
 
-Determines whether a string contains a substring.
-
-```javascript
-"hello".includes("ell")
-// true
-
-"hello".includes("xyz")
-// false
-```
-
----
-
-### `indexOf`
-
-Returns the index of the first occurrence of a substring within a string. Returns `-1` if not found.
+Matches the string against a regular expression. Returns an array of matches or `null` when there is no match.
 
 ```javascript
-"Hello world".indexOf("wo")
-// 6
-
-"hello world".indexOf("o")
-// 4
-
-"hello world".indexOf("x")
-// -1
-```
-
----
-
-### `lastIndexOf`
-
-Returns the index of the last occurrence of a substring within a string. Returns `-1` if not found.
-
-```javascript
-"to be or not to be".lastIndexOf("be")
-// 16
-
-"to be or not to be".lastIndexOf("to")
-// 13
-
-"to be or not to be".lastIndexOf("42")
-// -1
-```
-
----
-
-### `localeCompare`
-
-Compares two strings in the current locale.
-
-```javascript
-"a".localeCompare("b")
-// -1 (a comes before b)
-
-"b".localeCompare("a")
-// 1 (b comes after a)
-
-"a".localeCompare("a")
-// 0 (equal)
-```
-
----
-
-### `match`
-
-Matches a string against a regular expression.
-
-```javascript
-"hello".match(/l/g)
+console.log("hello".match(/l/g))
 // ["l", "l"]
 
-"hello".match(/x/)
+console.log("hello".match(/x/))
 // null
 ```
 
----
+Use `match()` when you want the matched values. Use `search()` when you only need the index of the first match.
 
-### `matchAll`
-
-Returns an iterator of all matches of a regular expression.
-
-```javascript
-Array.from("hello hello".matchAll(/hello/g))
-// [["hello"], ["hello"]]
-```
+See also [`RegExp`](./regexp).
 
 ---
 
-### `normalize`
+### `matchAll()`
 
-Returns the Unicode Normalization Form of a string.
-
-```javascript
-"\u0041\u030A".normalize()
-// "Å"
-```
-
----
-
-### `padEnd`
-
-Pads the end of a string to a specified length.
+Returns an iterator of all regular expression matches. The regular expression must use the `g` flag.
 
 ```javascript
-"42".padEnd(5, "0")
-// "42000"
+const text = "item-1 item-2"
+const matches = text.matchAll(/item-(\d)/g)
 
-"42".padEnd(5)
-// "42   " (spaces by default)
-```
-
----
-
-### `padStart`
-
-Pads the start of a string to a specified length.
-
-```javascript
-"42".padStart(5, "0")
-// "00042"
-
-"42".padStart(5)
-// "   42" (spaces by default)
-```
-
----
-
-### `repeat`
-
-Returns a new string with a specified number of copies.
-
-```javascript
-"hello".repeat(3)
-// "hellohellohello"
-```
-
----
-
-### `replace`
-
-Replaces the first occurrence of a substring or pattern.
-
-```javascript
-"hello world".replace("world", "JavaScript")
-// "hello JavaScript"
-
-"hello hello".replace("hello", "hi")
-// "hi hello" (only first)
-```
-
----
-
-### `replaceAll`
-
-Replaces all occurrences of a substring or pattern.
-
-```javascript
-"hello hello".replaceAll("hello", "hi")
-// "hi hi"
-```
-
----
-
-### `search`
-
-Searches for a match between a regular expression and a string.
-
-```javascript
-"hello".search(/l/)
+for (const match of matches) {
+  console.log(match[1])
+}
+// 1
 // 2
-
-"hello".search(/x/)
-// -1
 ```
 
----
-
-### `slice`
-
-Extracts a section of a string and returns it as a new string.
+Convert the iterator to an array when you need to inspect all matches at once.
 
 ```javascript
-"hello".slice(1, 4)
-// "ell"
+const results = Array.from("hello hello".matchAll(/hello/g))
 
-"hello".slice(1)
-// "ello"
-
-"hello".slice(-3)
-// "llo" (from end)
+console.log(results.length) // 2
 ```
 
 ---
 
-### `split`
+### `normalize()`
+
+Returns a Unicode-normalized version of the string.
+
+```javascript
+const composed = "\u00F1"
+const decomposed = "\u006E\u0303"
+
+console.log(composed === decomposed)              // false
+console.log(composed === decomposed.normalize())  // true
+```
+
+Use `normalize()` when visually identical text may be represented with different Unicode sequences.
+
+---
+
+### `padEnd()`
+
+Pads the end of a string until it reaches a target length. Returns a new string.
+
+```javascript
+console.log("42".padEnd(5, "0")) // "42000"
+console.log("42".padEnd(5))      // "42   "
+```
+
+If the string is already at least the target length, the original string value is returned unchanged.
+
+```javascript
+console.log("hello".padEnd(3, ".")) // "hello"
+```
+
+---
+
+### `padStart()`
+
+Pads the start of a string until it reaches a target length. Returns a new string.
+
+```javascript
+console.log("42".padStart(5, "0")) // "00042"
+console.log("42".padStart(5))      // "   42"
+```
+
+This is commonly used for fixed-width IDs, times, or numbers displayed as text.
+
+```javascript
+const minutes = 7
+
+console.log(String(minutes).padStart(2, "0")) // "07"
+```
+
+---
+
+### `repeat()`
+
+Returns a new string containing the original string repeated a specified number of times.
+
+```javascript
+console.log("ha".repeat(3)) // "hahaha"
+```
+
+The count must be non-negative and finite.
+
+```javascript
+// "ha".repeat(-1)       // RangeError
+// "ha".repeat(Infinity) // RangeError
+```
+
+---
+
+### `replace()`
+
+Replaces the first matching substring or regular expression match and returns a new string.
+
+```javascript
+console.log("hello world".replace("world", "JavaScript"))
+// hello JavaScript
+
+console.log("hello hello".replace("hello", "hi"))
+// hi hello
+```
+
+With a regular expression that uses the `g` flag, `replace()` replaces all matches.
+
+```javascript
+console.log("hello hello".replace(/hello/g, "hi"))
+// hi hi
+```
+
+The replacement can also be a callback.
+
+```javascript
+const result = "item 1 item 2".replace(/\d/g, number => Number(number) * 10)
+
+console.log(result)
+// item 10 item 20
+```
+
+---
+
+### `replaceAll()`
+
+Replaces all occurrences of a substring or regular expression match and returns a new string.
+
+```javascript
+console.log("hello hello".replaceAll("hello", "hi"))
+// hi hi
+```
+
+When using a regular expression with `replaceAll()`, the regular expression must have the `g` flag.
+
+```javascript
+console.log("a-b-c".replaceAll(/-/g, " "))
+// a b c
+
+// "a-b-c".replaceAll(/-/, " ")  // TypeError
+```
+
+Use `replaceAll()` when you want all literal occurrences replaced and do not need regular expression behavior.
+
+---
+
+### `search()`
+
+Searches for a regular expression match and returns the index of the first match. Returns `-1` if there is no match.
+
+```javascript
+console.log("hello".search(/l/)) // 2
+console.log("hello".search(/x/)) // -1
+```
+
+Use `indexOf()` for plain substring searches and `search()` for regular expressions.
+
+---
+
+### `slice()`
+
+Extracts part of a string and returns it as a new string. The start index is included, and the end index is excluded.
+
+```javascript
+const word = "hello"
+
+console.log(word.slice(1, 4)) // "ell"
+console.log(word.slice(1))    // "ello"
+console.log(word.slice(-3))   // "llo"
+console.log(word)             // "hello"
+```
+
+Use `slice()` as the default method for extracting part of a string.
+
+---
+
+### `split()`
 
 Splits a string into an array of substrings.
 
 ```javascript
-"hello world".split(" ")
+console.log("hello world".split(" "))
 // ["hello", "world"]
 
-"a,b,c".split(",")
+console.log("a,b,c".split(","))
 // ["a", "b", "c"]
+```
 
-"hello".split("")
+Use an empty string to split into UTF-16 code units.
+
+```javascript
+console.log("hello".split(""))
 // ["h", "e", "l", "l", "o"]
 ```
 
----
-
-### `startsWith`
-
-Returns `true` if the string begins with the indicated substring, otherwise returns `false`.
+An optional second argument limits the number of pieces.
 
 ```javascript
-"to be or not to be".startsWith("t")
-// true
+console.log("a,b,c".split(",", 2))
+// ["a", "b"]
+```
 
-"to be or not to be".startsWith("to")
-// true
+For structured formats with quoting or escaping rules, such as CSV, use a parser instead of relying only on `split()`.
 
-"to be or not to be".startsWith("be")
-// false
+:::note
+`split("")` can break emoji and other characters represented by multiple UTF-16 code units. Use `Array.from(text)` when you need a better approximation of user-visible characters.
+:::
+
+```javascript
+console.log("😊".split(""))   // ["\ud83d", "\ude0a"]
+console.log(Array.from("😊")) // ["😊"]
 ```
 
 ---
 
-### `substring`
+### `startsWith()`
 
-Similar to `slice()`, but doesn't accept negative indices.
+Returns `true` if the string starts with the specified substring. Otherwise, returns `false`.
 
 ```javascript
-"hello".substring(1, 4)
-// "ell"
+const phrase = "to be or not to be"
 
-"hello".substring(1)
-// "ello"
+console.log(phrase.startsWith("to")) // true
+console.log(phrase.startsWith("be")) // false
+```
+
+An optional second argument sets the position where the check begins.
+
+```javascript
+console.log("JavaScript".startsWith("Script", 4)) // true
 ```
 
 ---
 
-### `substr` (deprecated)
+### `substring()`
 
-Extracts a substring starting at a specified position. **Deprecated**: Use `slice()` instead.
+Extracts part of a string and returns it as a new string. Unlike `slice()`, `substring()` treats negative indexes as `0` and swaps the start and end indexes if start is greater than end.
+
+```javascript
+console.log("hello".substring(1, 4)) // "ell"
+console.log("hello".substring(4, 1)) // "ell"
+console.log("hello".substring(-3))   // "hello"
+```
+
+Prefer `slice()` in most new code because its negative-index behavior is more useful and predictable.
 
 ---
 
-### `toLowerCase`
+### `substr()` (deprecated)
 
-Returns a string converted to lowercase.
+Extracts part of a string starting at an index for a specified length.
 
 ```javascript
-"HeLlO wOrLd!".toLowerCase()
-// "hello world!"
+console.log("hello".substr(1, 3)) // "ell"
+```
+
+:::note
+`substr()` is deprecated. Use `slice()` instead.
+:::
+
+---
+
+### `toLowerCase()`
+
+Returns a new string converted to lowercase.
+
+```javascript
+console.log("HeLlO wOrLd!".toLowerCase())
+// hello world!
+```
+
+This method is not locale-specific. Use `toLocaleLowerCase()` when locale-specific casing matters.
+
+---
+
+### `toLocaleLowerCase()`
+
+Returns a new string converted to lowercase according to locale-specific case mappings.
+
+```javascript
+console.log("İ".toLocaleLowerCase("tr"))
+// i
+```
+
+Use this when casing depends on a language or locale.
+
+---
+
+### `toUpperCase()`
+
+Returns a new string converted to uppercase.
+
+```javascript
+console.log("lowercase".toUpperCase())
+// LOWERCASE
+```
+
+This method is not locale-specific. Use `toLocaleUpperCase()` when locale-specific casing matters.
+
+---
+
+### `toLocaleUpperCase()`
+
+Returns a new string converted to uppercase according to locale-specific case mappings.
+
+```javascript
+console.log("i".toLocaleUpperCase("tr"))
+// İ
 ```
 
 ---
 
-### `toLocaleLowerCase`
+### `trim()`
 
-Returns a string converted to lowercase according to locale-specific case mappings.
+Returns a new string with whitespace removed from both ends.
 
 ```javascript
-"İ".toLocaleLowerCase("tr")
-// "i"
+const padded = "   hello there   "
+
+console.log(padded.trim()) // "hello there"
+console.log(padded)        // "   hello there   "
+```
+
+`trim()` does not remove whitespace inside the string.
+
+---
+
+### `trimEnd()` / `trimRight()`
+
+Returns a new string with trailing whitespace removed.
+
+```javascript
+console.log("hello   ".trimEnd())
+// hello
+```
+
+`trimRight()` is an alias of `trimEnd()`. Prefer `trimEnd()` in new code.
+
+---
+
+### `trimStart()` / `trimLeft()`
+
+Returns a new string with leading whitespace removed.
+
+```javascript
+console.log("   hello".trimStart())
+// hello
+```
+
+`trimLeft()` is an alias of `trimStart()`. Prefer `trimStart()` in new code.
+
+---
+
+### `toString()`
+
+Returns the string representation of a `String` object.
+
+```javascript
+const text = new String("hello")
+
+console.log(text.toString()) // "hello"
+```
+
+For normal string primitives, `toString()` returns the same string value.
+
+```javascript
+console.log("hello".toString()) // "hello"
 ```
 
 ---
 
-### `toUpperCase`
+### `valueOf()`
 
-Returns a string converted to uppercase.
+Returns the primitive string value of a `String` object.
 
 ```javascript
-"lowercase".toUpperCase()
-// "LOWERCASE"
+const text = new String("hello")
+
+console.log(text.valueOf()) // "hello"
+console.log(typeof text)    // "object"
+console.log(typeof text.valueOf()) // "string"
 ```
+
+Use string primitives directly instead of creating `String` objects.
+
+## String static methods
+
+### `String.fromCharCode()`
+
+Creates a string from one or more UTF-16 code units.
+
+```javascript
+console.log(String.fromCharCode(65, 66, 67))
+// ABC
+```
+
+For code points outside the basic multilingual plane, use `String.fromCodePoint()`.
 
 ---
 
-### `toLocaleUpperCase`
+### `String.fromCodePoint()`
 
-Returns a string converted to uppercase according to locale-specific case mappings.
+Creates a string from one or more Unicode code points.
 
 ```javascript
-"i".toLocaleUpperCase("tr")
-// "İ"
+console.log(String.fromCodePoint(128522))
+// 😊
 ```
+
+This handles code points that cannot be represented by a single UTF-16 code unit.
 
 ---
 
-### `trim`
+### `String.raw()`
 
-Returns the given string with leading and trailing whitespace removed.
-
-```javascript
-"         hello        there              ".trim()
-// "hello        there"
-```
-
----
-
-### `trimEnd` / `trimRight`
-
-Returns the given string with trailing whitespace removed.
+Returns a raw string from a template literal, without interpreting escape sequences in the usual way.
 
 ```javascript
-"heehaw           ".trimEnd()
-// "heehaw"
+console.log(String.raw`Line 1\nLine 2`)
+// Line 1\nLine 2
 ```
 
----
+This is useful when writing strings for paths, regular expressions, or other text where backslashes should stay visible.
 
-### `trimStart` / `trimLeft`
+## Behavioral notes
 
-Returns the given string with leading whitespace removed.
+### Strings are immutable
+
+String methods return new strings. They do not modify the original string.
 
 ```javascript
-"     Hello there!".trimStart()
-// "Hello there!"
+const text = " hello "
+
+text.trim()
+console.log(text) // " hello "
+
+const cleaned = text.trim()
+console.log(cleaned) // "hello"
 ```
 
----
+### Indexes use UTF-16 code units
 
-### `valueOf`
-
-Returns the primitive value of a string object.
+String indexes and `length` count UTF-16 code units. Some user-visible characters use more than one code unit.
 
 ```javascript
-const str = new String("hello")
-str.valueOf()
-// "hello"
+console.log("😊".length) // 2
+console.log("😊"[0])     // "\ud83d"
 ```
+
+Use `Array.from()` when you need to iterate over Unicode code points more safely.
+
+```javascript
+console.log(Array.from("😊").length) // 1
+```
+
+### String comparison uses code unit order
+
+Operators such as `<` and `>` compare strings by code unit order.
+
+```javascript
+console.log("Z" < "a") // true
+```
+
+Use `localeCompare()` or `Intl.Collator` for user-facing sorting.
+
+### String objects are not string primitives
+
+`new String()` creates an object wrapper, not a string primitive.
+
+```javascript
+const primitive = "hello"
+const objectString = new String("hello")
+
+console.log(typeof primitive)     // "string"
+console.log(typeof objectString)  // "object"
+console.log(primitive === objectString) // false
+```
+
+## Best practices
+
+1. **Use string primitives**: Write `"hello"`, not `new String("hello")`.
+
+2. **Use template literals for interpolation**: They are easier to read than long `+` chains.
+
+3. **Remember that strings are immutable**: Store the returned value from methods like `trim()`, `replace()`, and `toLowerCase()`.
+
+4. **Use `includes()` for membership checks**: It is clearer than checking whether `indexOf()` returns `-1`.
+
+5. **Prefer `slice()` for extraction**: It handles negative indexes more predictably than `substring()`.
+
+6. **Use locale-aware methods for user-facing text**: Use `localeCompare()`, `toLocaleLowerCase()`, or `toLocaleUpperCase()` when language rules matter.
+
+7. **Be careful with Unicode**: `length`, indexes, and `split("")` do not always match what users see as individual characters.

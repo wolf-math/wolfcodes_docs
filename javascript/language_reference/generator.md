@@ -166,7 +166,7 @@ gen.next(10)    // { value: 12, done: false } (x = 10)
 gen.next(20)    // { value: 20, done: true } (y = 20)
 ```
 
-## Use cases
+## Usage examples
 
 ### Infinite Sequences
 
