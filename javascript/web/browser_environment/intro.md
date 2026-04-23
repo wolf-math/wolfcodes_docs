@@ -207,4 +207,5 @@ This guide intentionally does **NOT** cover:
 - **CSS frameworks** — Bootstrap, Tailwind, etc.
 - **Backend development** — server-side JavaScript
 
+
 We focus on **vanilla JavaScript** and **browser APIs** to give you a solid foundation before learning frameworks.
