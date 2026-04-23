@@ -11,6 +11,49 @@ source:
   canonical_url: https://wolfcodes.dev
 ---
 
+## What is the browser environment?
+
+The **browser environment** is the set of objects and APIs a web browser gives your JavaScript while it runs on a web page. It includes things like the **DOM**, events, networking (`fetch()`), storage, and timers.
+
+The browser environment is:
+- **Page-aware**: it can read and change HTML via the DOM
+- **Event-driven**: it reacts to clicks, input, timers, and network responses
+- **Browser-specific**: these APIs exist in browsers (not in "pure" JavaScript)
+
+### Smallest working example
+
+This is a complete, minimal page that uses HTML + CSS + JavaScript together:
+
+```html
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Browser JavaScript example</title>
+    <style>
+      #message {
+        font-size: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="myButton">Click me</button>
+    <p id="message">Hello</p>
+
+    <script>
+      const button = document.getElementById("myButton");
+      const message = document.getElementById("message");
+
+      if (button && message) {
+        button.addEventListener("click", () => {
+          message.textContent = "Button clicked!";
+        });
+      }
+    </script>
+  </body>
+</html>
+```
+
 ## How JavaScript runs in the browser
 
 JavaScript can run in many environments—browsers, Node.js servers, mobile apps, and more. This guide focuses on **JavaScript in the browser**, where it runs alongside HTML and CSS to create interactive web pages.
@@ -55,12 +98,14 @@ CSS describes *how* things look, but not how they behave.
 **JavaScript** adds **interactivity** and **dynamic behavior**:
 
 ```javascript
-const button = document.getElementById('myButton');
-const message = document.getElementById('message');
+const button = document.getElementById("myButton");
+const message = document.getElementById("message");
 
-button.addEventListener('click', function() {
-  message.textContent = 'Button clicked!';
-});
+if (button && message) {
+  button.addEventListener("click", () => {
+    message.textContent = "Button clicked!";
+  });
+}
 ```
 
 JavaScript describes *what happens* when users interact with the page.
@@ -84,14 +129,17 @@ The browser environment gives JavaScript access to powerful APIs that don't exis
 The **DOM** is a representation of your HTML page that JavaScript can read and modify:
 
 ```javascript
-// Access HTML elements
-const element = document.getElementById('myButton');
+const button = document.getElementById("myButton");
 
-// Change content
-element.textContent = 'New text';
+if (button) {
+  // Change content
+  button.textContent = "New text";
 
-// Add event listeners
-element.addEventListener('click', handleClick);
+  // Add event listeners
+  button.addEventListener("click", () => {
+    console.log("Clicked");
+  });
+}
 ```
 
 ### Browser APIs
@@ -124,9 +172,15 @@ const numbers = [1, 2, 3];
 const doubled = numbers.map(n => n * 2);
 
 // Web Platform (only works in browsers)
-const button = document.getElementById('myButton'); // DOM API
-button.addEventListener('click', handler); // Events API
-fetch('/api/data'); // Fetch API
+const button = document.getElementById("myButton"); // DOM API
+
+if (button) {
+  button.addEventListener("click", () => {
+    console.log("Clicked"); // Events API
+  });
+}
+
+fetch("/api/data"); // Fetch API
 ```
 
 Both are written in JavaScript, but the second example uses browser-specific APIs.
@@ -158,9 +212,9 @@ Placing scripts at the end of `<body>` ensures the DOM is ready before JavaScrip
 For scripts in `<head>`, wait for the DOM to be ready:
 
 ```javascript
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener("DOMContentLoaded", () => {
   // DOM is ready, safe to access elements
-  const button = document.getElementById('myButton');
+  const button = document.getElementById("myButton");
 });
 ```
 
@@ -177,6 +231,10 @@ This ensures all HTML elements exist before your JavaScript tries to access them
 <script src="app.js" async></script>     <!-- Async -->
 <script src="app.js" defer></script>     <!-- Deferred -->
 ```
+
+:::tip
+Default recommendation: either place your `<script>` tag right before `</body>`, or use `defer` for scripts in `<head>`. Both patterns help you avoid "null element" bugs when you query the DOM too early.
+:::
 
 ## Why this matters
 
@@ -199,7 +257,7 @@ This guide teaches you:
 
 ## What this guide does not cover
 
-This guide intentionally does **NOT** cover:
+This guide intentionally does not cover:
 
 - **JavaScript the language** — see the [JavaScript User Guide](../../guides)
 - **React, Vue, Angular** — these are frameworks built on JavaScript
@@ -207,5 +265,11 @@ This guide intentionally does **NOT** cover:
 - **CSS frameworks** — Bootstrap, Tailwind, etc.
 - **Backend development** — server-side JavaScript
 
-
 We focus on **vanilla JavaScript** and **browser APIs** to give you a solid foundation before learning frameworks.
+
+## Next up
+
+- [The Browser Environment](./the_browser_environment)
+- [DOM introduction](../dom/dom_intro)
+- [Selecting elements](../dom/selecting_elements)
+- [DOM events](../events/dom_events)
