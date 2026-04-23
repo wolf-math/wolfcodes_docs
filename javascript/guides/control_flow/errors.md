@@ -368,7 +368,7 @@ fetch("/api/users/1")
   });
 ```
 
-Async patterns are covered in more detail in the [async guide](../async/asyncronous).
+Async patterns are covered in more detail in the [async guide](../async/asynchronous).
 
 ## Common patterns
 

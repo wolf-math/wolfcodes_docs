@@ -11,18 +11,25 @@ source:
   canonical_url: https://wolfcodes.dev
 ---
 
-<!-- **Promises** represent a value that will be available in the future (or an error if something goes wrong).  -->
-
-
 ## What is a promise?
 
-A promise is an object that represents the eventual result of an async operation, or more plainly, a value that will be available in the future. It can be in one of three states:
+**Promises** represent values that will be available in the future (or an error if something goes wrong).
+
+A promise is an object that represents the eventual result of an async operation. It can be in one of three states:
 
 1. **Pending** — operation hasn't completed yet
 2. **Fulfilled** — operation succeeded (resolved with a value)
 3. **Rejected** — operation failed (rejected with an error)
 
 Once a promise is fulfilled or rejected, it's "settled" and cannot change.
+
+```javascript
+const promise = Promise.resolve("Hello");
+
+promise.then(value => {
+  console.log(value); // "Hello"
+});
+```
 
 ## Why promises are better than callbacks
 
@@ -33,6 +40,7 @@ Promises solve the problems with callbacks:
 - **Easier to read** — code flows top to bottom
 - **Easier to debug** — clearer error messages
 
+This page focuses on `.then()` / `.catch()` chaining. Many projects use `async` / `await` on top of promises for readability.
 
 ## Creating promises
 
@@ -50,6 +58,10 @@ const promise = new Promise((resolve, reject) => {
 The function you pass to `Promise` receives two functions:
 - `resolve(value)` — call this when the operation succeeds
 - `reject(error)` — call this when the operation fails
+
+:::warning
+You usually do not need `new Promise(...)` in everyday code. Most promise-based APIs already return promises (like `fetch()` in the browser).
+:::
 
 ## Using promises
 
@@ -86,12 +98,22 @@ promise
   });
 ```
 
-## Chaining promises
-
-This is where promises shine! You can chain multiple async operations without nesting:
+If you return a promise from `.then(...)`, the next `.then(...)` waits for it:
 
 ```javascript
-// With promises - clean and readable!
+Promise.resolve(2)
+  .then(value => Promise.resolve(value * 3))
+  .then(result => {
+    console.log(result); // 6
+  });
+```
+
+## Chaining promises
+
+You can chain multiple async operations without nesting:
+
+```javascript
+// Example async APIs:
 fetchUser(userId)
   .then(user => {
     return fetchPosts(user.id);  // Return a promise
@@ -100,14 +122,16 @@ fetchUser(userId)
     return fetchComments(posts[0].id);  // Return another promise
   })
   .then(comments => {
-    console.log(comments);  // Clean and readable!
+    console.log(comments);
   })
   .catch(error => {
-    console.error("Something went wrong:", error);  // One catch for all errors!
+    console.error("Something went wrong:", error);  // One catch for all errors
   });
 ```
 
-Compare this to the callback version—much cleaner!
+:::note
+The functions in the example (`fetchUser`, `fetchPosts`, `fetchComments`) are placeholders to show chaining structure.
+:::
 
 ### Shorter chaining syntax
 
@@ -155,6 +179,47 @@ fetchUser(userId)
   .catch(error => {
     console.error(error);  // Catches the thrown error
   });
+```
+
+## Common mistakes
+
+### Forgetting to return a promise in a chain
+
+If you start an async step inside `.then(...)` but forget to return it, the outer chain will not wait.
+
+```javascript
+fetchUser(userId)
+  .then(user => {
+    fetchPosts(user.id); // Missing `return`
+  })
+  .then(() => {
+    console.log("This runs too early");
+  });
+```
+
+Return the promise so the chain waits:
+
+```javascript
+fetchUser(userId)
+  .then(user => {
+    return fetchPosts(user.id);
+  })
+  .then(posts => {
+    console.log(posts);
+  });
+```
+
+### Starting a promise and never handling rejection
+
+Promises that reject without a `.catch()` can cause confusing warnings and failures.
+
+```javascript
+Promise.reject(new Error("Boom"));
+
+// Add a catch to handle it:
+Promise.reject(new Error("Boom")).catch(error => {
+  console.log(error.message); // "Boom"
+});
 ```
 
 ## Promise methods
@@ -258,4 +323,4 @@ This is useful when you need to return a promise but already have the value.
 - Chain promises to avoid callback hell
 - One `.catch()` handles errors from anywhere in the chain
 - `Promise.all()` waits for all promises; `Promise.race()` waits for the first
-- Promises are better than callbacks, but [async/await](./async_await) is even better!
+- Many codebases use [`async` / `await`](./async_await) on top of promises for readability

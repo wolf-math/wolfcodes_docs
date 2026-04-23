@@ -11,17 +11,35 @@ source:
   canonical_url: https://wolfcodes.dev
 ---
 
-**`async/await`** is syntactic sugar over [promises](./promises) that makes async code look like synchronous code. It's the **modern, preferred way** to write async JavaScript.
+## What is `async` / `await`?
 
-## Why `async`/`await`?
+**`async` / `await`** is syntax for working with [promises](./promises) that lets async code read more like top-to-bottom code.
 
-`async`/`await` makes async code:
-- **Easier to read** — looks like regular code
-- **Easier to write** — no `.then()` chains
-- **Easier to debug** — standard error handling with `try/catch`
-- **Easier to understand** — flows top to bottom
+```javascript
+function wait(ms) {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
+}
 
-## `async` Functions
+async function example() {
+  console.log("Start");
+  await wait(10);
+  console.log("End");
+}
+
+example();
+```
+
+## Why `async` / `await`?
+
+`async` / `await` is popular because it:
+
+- Reads like normal control flow (`try/catch`, `if`, `for`)
+- Avoids deeply nested callbacks
+- Avoids long `.then(...)` chains in many cases
+
+## `async` functions
 
 An `async` function always returns a promise:
 
@@ -49,7 +67,7 @@ async function getData() {
 
 getData()
   .then(data => {
-    console.log(data);  // "Hello"
+    console.log(data); // "Hello"
   });
 ```
 
@@ -57,12 +75,13 @@ But you'll usually use `await` instead (see below).
 
 ## The `await` keyword
 
-Use `await` to wait for a promise to resolve. It **pauses** the function execution until the promise settles, then returns the value.
+Use `await` to wait for a promise to settle. It pauses the current `async` function until the promise resolves (or rejects), then gives you the resolved value (or throws the rejection error).
 
 ```javascript
 async function getUser() {
-  const user = await fetchUser(userId);  // Wait for promise to resolve
-  console.log(user);  // This runs AFTER fetchUser completes
+  // Example async API:
+  const user = await fetchUser(userId);
+  console.log(user);
 }
 ```
 
@@ -73,16 +92,20 @@ Without `await`, you'd get a promise object. With `await`, you get the actual va
 You can only use `await` inside an `async` function:
 
 ```javascript
-// ✅ Good
+// Good
 async function example() {
   const data = await fetchData();
 }
 
-// ❌ Error - can't use await here
+// Error - can't use await here
 function example() {
   const data = await fetchData();  // SyntaxError!
 }
 ```
+
+:::note
+Some environments also support top-level `await` in modules. As a beginner default, use `await` inside an `async` function.
+:::
 
 ## Chaining with `async`/`await`
 
@@ -90,6 +113,7 @@ Compare promises vs `async`/`await` for chaining operations:
 
 **With promises:**
 ```javascript
+// Example async APIs:
 fetchUser(userId)
   .then(user => fetchPosts(user.id))
   .then(posts => fetchComments(posts[0].id))
@@ -100,6 +124,7 @@ fetchUser(userId)
 **With `async`/`await`:**
 ```javascript
 async function getComments() {
+  // Example async APIs:
   const user = await fetchUser(userId);
   const posts = await fetchPosts(user.id);
   const comments = await fetchComments(posts[0].id);
@@ -107,15 +132,18 @@ async function getComments() {
 }
 ```
 
-Much cleaner! It reads like synchronous code.
+:::note
+The functions in these examples (`fetchUser`, `fetchPosts`, `fetchComments`) are placeholders to show how chaining works.
+:::
 
 ## Error handling
 
-Use `try/catch` with async/await—the same error handling you already know:
+Use `try/catch` with `async` / `await`:
 
 ```javascript
 async function fetchData() {
   try {
+    // Example async API:
     const data = await fetchFromServer();
     console.log(data);
   } catch (error) {
@@ -124,7 +152,7 @@ async function fetchData() {
 }
 ```
 
-This is much cleaner than promise chains with `.catch()`.
+This works because `await` turns a rejected promise into a thrown error.
 
 ### Handling errors in promise chains
 
@@ -158,6 +186,7 @@ Run operations one after another (each waits for the previous):
 
 ```javascript
 async function sequential() {
+  // Example async APIs:
   const user = await fetchUser(id);
   const posts = await fetchPosts(user.id);
   const comments = await fetchComments(posts[0].id);
@@ -172,6 +201,7 @@ Run multiple operations simultaneously using `Promise.all()`:
 ```javascript
 async function parallel() {
   const [user, posts, settings] = await Promise.all([
+    // Example async APIs:
     fetchUser(id),
     fetchPosts(id),
     fetchSettings(id)
@@ -180,7 +210,9 @@ async function parallel() {
 }
 ```
 
-All three fetches happen at the same time, then you wait for all to complete. Learn more about using [`fetch`](/docs/javascript/web/browser_api/networking) for HTTP requests.
+All three operations start immediately, then you wait for all of them to complete.
+
+**Rule of thumb:** use `await` for sequential steps, and `Promise.all(...)` for independent work you can do in parallel.
 
 ### Looping with async
 
@@ -201,6 +233,8 @@ async function processItemsParallel(items) {
   await Promise.all(items.map(item => processItem(item)));
 }
 ```
+
+Be careful with parallel loops if the list can be very large. Starting thousands of async operations at once can overload the system.
 
 ## Converting callback code to async/await
 
@@ -236,7 +270,7 @@ async function getUserProfile(userId) {
     // Fetch data in parallel
     const [user, posts] = await Promise.all([
       fetch(`/api/users/${userId}`).then(r => r.json()),
-      fetch(`/api/users/${userId}/posts`).then(r => r.json())
+      fetch(`/api/users/${userId}/posts`).then(r => r.json()),
     ]);
 
     // Process posts
@@ -255,12 +289,16 @@ async function getUserProfile(userId) {
 }
 
 // Usage
-try {
-  const profile = await getUserProfile(123);
-  console.log(profile);
-} catch (error) {
-  console.error("Error loading profile:", error);
+async function run() {
+  try {
+    const profile = await getUserProfile(123);
+    console.log(profile);
+  } catch (error) {
+    console.error("Error loading profile:", error);
+  }
 }
+
+run();
 ```
 
 ## Common mistakes
@@ -268,13 +306,13 @@ try {
 ### Forgetting `await`
 
 ```javascript
-// ❌ Wrong - returns a promise, not the value
+// Wrong - returns a promise, not the value
 async function example() {
   const data = fetchData();  // Missing await!
   console.log(data);  // Promise object, not the data
 }
 
-// ✅ Correct
+// Correct
 async function example() {
   const data = await fetchData();
   console.log(data);  // Actual data
@@ -284,26 +322,41 @@ async function example() {
 ### Forgetting `async`
 
 ```javascript
-// ❌ Wrong - can't use await without async
+// Wrong - can't use await without async
 function example() {
   const data = await fetchData();  // SyntaxError!
 }
 
-// ✅ Correct
+// Correct
 async function example() {
   const data = await fetchData();
 }
 ```
 
+### Awaiting independent work sequentially
+
+If two async operations do not depend on each other, awaiting them one-by-one is slower than waiting in parallel:
+
+```javascript
+// Slower: runs one after the other
+const user = await fetchUser(id);
+const settings = await fetchSettings(id);
+```
+
+```javascript
+// Faster: start both, then await both
+const [user, settings] = await Promise.all([fetchUser(id), fetchSettings(id)]);
+```
+
 ### Not handling errors
 
 ```javascript
-// ❌ Bad - unhandled rejection
+// Bad - unhandled rejection
 async function badExample() {
   await failingPromise();  // Error not caught!
 }
 
-// ✅ Good - handle errors
+// Good - handle errors
 async function goodExample() {
   try {
     await failingPromise();
@@ -320,6 +373,4 @@ async function goodExample() {
 - Use `try/catch` for error handling (same as synchronous code)
 - Chain operations naturally—no `.then()` needed
 - Use `Promise.all()` for parallel operations
-- Async/await is the **preferred way** to write async JavaScript
-
-**You now know modern async JavaScript!** Use async/await for all new code.
+- `async` / `await` is the most common way to write promise-based code
