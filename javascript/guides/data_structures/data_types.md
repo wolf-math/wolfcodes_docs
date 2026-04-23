@@ -13,278 +13,465 @@ source:
 
 ## What are data types?
 
-**Data types** define what kind of data a value represents and what operations you can perform on it. JavaScript has several built-in data types that fall into two categories:
-
-- **Primitive types** — simple, immutable values
-- **Reference types** — objects and arrays (covered in more detail in later guides)
-
-## Primitive types
-
-Primitive types are the basic building blocks of JavaScript. They're **immutable** (cannot be changed), and when you assign them to variables, the value itself is copied.
-
-### String
-
-A **string** is text data, enclosed in quotes:
+**Data types** describe what kind of value you are working with. A value's type affects what you can do with it: add it, compare it, loop over it, call methods on it, store properties on it, or use it in a condition.
 
 ```javascript
-const name = "Alice";
+const name = "Alice";  // string
+const age = 30;        // number
+const isAdmin = false; // boolean
+const scores = [90, 85, 100]; // array
+```
+
+JavaScript has two broad groups of values:
+
+- **Primitive values**: simple values like strings, numbers, booleans, `null`, and `undefined`
+- **Reference values**: objects, arrays, and functions
+
+## Why this matters
+
+Types shape how JavaScript behaves. The same operator can do different things depending on the types involved:
+
+```javascript
+5 + 3;     // 8
+"5" + 3;   // "53"
+"5" - 3;   // 2
+```
+
+Understanding data types helps you predict what your code will do, avoid confusing type coercion bugs, and choose the right checks before using a value.
+
+## Primitive values
+
+Primitive values are the simplest values in JavaScript. They are **immutable**, which means the value itself cannot be changed. When you "change" a primitive value, you are really creating or assigning a new value.
+
+JavaScript's main primitive types are:
+
+- `string`
+- `number`
+- `bigint`
+- `boolean`
+- `null`
+- `undefined`
+- `symbol`
+
+You will use strings, numbers, booleans, `null`, and `undefined` constantly. `bigint` and `symbol` are more specialized.
+
+### Strings
+
+A **string** is text. Strings can use double quotes, single quotes, or backticks:
+
+```javascript
+const firstName = "Alice";
 const greeting = 'Hello';
-const template = `Template literal`;
+const message = `Hello, ${firstName}!`;
+
+console.log(message); // "Hello, Alice!"
 ```
 
-Strings can use single quotes `'`, double quotes `"`, or backticks `` ` `` (template literals). We'll cover strings in detail in the [strings guide](./strings).
+Backticks create **template literals**, which are useful when a string includes variables. You'll learn more in the [strings guide](./strings).
 
-### Number
+### Numbers
 
-JavaScript has one type for numbers (unlike some languages that separate integers and floats):
+JavaScript uses one main `number` type for integers and decimals:
 
 ```javascript
-const age = 30;           // Integer
-const price = 9.99;       // Decimal
-const negative = -42;     // Negative number
-const scientific = 1e6;   // 1000000 (scientific notation)
+const age = 30;
+const price = 9.99;
+const temperature = -4;
+const largeNumber = 1e6; // 1000000
 ```
 
-:::note 
-JavaScript numbers can sometimes behave unexpectedly with floating-point arithmetic:
+:::note Important 
+
+JavaScript numbers use floating-point math, so some decimal calculations can look surprising:
 
 ```javascript
-0.1 + 0.2 === 0.3  // false! (due to floating-point precision)
+0.1 + 0.2;       // 0.30000000000000004
+0.1 + 0.2 === 0.3; // false
 ```
 
-This is normal in most programming languages that use floating-point numbers. For precise decimal math, consider using a library or converting to integers.
+This is normal in many programming languages. For money, use integer cents or a decimal library instead of relying on exact decimal equality.
 :::
 
-### Boolean
 
-A **boolean** represents a `true` or `false` value:
+### BigInts
+
+A **BigInt** represents an integer larger than regular JavaScript numbers can safely handle. Add `n` to the end of an integer literal:
 
 ```javascript
-const isActive = true;
-const isComplete = false;
+const huge = 9007199254740993n;
 ```
 
-Booleans are used in conditionals and logical operations.
+You usually will not need `BigInt` as a beginner. Use regular numbers unless you specifically need very large integers.
+
+### Booleans
+
+A **boolean** is either `true` or `false`:
+
+```javascript
+const isLoggedIn = true;
+const hasPermission = false;
+```
+
+Booleans are common in conditionals:
+
+```javascript
+if (isLoggedIn) {
+  console.log("Welcome back");
+}
+```
 
 ### `null`
 
-`null` represents the intentional absence of a value:
+`null` means "intentionally no value":
 
 ```javascript
-const user = null;  // Explicitly no value
+const selectedUser = null;
 ```
 
-Use `null` when you want to explicitly indicate "no value" or "empty." This is different from `''` (empty string) or `0` (zero), which are actual values, whereas `null` means the absence of any value.
+Use `null` when your code deliberately needs to represent an empty or missing value.
 
 ### `undefined`
 
-`undefined` means a variable has been declared but not assigned a value:
+`undefined` usually means a value has not been set:
 
 ```javascript
-let x;
-console.log(x); // undefined
+let name;
+console.log(name); // undefined
 
-const obj = {};
-console.log(obj.missingProperty); // undefined
+const user = {};
+console.log(user.email); // undefined
 ```
 
-**Note:** You typically won't assign `undefined` yourself. It appears automatically when:
-- A variable is declared but not initialized
-- An object property doesn't exist
-- A function doesn't return anything explicitly
+You usually do not need to assign `undefined` yourself. Let JavaScript use it for values that are not set, and use `null` when you want to intentionally say "no value."
 
-Use `null` when you want to explicitly indicate "no value." Let `undefined` appear naturally when things aren't set.
+### Symbols
 
-## Reference types (introduction)
-
-These are more complex types that we'll cover in detail later:
-
-### Arrays
-
-An **array** is an ordered collection of values:
+A **symbol** is a unique value often used as an object property key:
 
 ```javascript
-const numbers = [1, 2, 3, 4, 5];
-const names = ["Alice", "Bob", "Charlie"];
+const id = Symbol("id");
 ```
 
-See the [arrays guide](./arrays) for details.
+Symbols are useful in advanced object patterns, but they are uncommon in beginner code.
+
+## Reference values
+
+Reference values are objects, arrays, and functions that JavaScript works with through references.
+
+A useful mental model is: a variable does not hold the whole object directly. It holds a reference to where that object is. If two variables refer to the same object, changes made through one variable can be seen through the other.
 
 ### Objects
 
-An **object** is a collection of key-value pairs:
+An **object** stores key-value pairs:
 
 ```javascript
-const person = {
+const user = {
   name: "Alice",
   age: 30
 };
+
+console.log(user.name); // "Alice"
 ```
 
-See the [objects guide](./objects) for details.
+Objects are covered in more detail in the [objects guide](./objects).
+
+### Arrays
+
+An **array** stores an ordered list of values:
+
+```javascript
+const scores = [90, 85, 100];
+
+console.log(scores[0]); // 90
+```
+
+Arrays are covered in more detail in the [arrays guide](./arrays).
+
+### Functions
+
+Functions are also values in JavaScript. You can store a function in a variable, pass it to another function, or return it from a function:
+
+```javascript
+const greet = function(name) {
+  return `Hello, ${name}!`;
+};
+
+console.log(greet("Alice")); // "Hello, Alice!"
+```
+
+Functions are covered in more detail in the [functions guide](../functions/function).
+
+## Primitive vs reference values
+
+A useful mental model:
+
+- Primitive values are copied by value.
+- Reference values are copied by reference.
+
+### Primitive values are copied
+
+```javascript
+let a = 1;
+let b = a;
+
+b = 2;
+
+console.log(a); // 1
+console.log(b); // 2
+```
+
+Changing `b` does not affect `a` because numbers are primitive values.
+
+### Reference values share the same object
+
+```javascript
+const first = [1, 2, 3];
+const second = first;
+
+second.push(4);
+
+console.log(first);  // [1, 2, 3, 4]
+console.log(second); // [1, 2, 3, 4]
+```
+
+Both `first` and `second` refer to the same array, so mutating the array through one name affects what you see through the other.
+
+You'll see this again when learning about [reassignment vs mutation](./variables_and_values#reassignment-vs-mutation).
 
 ## Dynamic typing
 
-JavaScript is **dynamically typed**, meaning variables can hold values of any type, and the type can change:
+JavaScript is **dynamically typed**. A variable can hold values of different types over time:
 
 ```javascript
-let x = 5;        // x is a number
-x = "hello";      // x is now a string
-x = true;         // x is now a boolean
+let value = 5;
+value = "hello";
+value = true;
+
+console.log(value); // true
 ```
 
-This is different from **statically typed** languages (like TypeScript, Java, or C++) where variables must be declared with a specific type that cannot change.
+This flexibility can be convenient, but it can also make bugs easier to create. In most code, keep a variable's meaning consistent. If `value` starts as a number count, do not later reuse it for a string message.
 
-Dynamic typing makes JavaScript flexible but can also lead to bugs if you're not careful. This is why many developers use TypeScript (which adds static typing to JavaScript) for larger projects.
+## Checking types with `typeof`
 
-## `typeof` Operator
-
-The `typeof` operator tells you what type a value is:
+The `typeof` operator tells you the type of many values:
 
 ```javascript
-typeof "hello"      // "string"
-typeof 42           // "number"
-typeof true         // "boolean"
-typeof null         // "object" (this is a bug in JavaScript!)
-typeof undefined    // "undefined"
-typeof [1, 2, 3]    // "object" (arrays are objects in JavaScript)
-typeof {a: 1}       // "object"
-typeof function(){} // "function"
+typeof "hello";   // "string"
+typeof 42;        // "number"
+typeof 10n;       // "bigint"
+typeof true;      // "boolean"
+typeof undefined; // "undefined"
+typeof Symbol();  // "symbol"
 ```
 
-:::note **Gotcha** 
-`typeof null` returns `"object"` instead of `"null"`. This is a known bug in JavaScript that can't be fixed without breaking existing code. To check for `null`, use strict equality:
+It also has a few important quirks:
+
+```javascript
+typeof null;        // "object" (a long-standing JavaScript bug)
+typeof [1, 2, 3];   // "object" (arrays are objects)
+typeof { name: "Alice" }; // "object"
+typeof function() {}; // "function"
+```
+
+**Important:** To check for `null`, use strict equality:
 
 ```javascript
 const value = null;
-value === null  // true (correct way to check for null)
-typeof value === "object" && value === null  // true (more verbose but works)
+
+value === null; // true
 ```
-:::
+
+To check if a value is an array, use `Array.isArray()`:
+
+```javascript
+const items = [1, 2, 3];
+
+Array.isArray(items); // true
+```
 
 ## Truthy and falsy values
 
-In JavaScript, values can be **truthy** or **falsy**. This means they evaluate to `true` or `false` in a boolean context (like `if` statements).
+In JavaScript, every value behaves like either `true` or `false` in a boolean context, such as an `if` statement. Values that behave like `true` are **truthy**. Values that behave like `false` are **falsy**.
 
 ### Falsy values
 
-These values are **falsy** (evaluate to `false`):
+These values are falsy:
 
 ```javascript
-false
-0
--0
-0n        // BigInt zero
-""        // Empty string
-null
-undefined
-NaN       // Not a Number
+false;
+0;
+-0;
+0n;
+"";
+null;
+undefined;
+NaN;
 ```
 
-Everything else is **truthy**.
+Everything else is truthy.
 
 ### Truthy examples
 
 ```javascript
-if ("hello") {        // truthy
-  console.log("runs");
+if ("hello") {
+  console.log("Non-empty strings are truthy");
 }
 
-if (42) {             // truthy
-  console.log("runs");
+if (42) {
+  console.log("Non-zero numbers are truthy");
 }
 
-if ([]) {             // truthy (empty array is truthy!)
-  console.log("runs");
+if ([]) {
+  console.log("Empty arrays are truthy");
 }
 
-if ({}) {             // truthy (empty object is truthy!)
-  console.log("runs");
+if ({}) {
+  console.log("Empty objects are truthy");
 }
 ```
 
 ### Common pitfalls
 
-**Empty strings are falsy:**
+Empty strings are falsy:
 
 ```javascript
 const name = "";
+
 if (name) {
-  // This won't run because empty string is falsy
   console.log("Name exists");
 }
 ```
 
-**Zero is falsy:**
+Zero is falsy, so be explicit when zero is a valid value:
 
 ```javascript
 const count = 0;
+
+// This will not run because 0 is falsy
 if (count) {
-  // This won't run! Zero is falsy
   console.log("Has items");
 }
 
-// Better: be explicit
+// Better: check the exact condition
 if (count > 0) {
   console.log("Has items");
 }
 ```
 
-**Arrays and objects are always truthy:**
+Empty arrays and empty objects are truthy:
 
 ```javascript
 const items = [];
+
+// This will run because arrays are truthy, even when empty
 if (items) {
-  // This WILL run (empty array is truthy!)
-  console.log("Has items"); // Wrong! Array is empty
+  console.log("This array exists");
 }
 
-// Better: check length
+// Better: check the length
 if (items.length > 0) {
-  console.log("Has items");
+  console.log("This array has items");
 }
 ```
 
-We'll explore truthy/falsy values more in the [control flow guide](../control_flow/conditionals).
+You'll use truthy and falsy values often in conditionals. The [conditionals guide](../control_flow/conditionals) covers this in context.
 
 ## Type conversion
 
-JavaScript can convert between types automatically (type coercion) or explicitly:
+JavaScript can convert values from one type to another.
 
 ### Explicit conversion
 
-Convert values intentionally:
+Use explicit conversion when you want the conversion to be obvious:
 
 ```javascript
-// String to number
-Number("42")        // 42
-parseInt("42")      // 42
-parseFloat("3.14")  // 3.14
+Number("42");       // 42
+parseInt("42");     // 42
+parseFloat("3.14"); // 3.14
 
-// Number to string
-String(42)          // "42"
-(42).toString()     // "42"
-
-// To boolean
-Boolean(1)          // true
-Boolean(0)          // false
-Boolean("")         // false
-Boolean("hello")    // true
-
-// Shorthand for boolean
-!!"hello"           // true (double negation trick)
-!!0                 // false
+String(42);         // "42"
+Boolean("hello");   // true
+Boolean("");        // false
 ```
 
-### Implicit conversion (type coercion)
+Prefer `Boolean(value)` over `!!value` in beginner-facing code. Both work, but `Boolean(value)` is easier to read.
 
-JavaScript converts types automatically in some contexts:
+### Implicit conversion
+
+JavaScript sometimes converts values automatically. This is called **type coercion**:
 
 ```javascript
-"5" + 3      // "53" (number converted to string, then concatenated)
-"5" - 3      // 2 (string converted to number, then subtracted)
-"5" * 2      // 10 (string converted to number)
-true + 1     // 2 (boolean converted to number)
+"5" + 3;  // "53"
+"5" - 3;  // 2
+"5" * 2;  // 10
+true + 1; // 2
 ```
 
-This is why using `===` (strict equality) is important—it avoids these automatic conversions. We covered this in the [variables guide](./variables_and_values).
+This behavior is one reason to use strict equality:
+
+```javascript
+5 == "5";  // true
+5 === "5"; // false
+```
+
+Use `===` and `!==` unless you specifically want JavaScript to coerce types. The [variables and values guide](./variables_and_values) explains this in more detail.
+
+## Common patterns
+
+### Checking for missing values
+
+Use strict equality when you care about one specific missing value:
+
+```javascript
+const user = null;
+
+if (user === null) {
+  console.log("No user selected");
+}
+```
+
+If you intentionally want to treat both `null` and `undefined` as missing, check for both:
+
+```javascript
+if (user === null || user === undefined) {
+  console.log("User is missing");
+}
+```
+
+### Checking for arrays
+
+Use `Array.isArray()` instead of `typeof`:
+
+```javascript
+const value = [1, 2, 3];
+
+if (Array.isArray(value)) {
+  console.log("This is an array");
+}
+```
+
+### Checking whether a string has text
+
+Use `.length` when you specifically care whether a string contains characters:
+
+```javascript
+const name = "";
+
+if (name.length > 0) {
+  console.log("Name has text");
+}
+```
+
+## Best practices
+
+- **Use strict equality**: Prefer `===` and `!==` so JavaScript does not silently coerce types.
+- **Use explicit conversion**: `Number(value)`, `String(value)`, and `Boolean(value)` make your intent clear.
+- **Be careful with truthiness**: It is useful, but use explicit checks when `0`, `""`, `null`, and `undefined` mean different things.
+- **Check arrays with `Array.isArray()`**: `typeof` reports arrays as `"object"`.
+- **Keep variable meanings consistent**: Dynamic typing allows type changes, but reusing one variable for unrelated types makes code harder to read.
+- **Remember reference behavior**: Objects and arrays can be mutated through any variable that refers to them.
+
+## Summary
+
+Data types tell you what kind of value you are working with and what JavaScript can do with it. Primitive values like strings, numbers, booleans, `null`, and `undefined` are simple and immutable. Reference values like objects, arrays, and functions can hold other values and can be mutated. Use `typeof` for quick checks, remember its `null` and array quirks, be explicit when converting types, and use strict equality to avoid surprising coercion.

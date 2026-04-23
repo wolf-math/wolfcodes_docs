@@ -13,89 +13,137 @@ source:
 
 ## What are objects?
 
-**Objects** are collections of key-value pairs. They let you group related data together and access it by name rather than by position (like arrays).
+**Objects** are collections of key-value pairs. They let you group related data together and access values by name.
 
 ```javascript
+const user = {
+  name: "Alice",
+  age: 30,
+  isAdmin: false
+};
+
+console.log(user.name); // "Alice"
+console.log(user.age);  // 30
+```
+
+This guide covers **plain objects**, also called object literals. Classes and object-oriented programming are covered in the [OOP guide](../oop/introduction).
+
+## Why this matters
+
+Objects are how JavaScript represents structured data. You'll use them for users, settings, API responses, products, form values, and many other things that have named properties.
+
+Objects are also the foundation for many JavaScript APIs. When you understand plain objects, arrays of objects, property access, and reference behavior, much of JavaScript becomes easier to read.
+
+## Creating objects
+
+Use curly braces to create an object literal:
+
+```javascript
+const empty = {};
+
 const person = {
   name: "Alice",
   age: 30,
-  city: "New York"
+  city: "Cleveland"
 };
 ```
 
-In JavaScript, objects are used for:
-- Representing structured data (like a user, product, or configuration)
-- Creating namespaces (grouping related functions)
-- As maps/dictionaries (storing data you look up by key)
-
-**Note:** This guide covers **plain objects** (also called "object literals"). We'll cover classes and object-oriented programming in the [OOP guide](../oop/introduction).
-
-## Objects as key–value maps
-
-Objects store data as **properties** (also called keys) with associated **values**:
+Each property has a key and a value:
 
 ```javascript
 const person = {
-  name: "Alice",        // key: "name", value: "Alice"
-  age: 30,              // key: "age", value: 30
-  isActive: true        // key: "isActive", value: true
+  name: "Alice", // key: name, value: "Alice"
+  age: 30        // key: age, value: 30
 };
 ```
 
-Each property is a `key: value` pair. Keys are strings (or symbols), and values can be any JavaScript type.
+Keys are usually strings, and values can be any JavaScript value: strings, numbers, booleans, arrays, other objects, or functions.
 
-## Dot notation vs bracket notation
-
-You can access object properties in two ways:
+## Accessing properties
 
 ### Dot notation
 
+Use dot notation when you know the property name and it is a valid identifier:
+
 ```javascript
 const person = {
   name: "Alice",
   age: 30
 };
 
-person.name;  // "Alice"
-person.age;   // 30
+console.log(person.name); // "Alice"
+console.log(person.age);  // 30
 ```
-
-**Use dot notation when:** You know the property name at write-time and it's a valid identifier.
 
 ### Bracket notation
 
+Use bracket notation when the property name is stored in a variable or is not a valid identifier:
+
 ```javascript
 const person = {
   name: "Alice",
   age: 30
 };
 
-person["name"];  // "Alice"
-person["age"];   // 30
-
-// Bracket notation allows variables
 const key = "name";
-person[key];     // "Alice"
+
+console.log(person[key]); // "Alice"
 ```
 
-**Use bracket notation when:**
-- The property name is stored in a variable
-- The property name contains special characters or spaces
-- The property name starts with a number
+Bracket notation is required for property names with spaces or special characters:
 
 ```javascript
-const obj = {
-  "first name": "Alice",  // Property name with space
-  "2nd item": "value"     // Property name starting with number
+const settings = {
+  "font size": 16,
+  "2faEnabled": true
 };
 
-obj["first name"];  // "Alice" (bracket notation required)
-obj["2nd item"];    // "value" (bracket notation required)
+console.log(settings["font size"]); // 16
+console.log(settings["2faEnabled"]); // true
 ```
 
-## Adding and removing properties
+If a property does not exist, JavaScript returns `undefined`:
 
-Objects are **mutable**, meaning you can add, modify, and remove properties after creation.
+```javascript
+const person = {
+  name: "Alice"
+};
+
+console.log(person.city); // undefined
+```
+
+## Property shorthand and computed keys
+
+When a variable name matches the property name you want, you can use property shorthand:
+
+```javascript
+const name = "Alice";
+const age = 30;
+
+const person = {
+  name,
+  age
+};
+
+console.log(person); // { name: "Alice", age: 30 }
+```
+
+Use computed property names when the key is stored in a variable:
+
+```javascript
+const key = "theme";
+const value = "dark";
+
+const settings = {
+  [key]: value
+};
+
+console.log(settings); // { theme: "dark" }
+```
+
+## Adding, changing, and removing properties
+
+Objects are mutable. You can add, update, and remove properties after creating the object.
 
 ### Adding properties
 
@@ -104,15 +152,13 @@ const person = {
   name: "Alice"
 };
 
-person.age = 30;           // Add new property with dot notation
-person["city"] = "NYC";    // Add new property with bracket notation
-person.isActive = true;    // Add boolean property
+person.age = 30;
+person.city = "Cleveland";
 
-console.log(person);
-// { name: "Alice", age: 30, city: "NYC", isActive: true }
+console.log(person); // { name: "Alice", age: 30, city: "Cleveland" }
 ```
 
-### Modifying properties
+### Changing properties
 
 ```javascript
 const person = {
@@ -120,188 +166,185 @@ const person = {
   age: 30
 };
 
-person.age = 31;  // Modify existing property
-person["name"] = "Bob";  // Also works
+person.age = 31;
+
+console.log(person.age); // 31
 ```
 
 ### Removing properties
 
-Use the `delete` operator:
+Use `delete` to remove a property:
 
 ```javascript
 const person = {
   name: "Alice",
   age: 30,
-  city: "NYC"
+  city: "Cleveland"
 };
 
-delete person.city;  // Remove the "city" property
+delete person.city;
+
 console.log(person); // { name: "Alice", age: 30 }
 ```
 
 ## Nested objects
 
-Objects can contain other objects (and arrays):
+Objects can contain other objects and arrays:
 
 ```javascript
-const person = {
+const user = {
   name: "Alice",
-  age: 30,
   address: {
-    street: "123 Main St",
-    city: "New York",
+    city: "Cleveland",
     zipCode: "10001"
   },
-  hobbies: ["reading", "coding"]
+  roles: ["admin", "editor"]
 };
 
-person.address.city;           // "New York"
-person.hobbies[0];             // "reading"
-person.address.street;         // "123 Main St"
+console.log(user.address.city); // "Cleveland"
+console.log(user.roles[0]);     // "admin"
 ```
 
-You can nest objects as deeply as needed, though too much nesting can make code harder to read.
+Nested data is common in API responses. Keep nesting reasonable; deeply nested objects can become hard to read and update.
+
+Use optional chaining (`?.`) when a nested property might be missing:
+
+```javascript
+const user = {
+  name: "Alice"
+};
+
+console.log(user.address?.city); // undefined
+```
+
+Without `?.`, `user.address.city` would cause an error because `address` is missing.
+
+## Objects are reference values
+
+Objects are **reference values**. When you assign an object to another variable, both variables refer to the same object:
+
+```javascript
+const first = { name: "Alice" };
+const second = first;
+
+second.name = "Bob";
+
+console.log(first.name);  // "Bob"
+console.log(second.name); // "Bob"
+```
+
+This is the same reference behavior you saw with arrays. To make a shallow copy, use spread syntax:
+
+```javascript
+const original = { name: "Alice", age: 30 };
+const copy = { ...original };
+
+copy.name = "Bob";
+
+console.log(original.name); // "Alice"
+console.log(copy.name);     // "Bob"
+```
+
+This is a shallow copy. Nested objects are still shared.
+
+```javascript
+const original = {
+  name: "Alice",
+  address: {
+    city: "Cleveland"
+  }
+};
+
+const copy = { ...original };
+
+copy.address.city = "Boston";
+
+console.log(original.address.city); // "Boston"
+```
+
+The top-level object was copied, but the nested `address` object was still shared.
+
+Rest and spread syntax are covered in more detail in the [rest and spread guide](./rest_and_spread).
 
 ## Looping over objects
 
-There are several ways to iterate over an object's properties:
+There are several ways to loop over an object's properties.
 
-### `for...in` loop
+### `Object.keys()`
 
-```javascript
-const person = {
-  name: "Alice",
-  age: 30,
-  city: "NYC"
-};
-
-for (const key in person) {
-  console.log(key, person[key]);
-}
-// Output:
-// name Alice
-// age 30
-// city NYC
-```
-
-:::note 
-`for...in` also iterates over inherited properties (from prototypes). In most cases, you'll want to use `Object.keys()`, `Object.values()`, or `Object.entries()` instead.
-:::
-
-### `Object.keys()` — get property names
+Use `Object.keys()` when you need property names:
 
 ```javascript
 const person = {
   name: "Alice",
   age: 30,
-  city: "NYC"
+  city: "Cleveland"
 };
 
-Object.keys(person);  // ["name", "age", "city"]
-
-// Iterate over keys
 for (const key of Object.keys(person)) {
   console.log(key, person[key]);
 }
 ```
 
-### `Object.values()` — get property values
+**Output:**
+
+```text
+name Alice
+age 30
+city Cleveland
+```
+
+### `Object.values()`
+
+Use `Object.values()` when you only need values:
 
 ```javascript
 const person = {
   name: "Alice",
   age: 30,
-  city: "NYC"
+  city: "Cleveland"
 };
-
-Object.values(person);  // ["Alice", 30, "NYC"]
 
 for (const value of Object.values(person)) {
   console.log(value);
 }
 ```
 
-### `Object.entries()` — get key-value pairs
+**Output:**
+
+```text
+Alice
+30
+Cleveland
+```
+
+### `Object.entries()`
+
+Use `Object.entries()` when you need both keys and values:
 
 ```javascript
 const person = {
   name: "Alice",
   age: 30,
-  city: "NYC"
+  city: "Cleveland"
 };
 
-Object.entries(person);
-// [["name", "Alice"], ["age", 30], ["city", "NYC"]]
-
 for (const [key, value] of Object.entries(person)) {
-  console.log(key, value);
+  console.log(`${key}: ${value}`);
 }
 ```
 
-**Prefer `Object.keys()`, `Object.values()`, or `Object.entries()`** over `for...in` for iterating over own properties.
+**Output:**
 
-## Objects vs arrays (when to use each)
-
-Both objects and arrays store collections of data, but they serve different purposes:
-
-### Use objects when:
-
-- You need to look up values by name/key
-- The data has a structure with meaningful property names
-- Order doesn't matter (though modern JavaScript preserves insertion order)
-- You're representing a real-world entity (person, product, configuration)
-
-Examples:
-```javascript
-const user = {
-  id: 1,
-  name: "Alice",
-  email: "alice@example.com"
-};
-
-const config = {
-  apiUrl: "https://api.example.com",
-  timeout: 5000,
-  retries: 3
-};
+```text
+name: Alice
+age: 30
+city: Cleveland
 ```
 
-### Use arrays when:
+### `for...in`
 
-- Order matters
-- You need to iterate over all elements
-- You have a list of similar items
-- You need array methods (map, filter, reduce)
-
-Examples:
-```javascript
-const scores = [95, 87, 92, 88];
-const names = ["Alice", "Bob", "Charlie"];
-```
-
-### Combining both
-
-Objects and arrays work great together:
-
-```javascript
-const users = [
-  { name: "Alice", age: 30 },
-  { name: "Bob", age: 25 },
-  { name: "Charlie", age: 35 }
-];
-
-// Find user by name
-const alice = users.find(user => user.name === "Alice");
-
-// Get all names
-const names = users.map(user => user.name);
-```
-
-## Common object operations
-
-### Checking if property exists
-
-Use the `in` operator or `hasOwnProperty()` method to check if a property exists on an object:
+You may also see `for...in`:
 
 ```javascript
 const person = {
@@ -309,54 +352,77 @@ const person = {
   age: 30
 };
 
-// Check if property exists (including undefined values)
-"name" in person;  // true
-"city" in person;  // false
-
-// Check if property exists and is not undefined
-person.name !== undefined;  // true
-person.city !== undefined;  // false
-
-// Using hasOwnProperty() (for own properties only)
-person.hasOwnProperty("name");  // true
+for (const key in person) {
+  console.log(key, person[key]);
+}
 ```
 
-### Getting property with default
+`for...in` can include inherited properties. For most beginner code, prefer `Object.keys()`, `Object.values()`, or `Object.entries()`.
 
-Use the nullish coalescing operator (`??`) or logical OR operator (`||`) to provide default values when a property is missing:
+## Checking properties
+
+Use the `in` operator to check whether a property exists:
+
+```javascript
+const person = {
+  name: "Alice",
+  age: 30
+};
+
+console.log("name" in person); // true
+console.log("city" in person); // false
+```
+
+Use `Object.hasOwn()` when you specifically want an object's own property:
 
 ```javascript
 const person = {
   name: "Alice"
 };
 
-// If property doesn't exist, use default
-const age = person.age ?? 0;  // 0 (nullish coalescing)
-const city = person.city || "Unknown";  // "Unknown" (logical OR)
+console.log(Object.hasOwn(person, "name")); // true
+console.log(Object.hasOwn(person, "city")); // false
 ```
 
-### Copying objects
-
-Use the spread operator (`...`) or `Object.assign()` method to create a shallow copy of an object:
+If you only care whether a property value is not missing, check the value:
 
 ```javascript
-const original = {
-  name: "Alice",
-  age: 30
-};
-
-// Shallow copy using spread operator
-const copy = { ...original };
-
-// Shallow copy using Object.assign()
-const copy2 = Object.assign({}, original);
-
-// Note: These are shallow copies. Nested objects are still shared.
+if (person.name !== undefined) {
+  console.log(person.name);
+}
 ```
 
-### Merging objects
+## Default values
 
-Use the spread operator (`...`) or `Object.assign()` method to merge multiple objects into one:
+Use `??` when you want a default only for `null` or `undefined`:
+
+```javascript
+const settings = {
+  retries: 0
+};
+
+const retries = settings.retries ?? 3;
+
+console.log(retries); // 0
+```
+
+Use `||` when any falsy value should use the default:
+
+```javascript
+const user = {
+  displayName: ""
+};
+
+const displayName = user.displayName || "Guest";
+
+console.log(displayName); // "Guest"
+```
+
+**Rule of thumb:** Use `??` when `0`, `false`, or `""` should remain valid values.
+
+## Copying and merging objects
+
+Use spread syntax to copy or merge objects:
 
 ```javascript
 const defaults = {
@@ -368,46 +434,130 @@ const userPrefs = {
   theme: "dark"
 };
 
-// Merge with spread operator
-const settings = { ...defaults, ...userPrefs };
-// { theme: "dark", language: "en" }
+const settings = {
+  ...defaults,
+  ...userPrefs
+};
 
-// Merge with Object.assign()
-const settings2 = Object.assign({}, defaults, userPrefs);
+console.log(settings); // { theme: "dark", language: "en" }
 ```
 
-### Destructuring (preview)
+Later properties override earlier properties when keys are the same.
 
-Use destructuring syntax to extract properties from objects into variables:
+For more copying, merging, and destructuring patterns, see the [rest and spread guide](./rest_and_spread).
+
+## Destructuring
+
+Destructuring lets you pull properties into variables:
 
 ```javascript
 const person = {
   name: "Alice",
-  age: 30,
-  city: "NYC"
+  age: 30
 };
 
 const { name, age } = person;
-console.log(name);  // "Alice"
-console.log(age);   // 30
 
-// With renaming
-const { name: personName } = person;
-console.log(personName);  // "Alice"
+console.log(name); // "Alice"
+console.log(age);  // 30
 ```
 
-Destructuring is a powerful feature we'll explore more in later guides.
-
-## Objects are reference types
-
-Objects are **reference types**, meaning variables store a reference to the object, not the object itself:
+You can rename a property while destructuring:
 
 ```javascript
-const obj1 = { name: "Alice" };
-const obj2 = obj1;  // obj2 points to the same object as obj1
+const { name: userName } = person;
 
-obj2.name = "Bob";
-console.log(obj1.name);  // "Bob" (both variables point to same object!)
+console.log(userName); // "Alice"
 ```
 
-To create a true copy, use the spread operator or `Object.assign()` as shown above.
+You can also provide a default value while destructuring:
+
+```javascript
+const person = {
+  name: "Alice"
+};
+
+const { name, role = "member" } = person;
+
+console.log(name); // "Alice"
+console.log(role); // "member"
+```
+
+## Objects vs arrays
+
+Use objects when:
+
+- You need named properties
+- The data represents one structured thing
+- You need to look up values by key
+
+Use arrays when:
+
+- Order matters
+- You have a list of similar items
+- You want to process every item with array methods
+
+Objects and arrays often work together:
+
+```javascript
+const users = [
+  { id: 1, name: "Alice" },
+  { id: 2, name: "Bob" }
+];
+
+const names = users.map((user) => user.name);
+
+console.log(names); // ["Alice", "Bob"]
+```
+
+## Common patterns
+
+### Building an object incrementally
+
+```javascript
+const scores = {};
+
+scores.alice = 95;
+scores.bob = 87;
+
+console.log(scores); // { alice: 95, bob: 87 }
+```
+
+### Counting values
+
+```javascript
+const words = ["apple", "banana", "apple"];
+const counts = {};
+
+for (const word of words) {
+  counts[word] = (counts[word] ?? 0) + 1;
+}
+
+console.log(counts); // { apple: 2, banana: 1 }
+```
+
+### Grouping related settings
+
+```javascript
+const config = {
+  apiUrl: "https://api.example.com",
+  timeout: 5000,
+  retries: 3
+};
+```
+
+## Best practices
+
+- **Use object literals**: `{}` is the clearest way to create plain objects.
+- **Use dot notation when possible**: It is shorter and easier to read.
+- **Use bracket notation for dynamic keys**: Use it when the property name is stored in a variable.
+- **Use optional chaining for uncertain nested data**: `user.address?.city` avoids errors when a middle property is missing.
+- **Prefer `Object.entries()` for key-value loops**: It makes both pieces visible.
+- **Use `??` for safe defaults**: It preserves valid falsy values like `0` and `""`.
+- **Remember reference behavior**: Copy objects before changing them if the original should stay unchanged.
+- **Remember that spread is shallow**: Nested objects are still shared unless you copy them too.
+- **Avoid deep nesting when possible**: Deep data is harder to update safely.
+
+## Summary
+
+Objects group related values under meaningful property names. Use dot notation for known property names, bracket notation for dynamic names, and `Object.keys()`, `Object.values()`, or `Object.entries()` when looping. Objects are reference values, so copying and mutation matter. When your data has named properties, an object is usually the right tool.

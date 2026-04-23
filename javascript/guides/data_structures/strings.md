@@ -1,6 +1,5 @@
 ---
 title: Strings
-description: How JavaScript strings work, including literals, template literals, common methods, and patterns for working with text.
 sidebar_position: 5
 author:
   name: Aaron Wolf
@@ -14,339 +13,397 @@ source:
 
 ## What are strings?
 
-In JavaScript, **strings** are sequences of characters used to represent text such as messages, names, and file paths. Strings are a primitive data type and are **immutable**. Once created, their contents cannot be changed, only replaced with a new string.
-
-Minimal example:
+**Strings** are values that represent text. Use strings for names, messages, labels, URLs, file paths, and any other text in your program.
 
 ```javascript
-const greeting = "Hello, World!";
+const greeting = "Hello";
 const name = "Alice";
-const message = "Welcome";
+const message = `Hello, ${name}!`;
+
+console.log(message); // "Hello, Alice!"
 ```
 
-Key characteristics:
-
-- Strings are sequences of UTF-16 code units (Unicode text)
-- You can create them with single quotes, double quotes, or backticks (template literals)
-- Most operations (like [`slice`](/docs/javascript/language_reference/string#slice), [`toUpperCase`](/docs/javascript/language_reference/string#touppercase), [`replace`](/docs/javascript/language_reference/string#replace)) return **new** strings
+Strings are primitive values and are **immutable**. String methods return new strings instead of changing the original string.
 
 ## Why this matters
 
-Strings are everywhere in JavaScript applications: UI labels, API responses, error messages, URLs, and configuration. A clear understanding of strings helps you:
+Strings are everywhere in JavaScript: user input, page text, API responses, error messages, and configuration values. Understanding strings helps you build readable messages, search and transform text, handle whitespace, and avoid bugs with quotes, escaping, and case sensitivity.
 
-- Avoid bugs from incorrect escaping (quotes, backslashes, newlines)
-- Build readable messages instead of messy concatenations
-- Extract and transform text without off-by-one slice errors
-- Choose the right method for searching, replacing, and splitting text
+## Creating strings
 
-Because JavaScript is so often used for web apps and JSON APIs, being fluent with strings is as important as understanding numbers or objects.
-
-## Basic syntax
-
-JavaScript supports three ways to write string literals:
+JavaScript has three common string literal forms:
 
 ```javascript
-const single = 'This is a string';
-const double = "This is also a string";
-const template = `This is a template literal`;
+const single = 'single quotes';
+const double = "double quotes";
+const template = `template literal`;
 ```
 
-Single and double quotes behave the same way. Template literals (backticks) add interpolation and multi-line support.
+Single and double quotes behave the same way. Choose one style and stay consistent in a project.
 
-If your string contains one type of quote, it’s often easiest to use the other:
+Template literals use backticks and support interpolation:
 
 ```javascript
-const message = "It's a beautiful day";  // Use double quotes for apostrophe
-const quote = 'He said "Hello"';         // Use single quotes for quotes
+const name = "Alice";
+const message = `Hello, ${name}!`;
+
+console.log(message); // "Hello, Alice!"
 ```
 
-### Simple example
+They also support multi-line strings:
+
+```javascript
+const text = `Line 1
+Line 2
+Line 3`;
+
+console.log(text);
+```
+
+**Output:**
+
+```text
+Line 1
+Line 2
+Line 3
+```
+
+## Combining strings
+
+Use `+` to concatenate strings:
 
 ```javascript
 const firstName = "Alice";
 const lastName = "Smith";
-
 const fullName = firstName + " " + lastName;
-// "Alice Smith"
+
+console.log(fullName); // "Alice Smith"
 ```
 
-### Behavior
-
-Template literals let you embed expressions directly into a string:
+For strings that include variables, prefer template literals:
 
 ```javascript
 const name = "Alice";
 const age = 30;
+const message = `${name} is ${age} years old.`;
 
-// Old way (concatenation)
-const message1 = "Hello, " + name + "! You are " + age + " years old.";
-
-// Modern way (template literal)
-const message2 = `Hello, ${name}! You are ${age} years old.`;
-// "Hello, Alice! You are 30 years old."
+console.log(message); // "Alice is 30 years old."
 ```
 
-You can use any JavaScript expression inside `${}`:
+Template literals are usually easier to read than long concatenation.
+
+## Escaping characters
+
+Use a backslash to escape characters with special meaning:
 
 ```javascript
-const x = 5;
-const y = 10;
-const sum = `The sum of ${x} and ${y} is ${x + y}`; // "The sum of 5 and 10 is 15"
+const quote = "She said \"Hello\"";
+const path = "C:\\Users\\Alice\\file.txt";
+const lines = "Line 1\nLine 2";
 
-const isActive = true;
-const status = `User is ${isActive ? "active" : "inactive"}`; // "User is active"
+console.log(quote); // She said "Hello"
+console.log(path);  // C:\Users\Alice\file.txt
+console.log(lines);
 ```
 
-## Using or Invoking the Concept
+The `\n` escape creates a new line.
 
-Strings support indexing, length, concatenation, and methods for inspecting and transforming text.
+**Output from `lines`:**
 
-Accessing characters and length:
-
-```javascript
-const text = "Hello";
-
-text.length;           // 5
-text[0];               // "H" (first character)
-text[text.length - 1]; // "o" (last character)
-text.charAt(0);        // "H" (older style)
-```
-
-Using template literals for multi-line strings:
-
-```javascript
-// Old way (concatenation + \n)
-const oldWay = "Line 1\n" +
-               "Line 2\n" +
-               "Line 3";
-
-// Template literal (preferred)
-const newWay = `Line 1
+```text
+Line 1
 Line 2
-Line 3`;
 ```
 
-Common transformations:
+Often, you can avoid escaping quotes by using the other quote style:
 
 ```javascript
-const text = "Hello, World!";
+const sentence = "It's a nice day";
+const quoted = 'She said "Hello"';
 
-text.toUpperCase();     // "HELLO, WORLD!"
-text.toLowerCase();     // "hello, world!"
-text.includes("World"); // true
-text.startsWith("He");  // true
-text.endsWith("!");     // true
+console.log(sentence); // "It's a nice day"
+console.log(quoted);   // She said "Hello"
 ```
 
-## 5. Parameters, Inputs, or Variations
-
-### Literal Forms
-
-- **Single quotes**: `'hello'`
-- **Double quotes**: `"hello"`
-- **Template literals**: `` `hello` ``
-
-Template literals add:
-
-1. **Expression interpolation** — `${expression}`
-2. **Multi-line strings** — line breaks are preserved
-
-### Escape Sequences
-
-You can escape special characters in strings using backslashes:
+In template literals, escape backticks:
 
 ```javascript
-const quote1 = 'He said "Hello"';           // Different quotes
-const quote2 = "He said \"Hello\"";         // Escaped quote
-const path = "C:\\Users\\Alice\\file.txt";  // Escaped backslashes
-const newline = "Line 1\nLine 2";           // Newline
-const tab = "Column1\tColumn2";            // Tab
+const text = `Use \`backticks\` for template literals`;
+
+console.log(text); // "Use `backticks` for template literals"
 ```
 
-In template literals, you still need to escape backticks and some sequences:
+## String length and indexing
+
+Use `.length` to get the number of characters:
 
 ```javascript
-const text = `He said "Hello"`;         // Quotes work fine
-const text2 = `Use \`backticks\` here`; // Escape backticks
+const word = "Hello";
+
+console.log(word.length); // 5
 ```
 
-### Template Literal Interpolation
-
-Any valid expression can go inside `${}`:
+Use bracket notation to access a character by index:
 
 ```javascript
-const items = ["apple", "banana"];
-const message = `You have ${items.length} items: ${items.join(", ")}`;
-// "You have 2 items: apple, banana"
+const word = "Hello";
+
+console.log(word[0]); // "H"
+console.log(word[1]); // "e"
+console.log(word[word.length - 1]); // "o"
 ```
 
-## 6. Default Behavior (If Applicable)
+String indexes start at `0`.
 
-### Immutability
-
-Strings are immutable. Methods return new strings instead of changing the original:
+If an index does not exist, JavaScript returns `undefined`:
 
 ```javascript
-const text = "Hello";
+const word = "Hello";
 
-text.toUpperCase();  // "HELLO" (but text is unchanged)
-console.log(text);   // "Hello"
-
-const upperText = text.toUpperCase();
-console.log(upperText); // "HELLO"
+console.log(word[10]); // undefined
 ```
 
-Methods like `replace`, `slice`, `trim`, and `toLowerCase` all follow this rule.
-
-### Truthiness
-
-In boolean contexts, an empty string is **falsy** and any non-empty string is **truthy**:
+For most everyday strings, `.length` tells you how many characters are in the string. Some emoji and symbols can count differently because JavaScript stores strings as UTF-16 code units:
 
 ```javascript
-if ("") {
-  // never runs
-}
-
-if ("hello") {
-  // runs, because non-empty string is truthy
-}
+console.log("A".length);  // 1
+console.log("😊".length); // 2
 ```
 
-This is often used for simple \"is empty\" checks.
+You usually do not need to worry about this for beginner code, but it is useful to know when working with emoji-heavy text.
 
-## 7. Rules and Constraints
+## Strings are immutable
 
-1. String indices start at `0` and go up to `length - 1`.  
-2. `slice(start, end)` returns characters from `start` up to, but not including, `end`.  
-3. Strings are immutable—assignment to `text[0]` does nothing (or throws in strict mode).  
-4. Template literals preserve line breaks and whitespace exactly as written.  
-5. `includes`, `indexOf`, `startsWith`, and `endsWith` are case-sensitive.
-
-Correct slicing:
+String methods do not change the original string:
 
 ```javascript
-const text = "Hello, World!";
-
-text.slice(0, 5);  // "Hello"
-text.slice(7);     // "World!"
-text.slice(-6);    // "World!"
-```
-
-## 8. Documentation or Introspection (If Applicable)
-
-Useful ways to inspect strings:
-
-```javascript
-typeof "hello";        // "string"
 const text = "hello";
-text.length;           // 5
-Object.keys(text);     // [] (primitive, not a plain object)
+const upper = text.toUpperCase();
+
+console.log(text);  // "hello"
+console.log(upper); // "HELLO"
 ```
 
-You can also inspect methods on `String.prototype` in the console, but in day-to-day coding you’ll mostly use the commonly known methods like `slice`, `toUpperCase`, `includes`, `trim`, `split`, and `join`.
+Trying to change one character does not update the string:
 
-## 9. Common Patterns
+```javascript
+const text = "hello";
 
-### Checking if a String Is Empty
+// This does not change the string:
+// text[0] = "H";
+
+console.log(text); // "hello"
+```
+
+To change text, create a new string.
+
+## Common string methods
+
+### Changing case
+
+```javascript
+const text = "Hello, World!";
+
+console.log(text.toUpperCase()); // "HELLO, WORLD!"
+console.log(text.toLowerCase()); // "hello, world!"
+```
+
+Use these before comparisons when case should not matter:
+
+```javascript
+const input = "ALICE";
+
+if (input.toLowerCase() === "alice") {
+  console.log("Match");
+}
+```
+
+String comparisons are case-sensitive unless you normalize the values first:
+
+```javascript
+console.log("Alice" === "alice"); // false
+console.log("Alice".toLowerCase() === "alice"); // true
+```
+
+### Searching strings
+
+Use `includes()`, `startsWith()`, and `endsWith()` when you need a boolean:
+
+```javascript
+const text = "Hello, World!";
+
+console.log(text.includes("World")); // true
+console.log(text.startsWith("Hello")); // true
+console.log(text.endsWith("!")); // true
+```
+
+Use `indexOf()` when you need the position:
+
+```javascript
+const text = "Hello, World!";
+
+console.log(text.indexOf("World")); // 7
+console.log(text.indexOf("JavaScript")); // -1
+```
+
+`indexOf()` returns `-1` when the text is not found.
+
+String searches are case-sensitive:
+
+```javascript
+const text = "Hello, World!";
+
+console.log(text.includes("World")); // true
+console.log(text.includes("world")); // false
+```
+
+### Slicing strings
+
+Use `slice()` to extract part of a string:
+
+```javascript
+const text = "Hello, World!";
+
+console.log(text.slice(0, 5)); // "Hello"
+console.log(text.slice(7));    // "World!"
+console.log(text.slice(-6));   // "World!"
+```
+
+`slice(start, end)` includes `start` but does not include `end`.
+
+### Replacing text
+
+Use `replace()` for the first match and `replaceAll()` for every match:
+
+```javascript
+const text = "red, blue, red";
+
+console.log(text.replace("red", "green")); // "green, blue, red"
+console.log(text.replaceAll("red", "green")); // "green, blue, green"
+```
+
+### Splitting and joining
+
+Use `split()` to turn a string into an array:
+
+```javascript
+const text = "apple,banana,cherry";
+const fruits = text.split(",");
+
+console.log(fruits); // ["apple", "banana", "cherry"]
+```
+
+Use `join()` on an array to build a string:
+
+```javascript
+const names = ["Alice", "Bob", "Charlie"];
+const text = names.join(", ");
+
+console.log(text); // "Alice, Bob, Charlie"
+```
+
+### Trimming whitespace
+
+Use `trim()` to remove whitespace from both ends:
+
+```javascript
+const input = "  Alice  ";
+
+console.log(input.trim());      // "Alice"
+console.log(input.trimStart()); // "Alice  "
+console.log(input.trimEnd());   // "  Alice"
+```
+
+This is especially useful for user input.
+
+## Truthiness
+
+Empty strings are falsy. Non-empty strings are truthy:
+
+```javascript
+const name = "";
+
+if (!name) {
+  console.log("Name is empty");
+}
+```
+
+Be careful with strings like `"false"` and `"0"`. They are non-empty strings, so they are truthy:
+
+```javascript
+console.log(Boolean("false")); // true
+console.log(Boolean("0"));     // true
+```
+
+If you need to parse `"true"` or `"false"`, compare explicitly:
+
+```javascript
+const input = "false";
+const value = input === "true";
+
+console.log(value); // false
+```
+
+## Common patterns
+
+### Checking if a string is empty
 
 ```javascript
 const text = "";
 
-// Using truthiness
-if (!text) {
-  console.log("String is empty");
-}
-
-// Explicit length check
 if (text.length === 0) {
   console.log("String is empty");
 }
 ```
 
-### Building Strings with Loops vs `join`
+Use `text.trim().length === 0` if whitespace-only text should count as empty:
 
 ```javascript
-const names = ["Alice", "Bob", "Charlie"];
-let result = "";
+const text = "   ";
 
-for (const name of names) {
-  result += name + ", ";
+if (text.trim().length === 0) {
+  console.log("String is blank");
 }
-
-console.log(result); // "Alice, Bob, Charlie, "
 ```
 
-Using `join` is cleaner and more efficient:
+### Building display messages
 
 ```javascript
-const names = ["Alice", "Bob", "Charlie"];
-const result = names.join(", ");
-console.log(result); // "Alice, Bob, Charlie"
+const itemCount = 3;
+const message = `You have ${itemCount} items.`;
+
+console.log(message); // "You have 3 items."
 ```
 
-### Searching and Extracting
+### Normalizing user input
 
 ```javascript
-const text = "Hello, World!";
+const input = "  ALICE@example.COM  ";
+const email = input.trim().toLowerCase();
 
-text.indexOf("World");    // 7
-text.indexOf("xyz");      // -1
-text.includes("World");   // true
-
-text.slice(0, 5);         // "Hello"
-text.slice(7);            // "World!"
-text.slice(-6);           // "World!"
-text.substring(0, 5);     // "Hello"
+console.log(email); // "alice@example.com"
 ```
 
-### Replacing Text
+### Turning comma-separated text into values
 
 ```javascript
-const text = "Hello, World!";
+const input = "red, green, blue";
+const colors = input.split(",").map((color) => color.trim());
 
-text.replace("World", "JavaScript");  // "Hello, JavaScript!"
-text.replace("l", "L");               // "HeLlo, World!" (first occurrence only)
-text.replaceAll("l", "L");            // "HeLLo, WorLd!" (all occurrences)
+console.log(colors); // ["red", "green", "blue"]
 ```
 
-### Splitting and Trimming
+## Best practices
 
-```javascript
-const text = "apple,banana,cherry";
-text.split(",");  // ["apple", "banana", "cherry"]
+- **Prefer template literals**: They are clearer when strings include variables.
+- **Use string methods intentionally**: Methods return new strings; they do not change the original.
+- **Normalize before comparing**: Use `trim()` and `toLowerCase()` when input may vary.
+- **Use `includes()` for presence checks**: It is clearer than `indexOf(...) !== -1`.
+- **Use `join()` for arrays of text**: It avoids trailing separators.
+- **Be explicit with blank strings**: Use `.length` or `.trim().length` depending on what "empty" means.
+- **Remember case sensitivity**: Most string checks are case-sensitive.
+- **Watch out for unusual characters**: Emoji and some symbols can make `.length` behave differently than you expect.
 
-const words = "Hello World";
-words.split(" ");  // ["Hello", "World"]
-words.split("");   // ["H", "e", "l", "l", "o", " ", "W", "o", "r", "l", "d"]
+## Summary
 
-const padded = "  Hello, World!  ";
-padded.trim();      // "Hello, World!"
-padded.trimStart(); // "Hello, World!  "
-padded.trimEnd();   // "  Hello, World!"
-```
-
-### Escaping Characters
-
-```javascript
-const quote = 'He said "Hello"';           // Using different quotes
-const quote2 = "He said \"Hello\"";        // Escaping with backslash
-const path = "C:\\Users\\Alice\\file.txt"; // Escaping backslashes
-const newline = "Line 1\nLine 2";          // Newline character
-const tab = "Column1\tColumn2";            // Tab character
-
-const text = `He said "Hello"`;            // Quotes work fine in template literal
-const text2 = `Use \`backticks\` here`;    // Escape backticks
-```
-
-## 10. Best Practices
-
-- **Prefer template literals** for strings that include variables or span multiple lines.
-- **Be consistent with quote style** (single vs double) across a project; use linters/formatters to enforce it.
-- **Avoid manual concatenation in complex strings**—template literals are more readable.
-- **Remember immutability**: always use the returned value from methods like `replace` and `toUpperCase`.
-- **Use `includes`, `startsWith`, and `endsWith`** instead of `indexOf` when you only care about presence.
-- **Normalize case** (e.g. `toLowerCase()`) before case-insensitive comparisons.
-
-## 11. Summary
-
-JavaScript strings are immutable sequences of characters used for all textual data in your programs. You create them with quotes or template literals, access characters by index, and use a rich set of methods to search, slice, transform, and format text. By understanding literals, interpolation, common methods, and a few best practices, you can handle strings in JavaScript clearly and reliably. 
+Strings represent text in JavaScript. Create them with quotes or template literals, use indexes and `.length` to inspect them, and use methods like `slice()`, `includes()`, `replace()`, `split()`, `join()`, and `trim()` to work with text. Strings are immutable, so methods return new strings. For readable code, prefer template literals, normalize user input before comparing, and use explicit checks when empty strings matter.

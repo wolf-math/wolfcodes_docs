@@ -1,5 +1,5 @@
 ---
-title: Callbacks (Historical Context)
+title: Async Callbacks (Historical Context)
 sidebar_position: 2
 author:
   name: Aaron Wolf
@@ -11,35 +11,52 @@ source:
   canonical_url: https://wolfcodes.dev
 ---
 
-:::warning **Don't use callbacks in new code**
-Callbacks are an **old way** of handling async operations. They still exist in older code and some APIs, but you should **never write new code using callbacks**. Use [promises](./promises) and [async/await](./async_await) instead.
+:::warning Callback-based async code is mostly historical
+Callbacks are still a normal JavaScript function pattern. You will use them with array methods, event listeners, timers, and custom helper functions.
 
-This section exists only so you can **recognize callbacks** when you see them in older code.
+This page is specifically about **callback-based asynchronous code**, which is an older way to organize async operations. For new async code, prefer [promises](./promises) and [`async` / `await`](./async_await).
+
+For the general function concept, see the [callback functions guide](../functions/callbacks).
 :::
 
-## What are callbacks?
+## What are async callbacks?
 
-A **callback** is a function passed to another function to be called later, usually after an async operation completes.
+An **async callback** is a function passed to an async operation so it can be called later, after the operation finishes.
 
 ```javascript
 // setTimeout takes a callback function
-setTimeout(function() {
-  console.log("This runs after 1 second");
+setTimeout(function () {
+  console.log("This runs later");
 }, 1000);
+
+console.log("This runs now");
 ```
 
 The function you pass to `setTimeout` is a callback. It gets called after the delay.
 
-## Why callbacks are problematic
+**Output:**
 
-Callbacks work, but they create serious problems when you need to chain multiple async operations:
+```text
+This runs now
+This runs later
+```
+
+**What happens:**
+
+1. `setTimeout(...)` schedules work to happen later.
+2. The program keeps going and logs `"This runs now"`.
+3. The callback runs after the delay and logs `"This runs later"`.
+
+## Why async callbacks are problematic
+
+Callback-based async code works, but it creates serious problems when you need to chain multiple async operations:
 
 ### Callback hell
 
-When you need to do multiple async operations in sequence, callbacks create deeply nested code:
+When you need to do multiple async operations in sequence, async callbacks create deeply nested code:
 
 ```javascript
-// Callback hell - hard to read and maintain!
+// Callback hell: hard to read and maintain
 fetchUser(userId, function(user) {
   fetchPosts(user.id, function(posts) {
     fetchComments(posts[0].id, function(comments) {
@@ -51,14 +68,21 @@ fetchUser(userId, function(user) {
 });
 ```
 
-This is called "callback hell" or "the pyramid of doom." It's:
-- **Hard to read** — nested functions are confusing
-- **Hard to debug** — errors can happen at any level
-- **Hard to maintain** — adding or removing steps is painful
+This is called "callback hell" or "the pyramid of doom."
+
+It is:
+
+- **Hard to read**: nested functions are confusing
+- **Hard to debug**: errors can happen at any level
+- **Hard to maintain**: adding or removing steps is painful
+
+:::note
+The functions in the example (`fetchUser`, `fetchPosts`, etc.) are placeholders to show the structure. The point is how nesting grows when each async step depends on the previous one.
+:::
 
 ### Error handling is messy
 
-With callbacks, error handling often requires checking errors at every level:
+With async callbacks, error handling often requires checking errors at every level:
 
 ```javascript
 fetchUser(userId, function(error, user) {
@@ -78,23 +102,46 @@ fetchUser(userId, function(error, user) {
 
 This pattern repeats at every level, making code verbose and error-prone.
 
-## Why you shouldn't use callbacks
+## A common historical pattern: Node-style callbacks
+
+Older Node.js APIs often used an "error-first" callback style:
+
+```javascript
+function readConfig(callback) {
+  setTimeout(() => {
+    callback(null, { debug: true });
+  }, 50);
+}
+
+readConfig((error, config) => {
+  if (error) {
+    console.log("Failed to read config");
+    return;
+  }
+
+  console.log(config.debug); // true
+});
+```
+
+The first callback argument is the error (or `null` when successful). The second argument is the successful result.
+
+## Why you should avoid async callbacks in new code
 
 **Modern JavaScript has better solutions:**
 
-1. **Promises** — Cleaner chaining with `.then()` and `.catch()`
-2. **async/await** — Makes async code read like synchronous code
+1. **Promises**: Cleaner chaining with `.then()` and `.catch()`
+2. **async/await**: Makes async code read like synchronous code
 
 Both solve callback hell and make error handling straightforward.
 
-## When you'll see callbacks
+## When you'll see async callbacks
 
-You might encounter callbacks in:
-- **Older codebases** — written before promises were widely adopted
-- **Some Node.js APIs** — older APIs like `fs.readFile()` (though modern versions support promises)
-- **Legacy libraries** — older third-party code
+You might encounter callback-based async code in:
+- **Older codebases**: written before promises were widely adopted
+- **Some Node.js APIs**: older APIs like `fs.readFile()` though modern versions support promises
+- **Legacy libraries**: older third-party code
 
-If you see callbacks, you can usually wrap them in promises:
+If you see async callbacks, you can usually wrap them in promises:
 
 ```javascript
 // Old callback API
@@ -123,8 +170,9 @@ async function useIt() {
 
 ## Summary
 
-- Callbacks are **old** and should **not be used** in new code
-- They create "callback hell" with deeply nested functions
-- Error handling is messy and repetitive
-- Use [promises](./promises) and [async/await](./async_await) instead
-- Learn to recognize callbacks so you can understand older code
+- Callbacks are still a normal function pattern in JavaScript.
+- Callback-based async code is the older async style this page is warning about.
+- Async callbacks can create "callback hell" with deeply nested functions.
+- Error handling in callback-based async code is messy and repetitive.
+- Use [promises](./promises) and [`async` / `await`](./async_await) for new async code.
+- Learn to recognize async callbacks so you can understand older code.

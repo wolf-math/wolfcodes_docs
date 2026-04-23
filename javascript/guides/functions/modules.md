@@ -11,26 +11,63 @@ source:
   canonical_url: https://wolfcodes.dev
 ---
 
-## Why modules exist
+## What are modules?
 
-As programs grow, keeping all code in one file becomes unmanageable. **Modules** let you:
-- Split code across multiple files
-- Organize related functionality together
-- Reuse code across different parts of your program
-- Avoid naming conflicts (each module has its own scope)
-- Control what other code can access (public vs private)
+**Modules** let you split JavaScript code across multiple files. A module can keep some code private and export the parts other files should use.
 
-JavaScript modules let you write code in separate files and import what you need where you need it.
+```javascript
+// math.js
+export function add(a, b) {
+  return a + b;
+}
 
-## JavaScript modules (`export` and `import`)
+// main.js
+import { add } from "./math.js";
 
-Introduced in version **ES6** (2015), modern JavaScript uses `export` and `import` statements . This is the standard way to organize code in JavaScript today.
+console.log(add(5, 3)); // 8
+```
 
-### Setting up modules
+Modules help you organize code as projects grow.
 
-To use ES6 modules, you need to indicate that your JavaScript file is a module:
+## Why this matters
 
-**In Node.js:** Add `"type": "module"` to your `package.json`:
+Small programs can live in one file. Larger programs become easier to understand when related code is grouped into separate files: math helpers, API calls, UI behavior, data models, configuration, and so on.
+
+Modules let you:
+
+- Split code into focused files
+- Reuse code across the project
+- Control what each file exposes
+- Avoid global variable conflicts
+- Make dependencies explicit with `import`
+
+## Using JavaScript modules
+
+Modern JavaScript uses `export` and `import`. How you enable modules depends on where the code runs.
+
+### In the browser
+
+In the browser, no `package.json` is required. Load module code with `type="module"`:
+
+```html
+<script type="module" src="main.js"></script>
+```
+
+That tells the browser to treat `main.js` as a module, so it can use `import` and `export`.
+
+Browser module imports usually need the file extension:
+
+```javascript
+import { add } from "./math.js";
+```
+
+Use `./math.js`, not just `./math`, when importing a local file in the browser.
+
+### In Node.js
+
+In Node.js, you have two common options.
+
+Add `"type": "module"` to `package.json` if you want `.js` files to be treated as ES modules:
 
 ```json
 {
@@ -38,42 +75,43 @@ To use ES6 modules, you need to indicate that your JavaScript file is a module:
 }
 ```
 
-Or use `.mjs` file extension: `myModule.mjs`
+Or use the `.mjs` file extension, which Node treats as an ES module without needing `"type": "module"`:
 
-**In browsers:** Use `<script type="module">`:
-
-```html
-<script type="module" src="main.js"></script>
+```text
+main.mjs
+math.mjs
 ```
 
-## Commonjs vs es6 modules
+This guide focuses on modern ES modules, not older CommonJS.
 
-:::note
-Node.js historically used **CommonJS** (`require`/`module.exports`), but ES6 modules are now the standard. This guide focuses on ES6 modules.
-:::
+## Import paths
 
-If you see `require()` or `module.exports` in code, that's CommonJS (older style):
+Use a relative path when importing a file from your project.
 
 ```javascript
-// CommonJS (old style)
-const math = require('./math.js');
-module.exports = { add, subtract };
-
-// ES6 modules (modern style - preferred)
-import { add, subtract } from './math.js';
-export { add, subtract };
+import { add } from "./math.js";
+import { formatDate } from "../utils/formatDate.js";
 ```
 
-**Use ES6 modules** in new projects.
+Common relative path pieces:
 
+- `./` means "from the current folder"
+- `../` means "go up one folder"
+- `/` at the beginning means "from the site or project root" in some tools, but the exact meaning depends on the environment
 
-## `export` — Making code available
+For beginner code, prefer explicit relative imports like `./math.js` and `../utils/formatDate.js`.
 
-Use `export` to make functions, variables, classes, etc. available to other modules.
+Imports from packages use the package name instead of a relative path:
 
-### Named exports
+```javascript
+import express from "express";
+```
 
-**Named exports** let you export multiple things from a module:
+Package imports depend on tools like Node.js, npm, or a bundler.
+
+## Named exports
+
+Use **named exports** when a module exports multiple things:
 
 ```javascript
 // math.js
@@ -88,7 +126,18 @@ export function subtract(a, b) {
 export const PI = 3.14159;
 ```
 
-You can also export at the end of the file:
+Import named exports with curly braces:
+
+```javascript
+// main.js
+import { add, subtract, PI } from "./math.js";
+
+console.log(add(5, 3));       // 8
+console.log(subtract(10, 4)); // 6
+console.log(PI);              // 3.14159
+```
+
+You can also export at the end of a file:
 
 ```javascript
 // math.js
@@ -100,253 +149,404 @@ function subtract(a, b) {
   return a - b;
 }
 
-const PI = 3.14159;
-
-export { add, subtract, PI };
+export { add, subtract };
 ```
 
-### Default export
+This style can make it easy to see everything the module exports in one place.
 
-A **default export** is the main export from a module (only one per module):
+## Default exports
+
+Use a **default export** when a module has one main thing to export:
 
 ```javascript
-// user.js
+// createUser.js
 export default function createUser(name, email) {
   return {
     name,
-    email,
-    createdAt: new Date()
+    email
   };
 }
 ```
-
-Or:
-
-```javascript
-// user.js
-function createUser(name, email) {
-  return {
-    name,
-    email,
-    createdAt: new Date()
-  };
-}
-
-export default createUser;
-```
-
-**Note:** You can combine named and default exports in the same module:
-
-```javascript
-// utils.js
-export default function mainFunction() {
-  // ...
-}
-
-export function helperFunction() {
-  // ...
-}
-
-export const CONSTANT = "value";
-```
-
-## `import` — Using exported code
-
-Use `import` to bring code from other modules into your current file.
-
-### Importing named exports
-
-Import named exports using curly braces `{}`:
-
-```javascript
-// main.js
-import { add, subtract, PI } from './math.js';
-
-console.log(add(5, 3));        // 8
-console.log(subtract(10, 4));  // 6
-console.log(PI);               // 3.14159
-```
-
-You can import with different names using `as`:
-
-```javascript
-import { add as addNumbers, subtract as subtractNumbers } from './math.js';
-```
-
-### Importing default exports
 
 Import default exports without curly braces:
 
 ```javascript
 // main.js
-import createUser from './user.js';
+import createUser from "./createUser.js";
 
 const user = createUser("Alice", "alice@example.com");
+
+console.log(user.name); // "Alice"
 ```
 
-You can rename default imports:
+Default imports can be renamed by the importing file:
 
 ```javascript
-import createUser as makeUser from './user.js';
+import makeUser from "./createUser.js";
 ```
 
-### Importing everything
+Use this power carefully. Renaming can be helpful, but inconsistent names make code harder to search.
 
-You can import all named exports as an object:
+## Named vs default exports
+
+Use named exports when:
+
+- A file exports several related utilities
+- You want imports to use the exact exported names
+- You want easier auto-imports and refactors
+
+Use default exports when:
+
+- A file exists mainly for one function, class, or component
+- The imported name may reasonably vary by context
 
 ```javascript
-import * as math from './math.js';
+// Good named exports for utilities
+export function formatDate(date) {}
+export function parseDate(text) {}
 
-console.log(math.add(5, 3));       // 8
-console.log(math.subtract(10, 4)); // 6
-console.log(math.PI);              // 3.14159
+// Good default export for one main thing
+export default function createUser(data) {}
 ```
 
-**Note:** This doesn't include default exports.
+Many teams prefer named exports most of the time because they make dependencies explicit and consistent.
 
-### Combining imports
+## Importing with aliases
 
-You can import both default and named exports:
+Use `as` to rename a named import:
 
 ```javascript
-// utils.js
-export default function main() { }
-export function helper() { }
+import { add as addNumbers } from "./math.js";
 
+console.log(addNumbers(2, 3)); // 5
+```
+
+Use aliases when names would conflict or when a clearer local name helps.
+
+You can also rename while exporting:
+
+```javascript
+function add(a, b) {
+  return a + b;
+}
+
+export { add as addNumbers };
+```
+
+## Importing everything
+
+Use `* as name` to import all named exports as an object:
+
+```javascript
+import * as math from "./math.js";
+
+console.log(math.add(5, 3)); // 8
+console.log(math.PI);        // 3.14159
+```
+
+This can be useful for grouped utilities, but avoid using it to hide unclear module boundaries.
+
+## Side-effect imports
+
+Sometimes a module is imported only because running it does something.
+
+```javascript
+// setup.js
+console.log("App setup complete");
+```
+
+```javascript
 // main.js
-import main, { helper } from './utils.js';
-//      ^^^^  ^^^^^^^^
-//   default   named
+import "./setup.js";
 ```
 
-## File organization basics
+This is called a **side-effect import**.
 
-### Project structure
+Use side-effect imports sparingly. They can be useful for setup code, but they make dependencies less obvious because no names are imported.
 
-Organize modules in a logical file structure:
+## Module scope
 
-```
-my-project/
-  ├── src/
-  │   ├── utils/
-  │   │   ├── math.js
-  │   │   └── strings.js
-  │   ├── models/
-  │   │   └── user.js
-  │   └── main.js
-  └── package.json
-```
+Each module has its own scope. Variables and functions are private unless exported:
 
-### Module responsibilities
+```javascript
+// counter.js
+let count = 0;
 
-Each module should have a clear, single responsibility. This makes your code easier to find, understand, and maintain.
-
-**Why single responsibility matters:**
-- **Easier to find code**: You know `add` is in `math.js`, not a generic `utils.js`
-- **Clearer dependencies**: A module about math doesn't need user management code
-- **Better organization**: Related functions are grouped together
-- **Easier testing**: You can test math functions without loading user management code
-
-**Good organization** - each module has a single responsibility:
-
-```
-my-project/
-  ├── src/
-  │   ├── utils/
-  │   │   ├── math.js        // add, multiply, divide
-  │   │   └── strings.js     // parseEmail, formatName
-  │   ├── models/
-  │   │   └── user.js        // createUser, getUserById
-  │   └── main.js
+export function increment() {
+  count += 1;
+  return count;
+}
 ```
 
-Clear and organized. Need math functions? Check `utils/math.js`. Need user management? Check `models/user.js`.
+Another file can import `increment`, but it cannot access `count` directly:
 
-**Bad organization** - everything dumped into a single file:
+```javascript
+// main.js
+import { increment } from "./counter.js";
 
+console.log(increment()); // 1
+
+// This would cause an error:
+// console.log(count); // ReferenceError
 ```
-my-project/
-  ├── src/
-  │   ├── utils.js           // add, multiply, parseEmail, createUser, formatName, etc.
-  │   └── main.js
+
+This makes modules a useful way to encapsulate implementation details.
+
+## Imports are static
+
+Static `import` statements must appear at the top level of a module.
+
+```javascript
+import { add } from "./math.js";
+
+console.log(add(2, 3)); // 5
 ```
 
-Everything is in one file. Where's the `add` function? In `utils.js` with 50 other unrelated functions. Good luck finding it quickly!
+Do not put a static `import` inside an `if` statement or function:
 
-When everything is in one "utils" file, it becomes a dumping ground where functions are hard to find and unrelated code gets tangled together.
+```javascript
+// This would cause an error:
+// if (shouldLoadMath) {
+//   import { add } from "./math.js";
+// }
+```
 
-### Naming conventions
+This top-level structure helps JavaScript and build tools understand module dependencies before the code runs.
 
-- Use descriptive file names: `userService.js`, `mathUtils.js`
-- Match export names to their purpose: `createUser`, `calculateTotal`
-- Use camelCase for JavaScript files: `userManager.js` (not `user_manager.js`)
+There is also a dynamic `import()` function for loading modules later, but that is an advanced pattern.
+
+## Imports are live bindings
+
+Imported values stay connected to the exported value.
+
+```javascript
+// counter.js
+export let count = 0;
+
+export function increment() {
+  count += 1;
+}
+```
+
+```javascript
+// main.js
+import { count, increment } from "./counter.js";
+
+console.log(count); // 0
+
+increment();
+
+console.log(count); // 1
+```
+
+The imported `count` reflects the updated exported value.
+
+You cannot reassign an imported binding from the importing file:
+
+```javascript
+// This would cause an error:
+// count = 10;
+```
+
+In most beginner code, export functions that update internal state instead of exporting mutable variables directly.
+
+## File organization
+
+Give each module a clear responsibility:
+
+```text
+src/
+  main.js
+  config.js
+  api/
+    users.js
+  utils/
+    math.js
+    strings.js
+```
+
+Good module names describe what lives inside:
+
+- `math.js`
+- `formatDate.js`
+- `userApi.js`
+- `createUser.js`
+- `storage.js`
+
+Avoid dumping unrelated helpers into one giant `utils.js`. A file that contains everything becomes hard to search, test, and maintain.
 
 ## Real-world example
-
-Here's a simple example showing modules in action:
 
 ```javascript
 // config.js
 export const API_URL = "https://api.example.com";
 export const TIMEOUT = 5000;
-
-// user.js
-import { API_URL, TIMEOUT } from './config.js';
-
-export function fetchUser(id) {
-  return fetch(`${API_URL}/users/${id}`, {
-    timeout: TIMEOUT
-  });
-}
-
-// main.js
-import { fetchUser } from './user.js';
-import { API_URL } from './config.js';
-
-async function displayUser(id) {
-  const user = await fetchUser(id);
-  console.log(user);
-}
 ```
-
-## Module scope
-
-Each module has its own scope. Variables and functions declared in a module are **private** unless explicitly exported:
 
 ```javascript
-// utils.js
-const privateVar = "I'm private";  // Not exported, can't be accessed outside
+// usersApi.js
+import { API_URL } from "./config.js";
 
-export function publicFunction() {
-  console.log(privateVar);  // Can access privateVar inside this module
-  return "I'm public";
+export async function fetchUser(id) {
+  const response = await fetch(`${API_URL}/users/${id}`);
+
+  if (!response.ok) {
+    throw new Error(`Request failed with status ${response.status}`);
+  }
+
+  return response.json();
 }
-
-// main.js
-import { publicFunction } from './utils.js';
-
-console.log(privateVar);  // Error: privateVar is not defined
-publicFunction();         // Works
 ```
 
-This is a form of **encapsulation**—you control what's accessible from outside the module.
+```javascript
+// main.js
+import { fetchUser } from "./usersApi.js";
+
+const user = await fetchUser(1);
+
+console.log(user);
+```
+
+Each file has a focused job:
+
+- `config.js` stores shared configuration.
+- `usersApi.js` handles user API calls.
+- `main.js` uses the exported behavior.
+
+## CommonJS vs ES modules
+
+Older Node.js code often uses CommonJS:
+
+```javascript
+// math.cjs
+function add(a, b) {
+  return a + b;
+}
+
+function subtract(a, b) {
+  return a - b;
+}
+
+module.exports = {
+  add,
+  subtract
+};
+```
+
+```javascript
+// main.cjs
+const math = require("./math.cjs");
+
+console.log(math.add(5, 3)); // 8
+```
+
+Modern JavaScript uses ES modules:
+
+```javascript
+// math.js
+export function add(a, b) {
+  return a + b;
+}
+```
+
+```javascript
+// main.js
+import { add } from "./math.js";
+
+console.log(add(5, 3)); // 8
+```
+
+Use ES modules in new projects unless the project already uses CommonJS.
 
 ## Circular dependencies
 
-**Circular dependencies** occur when module A imports from module B, and module B imports from module A:
+A **circular dependency** happens when two modules import from each other:
 
 ```javascript
 // a.js
-import { funcB } from './b.js';
-export function funcA() { }
+import { b } from "./b.js";
+export function a() {}
 
 // b.js
-import { funcA } from './a.js';
-export function funcB() { }
+import { a } from "./a.js";
+export function b() {}
 ```
 
-While JavaScript allows circular dependencies, they can cause confusing bugs. **Avoid them when possible** by:
-- Restructuring code to remove the circular dependency
-- Moving shared code to a third module
-- Using dependency injection
+JavaScript allows circular dependencies, but they can cause confusing bugs because one module may run before the other has finished setting up its exports.
 
+To avoid circular dependencies:
+
+- Move shared code into a third module.
+- Simplify module responsibilities.
+- Pass dependencies as arguments instead of importing directly.
+- Watch for two files that know too much about each other.
+
+## Common patterns
+
+### Utility module
+
+```javascript
+// strings.js
+export function capitalize(text) {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+export function trimLower(text) {
+  return text.trim().toLowerCase();
+}
+```
+
+### Configuration module
+
+```javascript
+// config.js
+export const API_URL = "https://api.example.com";
+export const DEFAULT_TIMEOUT = 5000;
+```
+
+### Barrel file
+
+A barrel file re-exports from several files:
+
+```javascript
+// utils/index.js
+export { capitalize } from "./strings.js";
+export { add } from "./math.js";
+```
+
+Barrel files can make imports shorter, but too many barrels can make dependencies harder to trace.
+
+### Module with private helpers
+
+Keep helper functions private when only the module needs them.
+
+```javascript
+// prices.js
+function roundToCents(amount) {
+  return Math.round(amount * 100) / 100;
+}
+
+export function calculateTotal(items) {
+  const total = items.reduce((sum, item) => sum + item.price, 0);
+  return roundToCents(total);
+}
+```
+
+Other files can import `calculateTotal`, but `roundToCents` stays private.
+
+## Best practices
+
+- **Use ES modules for new code**: Prefer `import` and `export`.
+- **Keep modules focused**: One module should have one clear responsibility.
+- **Prefer named exports for utilities**: They make imports explicit.
+- **Use default exports for one-main-thing files** when that matches the project style.
+- **Export only what other files need**: Keep implementation details private.
+- **Use explicit relative paths**: In browser and Node ES modules, include `.js` for local files.
+- **Keep static imports at the top level**: Use regular `import` statements before the code that depends on them.
+- **Use clear file names**: The filename should hint at the module's purpose.
+- **Avoid circular dependencies**: Move shared code to a separate module.
+- **Keep import paths readable**: Deep, tangled paths often signal organization problems.
+
+## Summary
+
+Modules split JavaScript code into focused files. Use `export` to make values available and `import` to use them elsewhere. Named exports work well for utilities, default exports work well for one main value, and module scope keeps unexported code private. Good modules make dependencies visible, reduce globals, and keep large programs easier to maintain.

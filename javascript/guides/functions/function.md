@@ -13,353 +13,440 @@ source:
 
 ## What are functions?
 
-**Functions** are reusable blocks of code that perform a specific task. They let you:
-- Organize code into logical units
-- Avoid repetition (DRY: Don't Repeat Yourself)
-- Make code easier to read and maintain
+**Functions** are reusable blocks of code that perform a specific task. They let you give a name to behavior, avoid repetition, and break a program into smaller pieces.
 
 ```javascript
 function greet(name) {
   return `Hello, ${name}!`;
 }
 
-console.log(greet("Alice"));  // "Hello, Alice!"
-console.log(greet("Bob"));    // "Hello, Bob!"
+console.log(greet("Alice")); // "Hello, Alice!"
+console.log(greet("Bob"));   // "Hello, Bob!"
 ```
 
-Instead of writing the greeting code twice, we wrote it once in a function and called it multiple times.
+Instead of writing the greeting code twice, you define it once and call the function with different values.
+
+## Why this matters
+
+Functions are how JavaScript programs stay organized. You'll use them to calculate values, handle events, validate data, process arrays, fetch data, and separate one piece of logic from another.
+
+Good functions make code easier to read because the function name explains what the code does:
+
+```javascript
+const total = calculateTotal(cartItems);
+```
+
+That is usually clearer than repeating the calculation everywhere.
 
 ## Function declarations
 
-A **function declaration** uses the `function` keyword:
+A **function declaration** uses the `function` keyword and gives the function a name:
 
 ```javascript
 function add(a, b) {
   return a + b;
 }
 
-const result = add(5, 3);  // 8
+const result = add(5, 3);
+
+console.log(result); // 8
 ```
 
-Function declarations are **hoisted**, meaning they can be called before they're defined in your code:
-
-```javascript
-sayHello();  // Works! (function is hoisted)
-
-function sayHello() {
-  console.log("Hello!");
-}
-```
+Function declarations are useful for named, reusable behavior.
 
 ## Function expressions
 
-A **function expression** assigns a function to a variable:
+A **function expression** creates a function value and stores it in a variable:
 
 ```javascript
 const add = function(a, b) {
   return a + b;
 };
 
-const result = add(5, 3);  // 8
+const result = add(5, 3);
+
+console.log(result); // 8
 ```
 
-Function expressions are **not hoisted**, so you must define them before calling:
-
-```javascript
-sayHello();  // Error! Cannot access before initialization
-
-const sayHello = function() {
-  console.log("Hello!");
-};
-```
+The function is assigned to `add`, so you call it with `add(5, 3)`.
 
 ## Arrow functions
 
-**Arrow functions** (introduced in ES6) are a shorter syntax for function expressions:
+**Arrow functions** are a shorter syntax for function expressions:
 
 ```javascript
-// Function expression
-const add = function(a, b) {
-  return a + b;
-};
-
-// Arrow function (equivalent)
 const add = (a, b) => {
   return a + b;
 };
 
-// Arrow function with implicit return (when body is single expression)
-const add = (a, b) => a + b;
-
-// Single parameter (no parentheses needed)
-const square = x => x * x;
-
-// No parameters (parentheses required)
-const greet = () => "Hello!";
+console.log(add(5, 3)); // 8
 ```
 
-### When to use arrow functions
+When the body is one expression, you can use an implicit return:
 
-Arrow functions are preferred in modern JavaScript for:
-- Short, simple functions
-- Callbacks (functions passed to other functions)
-- Array methods (`map`, `filter`, `reduce`)
+```javascript
+const add = (a, b) => a + b;
+const square = (number) => number * number;
+const greet = () => "Hello";
+
+console.log(square(4)); // 16
+```
+
+Arrow functions are common for callbacks and array methods:
 
 ```javascript
 const numbers = [1, 2, 3, 4];
-const doubled = numbers.map(x => x * 2);  // [2, 4, 6, 8]
+const doubled = numbers.map((number) => number * 2);
+
+console.log(doubled); // [2, 4, 6, 8]
 ```
 
-However, arrow functions behave differently with `this` (covered in the [OOP guide](../oop/introduction)), so use regular functions when you need `this` binding.
+Arrow functions are covered in more detail in the [callback functions guide](./callbacks), where they are used with array methods, timers, and events.
 
-## Parameters and return values
+**Important:** Arrow functions handle `this` differently from regular functions. That matters most in object-oriented code and is covered in the [OOP guide](../oop/introduction).
 
-### Parameters
+## Hoisting
 
-Functions can accept **parameters** (also called arguments):
+**Hoisting** is JavaScript's behavior of setting up some declarations before code runs. Function declarations and function expressions behave differently, so this is an important mental model.
+
+### Function declarations are hoisted
+
+You can call a function declaration before it appears in the file:
+
+```javascript
+sayHello();
+
+function sayHello() {
+  console.log("Hello");
+}
+```
+
+**Output:**
+
+```text
+Hello
+```
+
+JavaScript knows about the function declaration before executing the code.
+
+### Function expressions are not usable before initialization
+
+Function expressions stored in `const` or `let` are not usable before the assignment runs:
+
+```javascript
+// This would cause an error:
+// sayHello(); // ReferenceError: Cannot access 'sayHello' before initialization
+
+const sayHello = function() {
+  console.log("Hello");
+};
+```
+
+The variable exists in the scope, but it cannot be used before JavaScript reaches the `const` assignment.
+
+### Arrow functions follow function expression rules
+
+Arrow functions are also function expressions:
+
+```javascript
+// This would cause an error:
+// sayHello(); // ReferenceError: Cannot access 'sayHello' before initialization
+
+const sayHello = () => {
+  console.log("Hello");
+};
+```
+
+### Rule of thumb
+
+Define functions before you call them unless you are intentionally using a function declaration.
+
+```javascript
+function calculateTotal(items) {
+  return items.reduce((total, item) => total + item.price, 0);
+}
+
+const total = calculateTotal([{ price: 10 }, { price: 15 }]);
+
+console.log(total); // 25
+```
+
+This keeps the code easy to read even when hoisting would allow a different order.
+
+## Parameters and arguments
+
+**Parameters** are the names in the function definition. **Arguments** are the values you pass when calling the function.
 
 ```javascript
 function greet(name, greeting) {
   return `${greeting}, ${name}!`;
 }
 
-greet("Alice", "Hello");  // "Hello, Alice!"
+const message = greet("Alice", "Hello");
+
+console.log(message); // "Hello, Alice!"
 ```
 
-If you call a function with fewer arguments than parameters, missing parameters are `undefined`:
+Here, `name` and `greeting` are parameters. `"Alice"` and `"Hello"` are arguments.
+
+### Missing arguments
+
+If you call a function with fewer arguments than parameters, the missing parameters are `undefined`:
 
 ```javascript
 function greet(name, greeting) {
   return `${greeting}, ${name}!`;
 }
 
-greet("Alice");  // "undefined, Alice!"
+console.log(greet("Alice")); // "undefined, Alice!"
 ```
 
 ### Default parameters
 
-You can provide **default values** for parameters:
+Use default parameters when an argument should be optional:
 
 ```javascript
 function greet(name, greeting = "Hello") {
   return `${greeting}, ${name}!`;
 }
 
-greet("Alice");           // "Hello, Alice!" (uses default)
-greet("Alice", "Hi");     // "Hi, Alice!" (overrides default)
+console.log(greet("Alice"));       // "Hello, Alice!"
+console.log(greet("Alice", "Hi")); // "Hi, Alice!"
 ```
 
-Default parameters are only used when the argument is `undefined`:
+Default parameters are used only when the argument is `undefined`:
 
 ```javascript
 function greet(name, greeting = "Hello") {
   return `${greeting}, ${name}!`;
 }
 
-greet("Alice", undefined);  // "Hello, Alice!" (uses default)
-greet("Alice", null);       // "null, Alice!" (null is not undefined)
+console.log(greet("Alice", undefined)); // "Hello, Alice!"
+console.log(greet("Alice", null));      // "null, Alice!"
 ```
 
-### Return values
+### Rest parameters
 
-Functions can **return** values using the `return` statement:
+Use a rest parameter when a function should accept any number of arguments.
+
+```javascript
+function addAll(...numbers) {
+  let total = 0;
+
+  for (const number of numbers) {
+    total += number;
+  }
+
+  return total;
+}
+
+console.log(addAll(1, 2, 3));    // 6
+console.log(addAll(5, 10, 15));  // 30
+```
+
+The `...numbers` parameter gathers the remaining arguments into an array.
+
+Use rest parameters when the function naturally works with a list of values.
+
+Rest parameters and spread syntax are covered together in the [rest and spread guide](../data_structures/rest_and_spread).
+
+## Return values
+
+Use `return` to send a value back to the caller:
 
 ```javascript
 function add(a, b) {
   return a + b;
 }
 
-const result = add(5, 3);  // result is 8
+const result = add(5, 3);
+
+console.log(result); // 8
 ```
 
-If a function doesn't have a `return` statement (or returns without a value), it returns `undefined`:
-
-```javascript
-function doSomething() {
-  console.log("Doing something");
-  // No return statement
-}
-
-const result = doSomething();  // result is undefined
-```
-
-### Multiple return statements
-
-Functions can have multiple return statements:
+When a `return` statement runs, the function stops immediately:
 
 ```javascript
 function getGrade(score) {
   if (score >= 90) {
     return "A";
   }
+
   if (score >= 80) {
     return "B";
   }
+
   return "F";
 }
+
+console.log(getGrade(85)); // "B"
 ```
 
-When a `return` statement executes, the function exits immediately.
-
-## Scope basics
-
-**Scope** determines where variables are accessible. JavaScript has different scopes:
-
-### Global scope
-
-Variables declared outside functions are in **global scope**:
-
-```javascript
-const globalVar = "I'm global";
-
-function myFunction() {
-  console.log(globalVar);  // Can access global variable
-}
-```
-
-### Local scope (function scope)
-
-Variables declared inside a function are in **local scope**:
-
-```javascript
-function myFunction() {
-  const localVar = "I'm local";
-  console.log(localVar);  // Works
-}
-
-console.log(localVar);  // Error: localVar is not defined
-```
-
-### Block scope
-
-Variables declared with `let` and `const` are **block-scoped** (confined to the block `{}`):
-
-```javascript
-if (true) {
-  const blockVar = "I'm in a block";
-  console.log(blockVar);  // Works
-}
-
-console.log(blockVar);  // Error: blockVar is not defined
-```
-
-We'll explore scope in more detail in the [scope and closures guide](./scope_and_closures).
-
-## Common function patterns
-
-### Functions that don't return values
-
-Sometimes functions perform actions without returning values:
+If a function does not return a value, it returns `undefined`:
 
 ```javascript
 function logMessage(message) {
-  console.log(`[${new Date().toISOString()}] ${message}`);
+  console.log(message);
 }
 
-logMessage("Something happened");
-// Output: [2024-01-15T10:30:00.000Z] Something happened
+const result = logMessage("Hello");
+
+console.log(result); // undefined
 ```
 
-### Functions as values
+## Scope basics
 
-Functions are **first-class citizens** in JavaScript—they can be:
-- Assigned to variables
-- Passed as arguments
-- Returned from other functions
+Variables declared inside a function are local to that function:
 
 ```javascript
-// Assign to variable
-const myFunc = function() {
+function createMessage() {
+  const message = "Hello";
+  return message;
+}
+
+console.log(createMessage()); // "Hello"
+
+// This would cause an error:
+// console.log(message); // ReferenceError
+```
+
+Functions can access variables from outer scopes:
+
+```javascript
+const prefix = "Hello";
+
+function greet(name) {
+  return `${prefix}, ${name}!`;
+}
+
+console.log(greet("Alice")); // "Hello, Alice!"
+```
+
+Scope and closures are covered in more detail in the [scope and closures guide](./scope_and_closures).
+
+## Functions as values
+
+Functions are values in JavaScript. You can store them in variables, pass them to other functions, and return them from functions.
+
+```javascript
+function callTwice(callback) {
+  callback();
+  callback();
+}
+
+callTwice(() => {
   console.log("Hello");
-};
-
-// Pass as argument
-function callTwice(func) {
-  func();
-  func();
-}
-
-callTwice(() => console.log("Hello"));
-// Output: Hello (twice)
+});
 ```
 
-### Anonymous functions
+**Output:**
 
-Functions without names are **anonymous functions**:
+```text
+Hello
+Hello
+```
+
+This is why functions work so well with array methods and event listeners. The function passed to `callTwice` is a callback, which is covered in more detail in the [callback functions guide](./callbacks).
+
+## Common patterns
+
+### Helper functions
+
+Use helper functions to name reusable logic:
 
 ```javascript
-// Anonymous function assigned to variable
-const greet = function(name) {
-  return `Hello, ${name}!`;
-};
+function isAdult(age) {
+  return age >= 18;
+}
 
-// Anonymous arrow function
-const greet = (name) => `Hello, ${name}!`;
-
-// Anonymous function passed as argument
-setTimeout(function() {
-  console.log("Delayed");
-}, 1000);
+if (isAdult(20)) {
+  console.log("Can continue");
+}
 ```
 
-### Immediately Invoked Function Expressions (IIFE)
+### Early returns
 
-An IIFE runs immediately after it's defined:
+Use early returns to handle edge cases first:
+
+```javascript
+function getEmail(user) {
+  if (!user) {
+    return null;
+  }
+
+  if (!user.email) {
+    return null;
+  }
+
+  return user.email;
+}
+```
+
+### Array callbacks
+
+Functions are often passed to array methods:
+
+```javascript
+const numbers = [1, 2, 3, 4, 5];
+
+const evens = numbers.filter((number) => number % 2 === 0);
+const squares = numbers.map((number) => number * number);
+
+console.log(evens);   // [2, 4]
+console.log(squares); // [1, 4, 9, 16, 25]
+```
+
+For a deeper explanation of passing functions into other functions, see the [callback functions guide](./callbacks).
+
+### Immediately invoked function expressions
+
+An immediately invoked function expression, or IIFE, runs right after it is created:
 
 ```javascript
 (function() {
   console.log("This runs immediately");
 })();
-
-// Arrow function version
-(() => {
-  console.log("This also runs immediately");
-})();
 ```
 
-IIFEs are less common in modern JavaScript (modules replaced most use cases), but you might encounter them in older code.
+IIFEs are less common in modern JavaScript because modules solve many of the same scope problems, but you may see them in older code.
 
-## Functions and arrays
+## When to create a function
 
-Functions work great with array methods:
+Create a function when:
+
+- You are repeating the same logic.
+- A block of code has one clear purpose.
+- A name would make the behavior easier to understand.
+- You want to test a piece of logic by itself.
+- A section of code is getting long or hard to scan.
+
+Good function names usually start with a verb:
 
 ```javascript
-const numbers = [1, 2, 3, 4, 5];
-
-// Using named function
-function double(x) {
-  return x * 2;
-}
-const doubled = numbers.map(double);
-
-// Using arrow function (more common)
-const doubled2 = numbers.map(x => x * 2);
-
-// Filtering with function
-const evens = numbers.filter(x => x % 2 === 0);
-
-// Reducing with function
-const sum = numbers.reduce((acc, x) => acc + x, 0);
+function calculateTotal(items) {}
+function getUserById(id) {}
+function isValidEmail(email) {}
 ```
 
-## When to create functions
-
-Create functions when:
-- You're repeating the same code
-- A block of code has a clear, single purpose
-- You want to test a piece of code in isolation
-- The code is getting long or hard to read
-
-**Good function names** are descriptive and start with a verb:
+Avoid vague names:
 
 ```javascript
-// Good
-function calculateTotal(items) { }
-function getUserById(id) { }
-function isValidEmail(email) { }
-
-// Bad
-function stuff() { }
-function doThings() { }
-function xyz() { }
+function stuff() {}
+function doThings() {}
+function handleIt() {}
 ```
+
+## Best practices
+
+- **Use descriptive names**: The name should explain what the function does.
+- **Keep functions focused**: One function should do one clear job.
+- **Return values consistently**: Avoid sometimes returning a value and sometimes not unless that behavior is intentional.
+- **Use default parameters for common defaults**.
+- **Use rest parameters** when a function should accept a flexible number of arguments.
+- **Prefer early returns over deep nesting**.
+- **Define functions before calling them** unless you intentionally rely on function declaration hoisting.
+- **Use arrow functions for short callbacks** and regular functions when `this` behavior matters.
+
+## Summary
+
+Functions package reusable behavior. Function declarations, function expressions, and arrow functions all create callable values, but they differ in syntax and hoisting behavior. Use parameters for inputs, rest parameters for flexible argument lists, `return` for outputs, and clear names to make code easier to read. Functions are also values, which is why callbacks work. Hoisting lets function declarations be called before their definition, but defining functions before use is usually the clearest habit.

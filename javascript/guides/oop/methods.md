@@ -11,11 +11,47 @@ source:
   canonical_url: https://wolfcodes.dev
 ---
 
-Instance methods are functions attached to a class that work with the instance’s data. They’re defined once on the class and shared across instances. Understanding how `this` works is key.
+# Methods and `this`
+
+## What are methods?
+
+**Methods** are functions that belong to an object or class. Instance methods work with the data stored on a specific instance.
+
+```javascript
+class User {
+  constructor(name) {
+    this.name = name;
+  }
+
+  greet() {
+    return `Hello, ${this.name}!`;
+  }
+}
+
+const user = new User("Alice");
+
+console.log(user.greet()); // "Hello, Alice!"
+```
+
+The method `greet()` uses `this.name`, which belongs to the `user` instance.
+
+**What happens:**
+
+1. `user.greet()` calls the method on the `user` instance.
+2. Inside `greet()`, `this` refers to `user`.
+3. The method reads `this.name` and returns a greeting.
+
+## Why this matters
+
+Methods are how objects do things. They let you keep behavior close to the data it works with, which is the main reason to use classes.
+
+Understanding `this` is essential because methods usually read or update instance state through `this`.
+
+Methods are useful when a behavior naturally belongs to the object. A `BankAccount` can `deposit()`, a `TodoItem` can `complete()`, and a `Cart` can `calculateTotal()`.
 
 ## Defining instance methods
 
-Define methods inside the class body. When you call them on an instance, JavaScript sets `this` to that instance.
+Define methods inside the class body:
 
 ```javascript
 class Car {
@@ -28,52 +64,70 @@ class Car {
   getInfo() {
     return `${this.color} ${this.make} ${this.model}`;
   }
-
-  repaint(newColor) {
-    this.color = newColor;
-    return `The car is now ${newColor}`;
-  }
 }
 
-const myCar = new Car("Toyota", "Camry", "Blue");
-console.log(myCar.getInfo());    // "Blue Toyota Camry"
-console.log(myCar.repaint("Red")); // "The car is now Red"
-console.log(myCar.getInfo());    // "Red Toyota Camry"
+const car = new Car("Toyota", "Camry", "Blue");
+
+console.log(car.getInfo()); // "Blue Toyota Camry"
 ```
 
-- `getInfo()` is a **method** that uses the instance’s data.
-- `repaint()` is a **method** that modifies the instance’s data.
-- When you call `myCar.getInfo()`, JavaScript passes `myCar` as `this`.
+Methods are shared across instances, but `this` changes based on which instance calls the method.
 
-## The `this` reference
+Class method syntax does not use the `function` keyword:
 
-Inside instance methods, `this` refers to the **instance that called the method**.
+```javascript
+class User {
+  greet() {
+    return "Hello!";
+  }
+}
+```
+
+You also do not put commas between methods in a class:
+
+```javascript
+class User {
+  greet() {
+    return "Hello!";
+  }
+
+  sayGoodbye() {
+    return "Goodbye!";
+  }
+}
+```
+
+## What `this` means
+
+Inside an instance method, `this` refers to the instance that called the method:
 
 ```javascript
 class Counter {
   constructor() {
     this.value = 0;
   }
+
   increment() {
     this.value += 1;
+    return this.value;
   }
 }
 
-const c1 = new Counter();
-const c2 = new Counter();
+const first = new Counter();
+const second = new Counter();
 
-c1.increment(); // changes c1.value to 1
-c2.increment(); // changes c2.value to 1
-
-console.log(c1.value); // 1
-console.log(c2.value); // 1
+console.log(first.increment());  // 1
+console.log(first.increment());  // 2
+console.log(second.increment()); // 1
 ```
 
-Each call works on the instance that invoked it.
+`first` and `second` each have their own `value`.
 
-## Methods that modify instance state
+**Rule of thumb:** look to the left of the method call. In `first.increment()`, `this` is `first`. In `second.increment()`, `this` is `second`.
 
-Methods can change the instance’s properties:
+## Methods that modify state
+
+Methods can change instance properties:
 
 ```javascript
 class BankAccount {
@@ -91,26 +145,25 @@ class BankAccount {
     if (amount > this.balance) {
       throw new Error("Insufficient funds");
     }
-    this.balance -= amount;
-    return this.balance;
-  }
 
-  getBalance() {
+    this.balance -= amount;
     return this.balance;
   }
 }
 
 const account = new BankAccount("Alice", 100);
-account.deposit(50);
-console.log(account.getBalance()); // 150
 
-account.withdraw(30);
-console.log(account.getBalance()); // 120
+console.log(account.deposit(50));  // 150
+console.log(account.withdraw(30)); // 120
 ```
+
+These methods modify `account.balance`.
+
+When a method changes state, validate the input before making the change. In `withdraw()`, the method checks the balance before subtracting money.
 
 ## Methods that return values
 
-Methods can return values computed from instance state:
+Methods can also compute values without changing state:
 
 ```javascript
 class Rectangle {
@@ -123,24 +176,48 @@ class Rectangle {
     return this.width * this.height;
   }
 
-  perimeter() {
-    return 2 * (this.width + this.height);
-  }
-
   isSquare() {
     return this.width === this.height;
   }
 }
 
-const rect = new Rectangle(5, 5);
-console.log(rect.area());      // 25
-console.log(rect.perimeter()); // 20
-console.log(rect.isSquare());  // true
+const rectangle = new Rectangle(5, 5);
+
+console.log(rectangle.area());     // 25
+console.log(rectangle.isSquare()); // true
 ```
 
-## Calling methods from other methods
+These methods read instance state and return results.
 
-Methods can call other methods on the same instance:
+Read-only methods are useful when other code needs information about an object without changing it.
+
+## Methods with parameters
+
+Methods can accept parameters just like regular functions:
+
+```javascript
+class Scoreboard {
+  constructor() {
+    this.score = 0;
+  }
+
+  addPoints(points) {
+    this.score += points;
+    return this.score;
+  }
+}
+
+const scoreboard = new Scoreboard();
+
+console.log(scoreboard.addPoints(10)); // 10
+console.log(scoreboard.addPoints(5));  // 15
+```
+
+Use parameters when the method needs extra information from the caller.
+
+## Calling one method from another
+
+Methods can call other methods on the same instance with `this.methodName()`:
 
 ```javascript
 class Car {
@@ -159,67 +236,167 @@ class Car {
     return `${this.year} ${this.make} ${this.model}`;
   }
 
-  fullInfo() {
-    const info = this.getInfo();
-    return `${info} with ${this.mileage} miles`;
+  getFullInfo() {
+    return `${this.getInfo()} with ${this.mileage} miles`;
   }
 }
 
 const car = new Car("Toyota", "Camry", 2020);
 car.drive(100);
-console.log(car.fullInfo()); // "2020 Toyota Camry with 100 miles"
+
+console.log(car.getFullInfo()); // "2020 Toyota Camry with 100 miles"
 ```
 
-## Methods with multiple parameters
+Calling one method from another helps you reuse behavior instead of repeating the same formatting or calculation in multiple places.
 
-Methods can take any parameters you need beyond `this`:
+## Losing `this`
+
+`this` depends on how a function is called. If you pull a method off an instance and call it by itself, `this` can be lost:
 
 ```javascript
-class Calculator {
-  constructor() {
-    this.history = [];
+class User {
+  constructor(name) {
+    this.name = name;
   }
 
-  add(a, b) {
-    const result = a + b;
-    this.history.push(`${a} + ${b} = ${result}`);
-    return result;
-  }
-
-  multiply(a, b) {
-    const result = a * b;
-    this.history.push(`${a} * ${b} = ${result}`);
-    return result;
+  greet() {
+    return `Hello, ${this.name}!`;
   }
 }
 
-const calc = new Calculator();
-console.log(calc.add(5, 3));      // 8
-console.log(calc.multiply(4, 7)); // 28
-console.log(calc.history);        // ["5 + 3 = 8", "4 * 7 = 28"]
+const user = new User("Alice");
+const greet = user.greet;
+
+// This would cause an error:
+// greet(); // TypeError in many environments
 ```
 
-## Keeping `this` intact (common gotcha)
-
-If you pull a method off an instance and call it later, `this` can be lost:
+Use `bind()` to lock `this` to the instance:
 
 ```javascript
-const car = new Car("Toyota", "Camry", "Blue");
-const info = car.getInfo;
-info(); // `this` is undefined; throws or returns wrong data
+const boundGreet = user.greet.bind(user);
+
+console.log(boundGreet()); // "Hello, Alice!"
 ```
 
-Bind the method or use an arrow wrapper when passing as a callback:
+Or use an arrow wrapper:
 
 ```javascript
-const boundInfo = car.getInfo.bind(car);
-console.log(boundInfo());
+const callGreet = () => user.greet();
+
+console.log(callGreet()); // "Hello, Alice!"
 ```
+
+This also matters when passing methods as callbacks:
+
+```javascript
+class ButtonCounter {
+  constructor() {
+    this.count = 0;
+  }
+
+  increment() {
+    this.count += 1;
+    console.log(this.count);
+  }
+}
+
+const counter = new ButtonCounter();
+
+// This would lose `this` in many callback situations:
+// setTimeout(counter.increment, 1000);
+
+setTimeout(() => counter.increment(), 1000);
+```
+
+The arrow wrapper calls the method on `counter`, so `this` still points to the instance.
+
+## Common patterns
+
+### Validation inside methods
+
+```javascript
+class TodoList {
+  constructor() {
+    this.items = [];
+  }
+
+  addItem(text) {
+    if (!text.trim()) {
+      throw new Error("Todo text is required");
+    }
+
+    this.items.push(text);
+  }
+}
+```
+
+Validation keeps the object from moving into an invalid state.
+
+### Read methods and write methods
+
+Some methods only read state. Other methods change state.
+
+```javascript
+class TodoItem {
+  constructor(text) {
+    this.text = text;
+    this.isComplete = false;
+  }
+
+  complete() {
+    this.isComplete = true;
+  }
+
+  getLabel() {
+    return this.isComplete ? `${this.text} (done)` : this.text;
+  }
+}
+
+const todo = new TodoItem("Practice methods");
+
+console.log(todo.getLabel()); // "Practice methods"
+
+todo.complete();
+
+console.log(todo.getLabel()); // "Practice methods (done)"
+```
+
+`complete()` changes the object. `getLabel()` reads the object and returns a value.
+
+### Chainable methods
+
+Some methods return `this` so calls can be chained:
+
+```javascript
+class Builder {
+  constructor() {
+    this.parts = [];
+  }
+
+  add(part) {
+    this.parts.push(part);
+    return this;
+  }
+}
+
+const builder = new Builder();
+builder.add("header").add("body");
+
+console.log(builder.parts); // ["header", "body"]
+```
+
+Use chaining only when it makes the code clearer.
+
+## Best practices
+
+- **Use methods for behavior tied to instance state**: If the behavior belongs to the object, a method is a good fit.
+- **Use `this` only when you need instance data**: If the logic does not need instance state, a plain helper function may be clearer.
+- **Keep methods focused**: One method should do one clear job.
+- **Validate inputs before changing state**: Check for invalid values before updating properties.
+- **Be careful when passing methods as callbacks**: Use `bind()` or an arrow wrapper.
+- **Prefer clear method names**: Use verbs like `deposit`, `getBalance`, `markComplete`, or `calculateTotal`.
 
 ## Summary
 
-- Instance methods are defined on the class and shared across instances.
-- `this` inside a method refers to the instance that called it.
-- Methods can read/modify instance state and return computed values.
-- Methods can call other methods on the same instance.
-- Be careful when passing methods as callbacks—bind them to keep `this`.
+Methods are functions attached to classes or objects. Instance methods use `this` to read and update the current instance. `this` is set by how a method is called, so passing methods around can lose the original instance. Use methods to keep behavior close to the state it works with, and keep each method focused.

@@ -110,6 +110,8 @@ Open the HTML file in a browser, and the JavaScript will run. However, for learn
 
 ### Installing Node.js
 
+You can follow [these instructions](/docs/category/setup) to set up your environment or just.
+
 1. Visit [nodejs.org](https://nodejs.org/)
 2. Download the LTS (Long Term Support) version
 3. Follow the installation instructions for your operating system
