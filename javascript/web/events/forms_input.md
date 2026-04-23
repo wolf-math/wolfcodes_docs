@@ -233,6 +233,19 @@ if (emailInput) {
 Use JavaScript validation when you need rules that HTML alone does not cover:
 
 ```javascript
+const form = document.querySelector("#myForm");
+
+if (form) {
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    clearFormErrors(form);
+
+    if (validateForm(form)) {
+      console.log("Form is valid");
+    }
+  });
+}
+
 function validateForm(form) {
   const usernameInput = form.querySelector("#username");
   const emailInput = form.querySelector("#email");
@@ -341,7 +354,7 @@ The `FormData` API is a convenient way to collect form values.
 const form = document.querySelector("#myForm");
 
 if (form) {
-  form.addEventListener("submit", async e => {
+  form.addEventListener("submit", e => {
     e.preventDefault();
 
     const formData = new FormData(form);
@@ -355,8 +368,6 @@ if (form) {
     for (const [key, value] of formData.entries()) {
       console.log(key, value);
     }
-
-    await fetch("../browser_api/networking");
   });
 }
 ```
