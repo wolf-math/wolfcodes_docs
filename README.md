@@ -35,7 +35,6 @@ WolfCodes focuses on:
 
 This repository reflects an educational approach grounded in real teaching experience, not just API reference writing.
 
----
 
 ## Viewing the Site
 
@@ -59,7 +58,12 @@ The live site is available at:
 
 Content is written in Markdown / MDX.
 
-Guidelines:
+Before contributing, please review the style guide:
+
+* `style_guides/technical_guide.md` (core philosophy and structure)
+* Additional style guides in the `style_guides/` directory
+
+General principles:
 
 * Teach concepts, do not just define them
 * Prefer examples over abstraction
@@ -80,6 +84,8 @@ If you notice unclear explanations, missing examples, or structural issues, you 
 2. Click the “Edit” (pencil) icon
 3. Make your changes in the browser
 4. Submit a pull request with a clear description of the improvement
+
+Before submitting changes, please make sure they align with the style guide in the `style_guides/` directory.
 
 You can also open an issue to:
 
