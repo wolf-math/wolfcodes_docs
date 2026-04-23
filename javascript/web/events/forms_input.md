@@ -11,9 +11,39 @@ source:
   canonical_url: https://wolfcodes.dev
 ---
 
+## What are forms and user input?
+
+**Forms and user input** are how users send information to your page. JavaScript can read those values, validate them, respond to changes, and control what happens when a form is submitted.
+
+### Smallest working example
+
+```html
+<label for="username">Username</label>
+<input type="text" id="username" />
+```
+
+```javascript
+const input = document.querySelector("#username");
+
+if (input) {
+  input.addEventListener("input", () => {
+    console.log("Current value:", input.value);
+  });
+}
+```
+
+## Why this matters
+
+Most interactive web pages depend on user input:
+
+- Sign-in and sign-up forms
+- Search boxes and filters
+- Settings panels and preferences
+- Checkout, feedback, and contact forms
+
 ## Reading input values
 
-Forms collect user input through various input types. JavaScript lets you read and validate these values.
+Different form controls expose their values in slightly different ways.
 
 ### Text inputs
 
@@ -22,19 +52,18 @@ Forms collect user input through various input types. JavaScript lets you read a
 ```
 
 ```javascript
-const input = document.querySelector('#username');
+const input = document.querySelector("#username");
 
-// Read value
-const username = input.value;
-console.log(username);
+if (input) {
+  const username = input.value;
+  console.log(username);
 
-// Update value
-input.value = 'new value';
+  input.value = "new value";
 
-// Listen for changes
-input.addEventListener('input', function() {
-  console.log('Current value:', input.value);
-});
+  input.addEventListener("input", () => {
+    console.log("Current value:", input.value);
+  });
+}
 ```
 
 ### Textareas
@@ -44,11 +73,15 @@ input.addEventListener('input', function() {
 ```
 
 ```javascript
-const textarea = document.querySelector('#message');
-const message = textarea.value;
+const textarea = document.querySelector("#message");
+
+if (textarea) {
+  const message = textarea.value;
+  console.log(message);
+}
 ```
 
-Textareas work the same way as text inputs—use `.value` to read and set their content.
+Textareas work like text inputs. Use `.value` to read and update their content.
 
 ### Select dropdowns
 
@@ -61,17 +94,17 @@ Textareas work the same way as text inputs—use `.value` to read and set their 
 ```
 
 ```javascript
-const select = document.querySelector('#country');
+const select = document.querySelector("#country");
 
-// Get selected value
-const country = select.value;  // "us", "uk", or "ca"
+if (select) {
+  const country = select.value;
+  console.log(country);
 
-// Set selected value
-select.value = 'uk';
+  select.value = "uk";
 
-// Get selected option element
-const selectedOption = select.options[select.selectedIndex];
-console.log(selectedOption.text);  // "United Kingdom"
+  const selectedOption = select.options[select.selectedIndex];
+  console.log(selectedOption.text);
+}
 ```
 
 ### Checkboxes
@@ -81,20 +114,17 @@ console.log(selectedOption.text);  // "United Kingdom"
 ```
 
 ```javascript
-const checkbox = document.querySelector('#agree');
+const checkbox = document.querySelector("#agree");
 
-// Check if checked
-if (checkbox.checked) {
-  console.log('Checkbox is checked');
+if (checkbox) {
+  console.log("Checked:", checkbox.checked);
+
+  checkbox.checked = true;
+
+  checkbox.addEventListener("change", () => {
+    console.log("Checked:", checkbox.checked);
+  });
 }
-
-// Set checked state
-checkbox.checked = true;
-
-// Listen for changes
-checkbox.addEventListener('change', function() {
-  console.log('Checked:', checkbox.checked);
-});
 ```
 
 ### Radio buttons
@@ -106,26 +136,30 @@ checkbox.addEventListener('change', function() {
 ```
 
 ```javascript
-// Get selected radio button
 const selected = document.querySelector('input[name="size"]:checked');
 if (selected) {
-  console.log('Selected size:', selected.value);
+  console.log("Selected size:", selected.value);
 }
 
-// Select a radio button
-document.querySelector('#size-medium').checked = true;
+const medium = document.querySelector("#size-medium");
+if (medium) {
+  medium.checked = true;
+}
 
-// Listen for changes
 document.querySelectorAll('input[name="size"]').forEach(radio => {
-  radio.addEventListener('change', function() {
-    console.log('Selected:', this.value);
+  radio.addEventListener("change", () => {
+    console.log("Selected:", radio.value);
   });
 });
 ```
 
-## Preventing default behavior
+:::tip
+Rule of thumb: use `.value` for text-like fields, `.checked` for checkboxes, and `:checked` when reading the selected radio button.
+:::
 
-Forms have a default behavior: they submit to the server and reload the page. In modern web apps, you often want to handle submission with JavaScript instead.
+## Handling form submission
+
+By default, forms submit to the server and reload the page. In many JavaScript-driven interfaces, you want to handle submission yourself.
 
 ### Prevent form submission
 
@@ -137,38 +171,36 @@ Forms have a default behavior: they submit to the server and reload the page. In
 ```
 
 ```javascript
-const form = document.querySelector('#myForm');
+const form = document.querySelector("#myForm");
 
-form.addEventListener('submit', function(e) {
-  e.preventDefault();  // Prevent default form submission
-  
-  // Get form data
-  const formData = new FormData(form);
-  const username = formData.get('username');
-  
-  // Handle form data yourself
-  console.log('Username:', username);
-  
-  // Maybe send to server with fetch, update UI, etc.
-});
+if (form) {
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const username = formData.get("username");
+
+    console.log("Username:", username);
+  });
+}
 ```
 
 ### Why `preventDefault()` matters
 
-Without `preventDefault()`, the form submits and the page reloads, losing any JavaScript state. By preventing the default, you keep control and can:
+Without `preventDefault()`, the browser submits the form right away and usually reloads the page. Preventing the default gives your code a chance to:
 
-- Validate data before sending
-- Show loading states
-- Handle errors gracefully
-- Update the UI without reloading
+- Validate the input first
+- Show loading or error states
+- Send the data with `fetch()`
+- Update the page without a full reload
 
-## Form validation basics
+## Validating form input
 
-Validation ensures users enter correct data before submission.
+Validation helps make sure the user entered acceptable data before you continue.
 
 ### HTML5 validation
 
-HTML5 provides built-in validation:
+Browsers already support some useful validation rules:
 
 ```html
 <input type="email" required />
@@ -177,199 +209,219 @@ HTML5 provides built-in validation:
 ```
 
 ```javascript
-const input = document.querySelector('input[type="email"]');
+const emailInput = document.querySelector('input[type="email"]');
 
-// Check if valid
-if (input.validity.valid) {
-  console.log('Valid email');
-} else {
-  console.log('Invalid email:', input.validationMessage);
-}
+if (emailInput) {
+  if (emailInput.validity.valid) {
+    console.log("Valid email");
+  } else {
+    console.log("Invalid email:", emailInput.validationMessage);
+  }
 
-// Check specific validation errors
-if (input.validity.valueMissing) {
-  console.log('Email is required');
-}
-if (input.validity.typeMismatch) {
-  console.log('Not a valid email format');
+  if (emailInput.validity.valueMissing) {
+    console.log("Email is required");
+  }
+
+  if (emailInput.validity.typeMismatch) {
+    console.log("Not a valid email format");
+  }
 }
 ```
 
 ### JavaScript validation
 
-For custom validation, check values yourself:
+Use JavaScript validation when you need rules that HTML alone does not cover:
 
 ```javascript
 function validateForm(form) {
-  const username = form.querySelector('#username').value;
-  const email = form.querySelector('#email').value;
-  
-  // Check if empty
-  if (!username.trim()) {
-    showError('Username is required');
+  const usernameInput = form.querySelector("#username");
+  const emailInput = form.querySelector("#email");
+
+  if (!usernameInput || !emailInput) {
     return false;
   }
-  
-  // Check length
+
+  const username = usernameInput.value.trim();
+  const email = emailInput.value.trim();
+
+  if (!username) {
+    showFormError(form, "Username is required");
+    return false;
+  }
+
   if (username.length < 3) {
-    showError('Username must be at least 3 characters');
+    showFormError(form, "Username must be at least 3 characters");
     return false;
   }
-  
-  // Check email format
+
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    showError('Invalid email format');
+    showFormError(form, "Invalid email format");
     return false;
   }
-  
+
   return true;
 }
-
-form.addEventListener('submit', function(e) {
-  e.preventDefault();
-  
-  if (validateForm(this)) {
-    // Form is valid, submit it
-    submitForm(this);
-  }
-});
 ```
 
 ### Showing validation errors
 
 ```javascript
-function showError(message) {
-  // Remove existing errors
-  const existingError = document.querySelector('.error-message');
-  if (existingError) {
-    existingError.remove();
-  }
-  
-  // Show new error
-  const errorDiv = document.createElement('div');
-  errorDiv.className = 'error-message';
+function showFormError(form, message) {
+  clearFormErrors(form);
+
+  const errorDiv = document.createElement("div");
+  errorDiv.className = "error-message";
   errorDiv.textContent = message;
-  errorDiv.style.color = 'red';
-  
-  form.insertBefore(errorDiv, form.firstChild);
+  errorDiv.setAttribute("role", "alert");
+
+  form.prepend(errorDiv);
 }
 
-function clearErrors() {
-  const errors = document.querySelectorAll('.error-message');
-  errors.forEach(error => error.remove());
+function clearFormErrors(form) {
+  form.querySelectorAll(".error-message").forEach(error => {
+    error.remove();
+  });
 }
 ```
 
 ### Real-time validation
 
-Validate as users type:
-
 ```javascript
-const emailInput = document.querySelector('#email');
+const emailInput = document.querySelector("#email");
 
-emailInput.addEventListener('input', function() {
-  clearErrors();
-  
-  if (this.value && !isValidEmail(this.value)) {
-    showFieldError(this, 'Invalid email format');
-  }
-});
+if (emailInput) {
+  emailInput.addEventListener("input", () => {
+    clearFieldError(emailInput);
+
+    if (emailInput.value && !isValidEmail(emailInput.value)) {
+      showFieldError(emailInput, "Invalid email format");
+    }
+  });
+}
 
 function showFieldError(input, message) {
-  input.style.borderColor = 'red';
-  
-  let error = input.parentElement.querySelector('.field-error');
-  if (!error) {
-    error = document.createElement('span');
-    error.className = 'field-error';
-    error.style.color = 'red';
+  input.setAttribute("aria-invalid", "true");
+
+  let error = input.parentElement?.querySelector(".field-error");
+  if (!error && input.parentElement) {
+    error = document.createElement("span");
+    error.className = "field-error";
     input.parentElement.appendChild(error);
   }
-  error.textContent = message;
+
+  if (error) {
+    error.textContent = message;
+  }
+}
+
+function clearFieldError(input) {
+  input.removeAttribute("aria-invalid");
+
+  const error = input.parentElement?.querySelector(".field-error");
+  if (error) {
+    error.remove();
+  }
+}
+
+function isValidEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 ```
 
-## Working with formdata
+:::note
+Real-time validation is helpful, but it can feel noisy if every keystroke shows an error immediately. In many cases, a good pattern is to validate after the user has typed something meaningful or after the field loses focus.
+:::
 
-The `FormData` API makes working with forms easier:
+## Working with `FormData`
+
+The `FormData` API is a convenient way to collect form values.
 
 ```javascript
-const form = document.querySelector('#myForm');
+const form = document.querySelector("#myForm");
 
-form.addEventListener('submit', function(e) {
-  e.preventDefault();
-  
-  const formData = new FormData(form);
-  
-  // Get specific fields
-  const username = formData.get('username');
-  const email = formData.get('email');
-  
-  // Get all data as object
-  const data = Object.fromEntries(formData);
-  
-  // Iterate over all fields
-  for (const [key, value] of formData.entries()) {
-    console.log(key, value);
-  }
-  
-  // Send to server
-  fetch('/api/submit', {
-    method: 'POST',
-    body: formData  // Can send FormData directly
+if (form) {
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+
+    const username = formData.get("username");
+    const email = formData.get("email");
+
+    const data = Object.fromEntries(formData);
+    console.log(username, email, data);
+
+    for (const [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+
+    await fetch("../browser_api/networking");
   });
+}
 ```
 
-Learn more about [making HTTP requests with fetch](/docs/javascript/web/browser_api/networking).
-});
+### Sending `FormData` with `fetch()`
+
+```javascript
+const form = document.querySelector("#myForm");
+
+if (form) {
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+
+    await fetch("/api/submit", {
+      method: "POST",
+      body: formData
+    });
+  });
+}
 ```
 
-### FormData with file uploads
+Learn more about [making HTTP requests with `fetch()`](../browser_api/networking).
+
+### `FormData` with file uploads
 
 ```html
 <input type="file" name="avatar" />
 ```
 
 ```javascript
-const formData = new FormData(form);
-const file = formData.get('avatar');
+const form = document.querySelector("#myForm");
 
-// file is a File object
-console.log(file.name);    // filename
-console.log(file.size);    // file size in bytes
-console.log(file.type);    // MIME type
+if (form) {
+  const formData = new FormData(form);
+  const file = formData.get("avatar");
 
-// Send file to server
-fetch('/api/upload', {
-  method: 'POST',
-  body: formData
-});
+  if (file instanceof File) {
+    console.log(file.name);
+    console.log(file.size);
+    console.log(file.type);
+  }
+}
 ```
 
 ## Accessibility considerations
 
-Making forms accessible helps all users, including those using screen readers.
+Accessible forms are easier for everyone to use, including people using screen readers or keyboard navigation.
 
-### Labels
+### Use labels
 
 Always associate labels with inputs:
 
 ```html
-<!-- Good: explicit association -->
 <label for="username">Username</label>
 <input type="text" id="username" name="username" />
 
-<!-- Also good: wrapping -->
 <label>
   Username
   <input type="text" name="username" />
 </label>
 ```
 
-### Error messages
-
-Associate error messages with inputs:
+### Associate error messages
 
 ```html
 <label for="email">Email</label>
@@ -378,19 +430,18 @@ Associate error messages with inputs:
 ```
 
 ```javascript
-function showError(inputId, message) {
+function showAccessibleError(inputId, message) {
   const input = document.querySelector(`#${inputId}`);
   const error = document.querySelector(`#${inputId}-error`);
-  
-  input.setAttribute('aria-invalid', 'true');
-  error.textContent = message;
-  error.setAttribute('role', 'alert');  // Screen readers announce this
+
+  if (input && error) {
+    input.setAttribute("aria-invalid", "true");
+    error.textContent = message;
+  }
 }
 ```
 
-### Required fields
-
-Indicate required fields clearly:
+### Mark required fields clearly
 
 ```html
 <label for="username">
@@ -399,43 +450,48 @@ Indicate required fields clearly:
 <input type="text" id="username" required aria-required="true" />
 ```
 
-### Focus management
-
-Move focus to errors or success messages:
+### Manage focus when needed
 
 ```javascript
-function showError(message) {
-  const errorDiv = document.createElement('div');
-  errorDiv.id = 'form-error';
+function showFormErrorAndFocus(form, message) {
+  const errorDiv = document.createElement("div");
+  errorDiv.id = "form-error";
   errorDiv.textContent = message;
-  form.insertBefore(errorDiv, form.firstChild);
-  
-  // Move focus to error for screen readers
-  errorDiv.setAttribute('tabindex', '-1');
+  errorDiv.setAttribute("tabindex", "-1");
+
+  form.prepend(errorDiv);
   errorDiv.focus();
 }
 ```
 
 ## Common patterns
 
-### Form reset
+### Reset a form
 
 ```javascript
-form.reset();  // Resets all form fields to default values
+const form = document.querySelector("#myForm");
+
+if (form) {
+  form.reset();
+}
 ```
 
-### Disable submit button
+### Disable the submit button while submitting
 
 ```javascript
-const submitBtn = form.querySelector('button[type="submit"]');
+const form = document.querySelector("#myForm");
 
-// Disable while submitting
-submitBtn.disabled = true;
-submitBtn.textContent = 'Submitting...';
+if (form) {
+  const submitButton = form.querySelector('button[type="submit"]');
 
-// Re-enable on error
-submitBtn.disabled = false;
-submitBtn.textContent = 'Submit';
+  if (submitButton) {
+    submitButton.disabled = true;
+    submitButton.textContent = "Submitting...";
+
+    submitButton.disabled = false;
+    submitButton.textContent = "Submit";
+  }
+}
 ```
 
 ### Multi-step forms
@@ -444,20 +500,33 @@ submitBtn.textContent = 'Submit';
 let currentStep = 1;
 
 function showStep(step) {
-  document.querySelectorAll('.form-step').forEach((s, i) => {
-    s.style.display = i + 1 === step ? 'block' : 'none';
+  document.querySelectorAll(".form-step").forEach((section, index) => {
+    section.style.display = index + 1 === step ? "block" : "none";
   });
 }
 
 function nextStep() {
   if (validateCurrentStep()) {
-    currentStep++;
+    currentStep += 1;
     showStep(currentStep);
   }
 }
 
 function previousStep() {
-  currentStep--;
+  currentStep -= 1;
   showStep(currentStep);
 }
 ```
+
+## Summary
+
+- Use `.value`, `.checked`, and `FormData` to read user input depending on the kind of field.
+- `submit` handlers usually call `preventDefault()` so your JavaScript can validate and control what happens next.
+- Start with built-in HTML validation when it fits, then add JavaScript rules for custom cases.
+- Good forms are not just functional; they also need labels, clear errors, and accessible focus behavior.
+
+## Next up
+
+- [Events](./dom_events)
+- [Selecting elements](../dom/selecting_elements)
+- [Networking](../browser_api/networking)

@@ -13,20 +13,46 @@ source:
 
 ## What are events?
 
-**Events** are actions that happen in the browser—a user clicking a button, typing in an input, scrolling the page, or the page finishing loading. JavaScript lets you **listen** for these events and **respond** to them.
+**Events** are actions that happen in the browser, such as clicking a button, typing in an input, submitting a form, or the page finishing loading. JavaScript lets you listen for those events and respond when they happen.
 
-Events are what make web pages interactive. Without events, pages would be static HTML and CSS.
+Events are what make web pages interactive. Without events, pages would mostly be static HTML and CSS.
 
-## `addEventListener`
+### Smallest working example
 
-The modern way to handle events is with `addEventListener`:
+```html
+<button id="helloButton">Click me</button>
+```
 
 ```javascript
-const button = document.querySelector('button');
+const button = document.querySelector("#helloButton");
 
-button.addEventListener('click', function() {
-  console.log('Button clicked!');
-});
+if (button) {
+  button.addEventListener("click", () => {
+    console.log("Button clicked!");
+  });
+}
+```
+
+## Why this matters
+
+Events are how browser JavaScript reacts to what is happening on the page:
+
+- User actions like clicks, typing, and form submissions
+- Browser changes like page load, resize, and scroll
+- UI behavior like opening menus, validating forms, and updating state
+
+## `addEventListener()`
+
+The standard way to handle events in modern JavaScript is `addEventListener()`:
+
+```javascript
+const button = document.querySelector("button");
+
+if (button) {
+  button.addEventListener("click", () => {
+    console.log("Button clicked!");
+  });
+}
 ```
 
 ### Syntax
@@ -35,102 +61,123 @@ button.addEventListener('click', function() {
 element.addEventListener(eventType, handler, options);
 ```
 
-- **`eventType`** — the type of event to listen for (`'click'`, `'submit'`, etc.)
-- **`handler`** — the function to call when the event occurs
-- **`options`** — optional configuration (less commonly used)
+- **`eventType`**: the event to listen for, like `"click"` or `"submit"`
+- **`handler`**: the function that runs when the event happens
+- **`options`**: optional configuration, used less often in beginner code
 
 ### Multiple listeners
 
-You can add multiple listeners to the same element:
+You can attach more than one listener to the same element:
 
 ```javascript
-const button = document.querySelector('button');
+const button = document.querySelector("button");
 
-button.addEventListener('click', function() {
-  console.log('First handler');
-});
+if (button) {
+  button.addEventListener("click", () => {
+    console.log("First handler");
+  });
 
-button.addEventListener('click', function() {
-  console.log('Second handler');
-});
-
-// Both run when button is clicked
+  button.addEventListener("click", () => {
+    console.log("Second handler");
+  });
+}
 ```
 
 ### Removing listeners
 
-To remove an event listener, you need a **named function**:
+To remove a listener, you need to keep a reference to the same function:
 
 ```javascript
 function handleClick() {
-  console.log('Clicked');
+  console.log("Clicked");
 }
 
-button.addEventListener('click', handleClick);
-button.removeEventListener('click', handleClick);  // Remove it
+const button = document.querySelector("button");
+
+if (button) {
+  button.addEventListener("click", handleClick);
+  button.removeEventListener("click", handleClick);
+}
 ```
 
-**Note:** You can't remove an anonymous function, so store it in a variable or use a named function.
+:::note
+You cannot remove an anonymous function later unless you stored it somewhere first.
+:::
 
 ## The event object
 
-When an event occurs, the browser passes an **event object** to your handler function:
+When an event happens, the browser passes an **event object** into your handler:
 
 ```javascript
-button.addEventListener('click', function(event) {
-  console.log(event);  // Event object with lots of properties
-});
+const button = document.querySelector("button");
+
+if (button) {
+  button.addEventListener("click", event => {
+    console.log(event);
+  });
+}
 ```
 
 ### Common event properties
 
 ```javascript
-element.addEventListener('click', function(e) {
-  e.type;        // Event type: "click"
-  e.target;      // Element that triggered the event
+element.addEventListener("click", e => {
+  e.type; // Event type: "click"
+  e.target; // Element that triggered the event
   e.currentTarget; // Element the listener is attached to
   e.preventDefault(); // Prevent default behavior
   e.stopPropagation(); // Stop event bubbling
-  
+
   // Mouse events
-  e.clientX;     // X coordinate of click
-  e.clientY;     // Y coordinate of click
-  
+  e.clientX; // X coordinate of click
+  e.clientY; // Y coordinate of click
+
   // Keyboard events
-  e.key;         // Key that was pressed
-  e.code;        // Physical key code
-  e.ctrlKey;     // Was Ctrl held?
-  e.shiftKey;    // Was Shift held?
+  e.key; // Key that was pressed
+  e.code; // Physical key code
+  e.ctrlKey; // Was Ctrl held?
+  e.shiftKey; // Was Shift held?
 });
 ```
 
 ### `target` vs `currentTarget`
 
-```javascript
+```html
 <div id="parent">
   <button id="child">Click me</button>
 </div>
 ```
 
 ```javascript
-const parent = document.querySelector('#parent');
-parent.addEventListener('click', function(e) {
-  console.log(e.target);        // Button (element that was clicked)
-  console.log(e.currentTarget); // Div (element with the listener)
-});
+const parent = document.querySelector("#parent");
+
+if (parent) {
+  parent.addEventListener("click", e => {
+    console.log(e.target); // The element that was clicked
+    console.log(e.currentTarget); // The element with the listener
+  });
+}
 ```
 
 **Use `target`** when you want the element that triggered the event.  
-**Use `currentTarget`** when you want the element with the listener.
+**Use `currentTarget`** when you want the element that owns the listener.
+
+:::tip
+Rule of thumb: `target` is "what was clicked"; `currentTarget` is "where the listener is attached".
+:::
 
 ## Common events
 
 ### Click events
 
 ```javascript
-button.addEventListener('click', function(e) {
-  console.log('Button clicked!');
-});
+const button = document.querySelector("button");
+
+if (button) {
+  button.addEventListener("click", () => {
+    console.log("Button clicked!");
+  });
+}
 ```
 
 ### Input events
@@ -138,91 +185,93 @@ button.addEventListener('click', function(e) {
 For `<input>` and `<textarea>` elements:
 
 ```javascript
-const input = document.querySelector('input');
+const input = document.querySelector("input");
 
-// Fires on every keystroke
-input.addEventListener('input', function(e) {
-  console.log('Input value:', e.target.value);
-});
+if (input) {
+  input.addEventListener("input", e => {
+    console.log("Input value:", e.target.value);
+  });
 
-// Fires when input loses focus (user clicks away)
-input.addEventListener('change', function(e) {
-  console.log('Final value:', e.target.value);
-});
+  input.addEventListener("change", e => {
+    console.log("Final value:", e.target.value);
+  });
+}
 ```
+
+**What happens:**
+1. `input` fires on every keystroke.
+2. `change` fires when the value is committed, usually when the field loses focus.
 
 ### Submit events
 
-For forms:
-
 ```javascript
-const form = document.querySelector('form');
+const form = document.querySelector("form");
 
-form.addEventListener('submit', function(e) {
-  e.preventDefault();  // Prevent form from submitting normally
-  console.log('Form submitted!');
-});
+if (form) {
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    console.log("Form submitted!");
+  });
+}
 ```
 
 ### Keyboard events
 
 ```javascript
-document.addEventListener('keydown', function(e) {
-  console.log('Key pressed:', e.key);
-  console.log('Key code:', e.code);
-  
-  if (e.key === 'Enter') {
-    console.log('Enter key pressed!');
+document.addEventListener("keydown", e => {
+  console.log("Key pressed:", e.key);
+  console.log("Key code:", e.code);
+
+  if (e.key === "Enter") {
+    console.log("Enter key pressed!");
   }
-  
-  if (e.ctrlKey && e.key === 's') {
-    e.preventDefault();  // Prevent save dialog
-    console.log('Ctrl+S pressed');
+
+  if (e.ctrlKey && e.key === "s") {
+    e.preventDefault();
+    console.log("Ctrl+S pressed");
   }
 });
 
-// keyup fires when key is released
-document.addEventListener('keyup', function(e) {
-  console.log('Key released:', e.key);
+document.addEventListener("keyup", e => {
+  console.log("Key released:", e.key);
 });
 ```
 
 ### Other common events
 
 ```javascript
-// Page load
-window.addEventListener('load', function() {
-  console.log('Page fully loaded');
+window.addEventListener("load", () => {
+  console.log("Page fully loaded");
 });
 
-// DOM ready (fires earlier than load)
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('DOM ready');
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM ready");
 });
 
-// Scroll
-window.addEventListener('scroll', function() {
-  console.log('Page scrolled');
+window.addEventListener("scroll", () => {
+  console.log("Page scrolled");
 });
 
-// Resize
-window.addEventListener('resize', function() {
-  console.log('Window resized');
+window.addEventListener("resize", () => {
+  console.log("Window resized");
 });
 
-// Focus/blur
-input.addEventListener('focus', function() {
-  console.log('Input focused');
-});
+const input = document.querySelector("input");
 
-input.addEventListener('blur', function() {
-  console.log('Input lost focus');
-});
+if (input) {
+  input.addEventListener("focus", () => {
+    console.log("Input focused");
+  });
+
+  input.addEventListener("blur", () => {
+    console.log("Input lost focus");
+  });
+}
 ```
 
 ## Event bubbling and capturing
 
-Events don't just happen on one element—they **bubble up** through parent elements.
+Events do not stay only on one element. In most cases, they **bubble up** through parent elements.
 
 ### Bubbling example
 
@@ -233,195 +282,236 @@ Events don't just happen on one element—they **bubble up** through parent elem
 ```
 
 ```javascript
-const parent = document.querySelector('#parent');
-const button = document.querySelector('#child');
+const parent = document.querySelector("#parent");
+const button = document.querySelector("#child");
 
-button.addEventListener('click', function() {
-  console.log('Button clicked');
-});
+if (button) {
+  button.addEventListener("click", () => {
+    console.log("Button clicked");
+  });
+}
 
-parent.addEventListener('click', function() {
-  console.log('Parent clicked');
-});
-
-// When you click the button:
-// Output: "Button clicked"
-// Output: "Parent clicked" (event bubbled up!)
+if (parent) {
+  parent.addEventListener("click", () => {
+    console.log("Parent clicked");
+  });
+}
 ```
 
-The click event **bubbles up** from the button to its parent.
+**What happens:**
+1. You click the button.
+2. The button's listener runs first.
+3. The event bubbles up, so the parent's listener runs next.
 
-### Capturing (less common)
+### Capturing
 
-Events can also be captured on the way down (capturing phase):
+Events can also be handled on the way down. This is called the **capturing phase**:
 
 ```javascript
-parent.addEventListener('click', function() {
-  console.log('Capturing phase');
-}, true);  // true enables capturing phase
+const parent = document.querySelector("#parent");
+
+if (parent) {
+  parent.addEventListener("click", () => {
+    console.log("Capturing phase");
+  }, true);
+}
 ```
 
-**Most of the time, you'll use bubbling** (the default). Capturing is less commonly needed.
+Most of the time, you will use the default bubbling behavior.
 
 ### Stopping propagation
 
-To prevent an event from bubbling up:
+If you need to stop an event from bubbling:
 
 ```javascript
-button.addEventListener('click', function(e) {
-  e.stopPropagation();  // Stop event from bubbling
-  console.log('Button clicked');
-});
+const parent = document.querySelector("#parent");
+const button = document.querySelector("#child");
 
-parent.addEventListener('click', function() {
-  console.log('This won't run if stopPropagation was called');
-});
+if (button) {
+  button.addEventListener("click", e => {
+    e.stopPropagation();
+    console.log("Button clicked");
+  });
+}
+
+if (parent) {
+  parent.addEventListener("click", () => {
+    console.log("This will not run if propagation was stopped");
+  });
+}
 ```
 
-**Use carefully:** Stopping propagation can break other code that expects events to bubble.
+:::warning
+Use `stopPropagation()` carefully. It can break other code that expects events to bubble normally.
+:::
 
 ## Event delegation
 
-**Event delegation** means attaching an event listener to a parent element and handling events for child elements. This is powerful for dynamic content.
+**Event delegation** means adding one listener to a parent element and handling events for matching child elements. This is especially useful for dynamic content.
 
-### The problem without delegation
+### Without delegation
 
 ```javascript
-// Bad: adding listener to each button
-document.querySelectorAll('button').forEach(button => {
-  button.addEventListener('click', handleClick);
+document.querySelectorAll("button").forEach(button => {
+  button.addEventListener("click", handleClick);
 });
 
-// If you add a new button dynamically, it won't have the listener!
-const newButton = document.createElement('button');
-document.body.appendChild(newButton);  // No click handler!
+const newButton = document.createElement("button");
+document.body.appendChild(newButton);
 ```
 
-### The solution: delegation
+If you add a new button later, it will not automatically get a click listener.
+
+### With delegation
 
 ```javascript
-// Good: listen on parent, check target
-const container = document.querySelector('#container');
+const container = document.querySelector("#container");
 
-container.addEventListener('click', function(e) {
-  // Check if clicked element is a button
-  if (e.target.tagName === 'BUTTON') {
-    console.log('Button clicked:', e.target.textContent);
-  }
-});
+if (container) {
+  container.addEventListener("click", e => {
+    const clickedButton = e.target.closest("button");
 
-// Now dynamically added buttons work automatically!
-const newButton = document.createElement('button');
-newButton.textContent = 'New Button';
-container.appendChild(newButton);  // Works! Event bubbles up to container
+    if (clickedButton && container.contains(clickedButton)) {
+      console.log("Button clicked:", clickedButton.textContent);
+    }
+  });
+}
+
+const newButton = document.createElement("button");
+newButton.textContent = "New Button";
+
+if (container) {
+  container.appendChild(newButton);
+}
 ```
 
-### Benefits of event delegation
+### Why delegation is useful
 
-1. **Works with dynamic content** — new elements automatically get event handling
-2. **Better performance** — one listener instead of many
-3. **Less memory** — fewer event listeners
-4. **Easier management** — one place to handle events
+- **Works with dynamic content**: new elements automatically participate
+- **Uses fewer listeners**: often one listener instead of many
+- **Simplifies updates**: event handling stays in one place
 
-### Example: Dynamic list
+### Example: dynamic list
 
 ```javascript
-const list = document.querySelector('#list');
+const list = document.querySelector("#list");
 
-// Single listener for entire list
-list.addEventListener('click', function(e) {
-  if (e.target.classList.contains('delete-btn')) {
-    e.target.closest('li').remove();  // Remove the list item
-  }
-  
-  if (e.target.classList.contains('edit-btn')) {
-    // Handle edit
-  }
-});
+if (list) {
+  list.addEventListener("click", e => {
+    const deleteButton = e.target.closest(".delete-btn");
+    if (deleteButton) {
+      const listItem = deleteButton.closest("li");
+      if (listItem) {
+        listItem.remove();
+      }
+      return;
+    }
 
-// All delete buttons work, even if added later
+    const editButton = e.target.closest(".edit-btn");
+    if (editButton) {
+      console.log("Edit clicked");
+    }
+  });
+}
+
 function addItem(text) {
-  const li = document.createElement('li');
+  const li = document.createElement("li");
   li.innerHTML = `
     ${text}
     <button class="delete-btn">Delete</button>
     <button class="edit-btn">Edit</button>
   `;
-  list.appendChild(li);  // Automatically works!
+
+  if (list) {
+    list.appendChild(li);
+  }
 }
 ```
 
 ## Preventing default behavior
 
-Some elements have default behaviors:
+Some elements have built-in browser behavior:
 
-- `<a>` tags navigate to URLs
+- `<a>` tags navigate to another URL
 - Forms submit to the server
 - Submit buttons submit forms
-- Right-click shows context menu
 
-To prevent these:
+You can prevent that behavior with `preventDefault()`:
 
 ```javascript
-const link = document.querySelector('a');
-link.addEventListener('click', function(e) {
-  e.preventDefault();  // Prevent navigation
-  console.log('Link clicked but navigation prevented');
-});
+const link = document.querySelector("a");
 
-const form = document.querySelector('form');
-form.addEventListener('submit', function(e) {
-  e.preventDefault();  // Prevent form submission
-  // Handle form manually
-});
+if (link) {
+  link.addEventListener("click", e => {
+    e.preventDefault();
+    console.log("Link clicked but navigation prevented");
+  });
+}
+
+const form = document.querySelector("form");
+
+if (form) {
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    console.log("Handle form submission manually");
+  });
+}
 ```
 
 ## Best practices
 
-### 1. Use named functions when removing
+### Use named functions when you need removal
 
 ```javascript
-// Good: can remove later
-function handleClick() { }
-button.addEventListener('click', handleClick);
-button.removeEventListener('click', handleClick);
+function handleClick() {}
 
-// Bad: can't remove anonymous function
-button.addEventListener('click', function() { });
-```
+const button = document.querySelector("button");
 
-### 2. Use event delegation for dynamic content
-
-```javascript
-// Good: delegation
-container.addEventListener('click', function(e) {
-  if (e.target.matches('.button')) {
-    // Handle click
-  }
-});
-```
-
-### 3. Check if element exists
-
-```javascript
-const button = document.querySelector('button');
 if (button) {
-  button.addEventListener('click', handleClick);
+  button.addEventListener("click", handleClick);
+  button.removeEventListener("click", handleClick);
 }
 ```
 
-### 4. Consider performance
+### Check elements before attaching listeners
 
 ```javascript
-// Bad: listener on every item
-items.forEach(item => {
-  item.addEventListener('click', handler);
-});
+function handleClick() {}
 
-// Good: single listener with delegation
-container.addEventListener('click', function(e) {
-  if (e.target.classList.contains('item')) {
-    handler(e);
-  }
-});
+const button = document.querySelector("button");
+
+if (button) {
+  button.addEventListener("click", handleClick);
+}
 ```
+
+### Prefer delegation for many similar elements
+
+```javascript
+function handler(event) {
+  console.log(event.target);
+}
+
+const container = document.querySelector("#container");
+
+if (container) {
+  container.addEventListener("click", e => {
+    if (e.target.classList.contains("item")) {
+      handler(e);
+    }
+  });
+}
+```
+
+## Summary
+
+- Events let your JavaScript respond to browser activity like clicks, typing, and form submission.
+- `addEventListener()` is the standard way to handle events in modern code.
+- Event delegation is often the best choice when many child elements need the same behavior.
+- Check that elements exist before attaching listeners, and use `preventDefault()` or `stopPropagation()` carefully.
+
+## Next up
+
+- [Selecting elements](../dom/selecting_elements)
+- [Manipulating the DOM](../dom/manipulating_dom)
+- [Forms and input](./forms_input)
