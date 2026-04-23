@@ -214,7 +214,7 @@ const user = parseUser('{"name":"Maya"}');
 console.log(user.name); // "Maya"
 ```
 
-When invalid JSON is expected (like user input), `try/catch` around `JSON.parse()` is appropriate.
+When invalid JSON is expected (like user input), `try/catch` around `JSON.parse()` is appropriate. The [errors guide](../control_flow/errors) covers `try/catch` in more detail.
 
 ## Common patterns
 
@@ -234,7 +234,7 @@ console.log(clone); // { name: 'Maya', points: 42 }
 This is not a general cloning tool. It drops functions and `undefined`, converts dates to strings, and cannot handle circular references.
 :::
 
-For plain objects, prefer explicit copying patterns like object spread:
+For plain objects, prefer explicit copying patterns like object spread. The [rest and spread guide](./rest_and_spread) covers spread syntax in more detail.
 
 ```javascript
 const original = { name: "Maya", points: 42 };

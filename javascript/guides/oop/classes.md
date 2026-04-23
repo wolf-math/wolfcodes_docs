@@ -207,7 +207,7 @@ console.log(car.getInfo());  // "Blue Toyota Camry"
 
 Instance methods are shared through the class, but they work with the specific instance that calls them.
 
-The next guide covers methods and `this` in more detail.
+The next guide, [Methods and `this`](./methods), covers methods and `this` in more detail.
 
 ## Class names and file organization
 
