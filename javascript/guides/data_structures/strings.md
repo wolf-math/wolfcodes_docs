@@ -56,6 +56,16 @@ They also support multi-line strings:
 const text = `Line 1
 Line 2
 Line 3`;
+
+console.log(text);
+```
+
+**Output:**
+
+```text
+Line 1
+Line 2
+Line 3
 ```
 
 ## Combining strings
@@ -91,7 +101,18 @@ const quote = "She said \"Hello\"";
 const path = "C:\\Users\\Alice\\file.txt";
 const lines = "Line 1\nLine 2";
 
-console.log(quote); // "She said "Hello""
+console.log(quote); // She said "Hello"
+console.log(path);  // C:\Users\Alice\file.txt
+console.log(lines);
+```
+
+The `\n` escape creates a new line.
+
+**Output from `lines`:**
+
+```text
+Line 1
+Line 2
 ```
 
 Often, you can avoid escaping quotes by using the other quote style:
@@ -99,12 +120,17 @@ Often, you can avoid escaping quotes by using the other quote style:
 ```javascript
 const sentence = "It's a nice day";
 const quoted = 'She said "Hello"';
+
+console.log(sentence); // "It's a nice day"
+console.log(quoted);   // She said "Hello"
 ```
 
 In template literals, escape backticks:
 
 ```javascript
 const text = `Use \`backticks\` for template literals`;
+
+console.log(text); // "Use `backticks` for template literals"
 ```
 
 ## String length and indexing
@@ -128,6 +154,23 @@ console.log(word[word.length - 1]); // "o"
 ```
 
 String indexes start at `0`.
+
+If an index does not exist, JavaScript returns `undefined`:
+
+```javascript
+const word = "Hello";
+
+console.log(word[10]); // undefined
+```
+
+For most everyday strings, `.length` tells you how many characters are in the string. Some emoji and symbols can count differently because JavaScript stores strings as UTF-16 code units:
+
+```javascript
+console.log("A".length);  // 1
+console.log("😊".length); // 2
+```
+
+You usually do not need to worry about this for beginner code, but it is useful to know when working with emoji-heavy text.
 
 ## Strings are immutable
 
@@ -175,6 +218,13 @@ if (input.toLowerCase() === "alice") {
 }
 ```
 
+String comparisons are case-sensitive unless you normalize the values first:
+
+```javascript
+console.log("Alice" === "alice"); // false
+console.log("Alice".toLowerCase() === "alice"); // true
+```
+
 ### Searching strings
 
 Use `includes()`, `startsWith()`, and `endsWith()` when you need a boolean:
@@ -197,6 +247,15 @@ console.log(text.indexOf("JavaScript")); // -1
 ```
 
 `indexOf()` returns `-1` when the text is not found.
+
+String searches are case-sensitive:
+
+```javascript
+const text = "Hello, World!";
+
+console.log(text.includes("World")); // true
+console.log(text.includes("world")); // false
+```
 
 ### Slicing strings
 
@@ -272,8 +331,8 @@ if (!name) {
 Be careful with strings like `"false"` and `"0"`. They are non-empty strings, so they are truthy:
 
 ```javascript
-Boolean("false"); // true
-Boolean("0");     // true
+console.log(Boolean("false")); // true
+console.log(Boolean("0"));     // true
 ```
 
 If you need to parse `"true"` or `"false"`, compare explicitly:
@@ -329,7 +388,7 @@ console.log(email); // "alice@example.com"
 
 ```javascript
 const input = "red, green, blue";
-const colors = input.split(",").map(color => color.trim());
+const colors = input.split(",").map((color) => color.trim());
 
 console.log(colors); // ["red", "green", "blue"]
 ```
@@ -343,6 +402,7 @@ console.log(colors); // ["red", "green", "blue"]
 - **Use `join()` for arrays of text**: It avoids trailing separators.
 - **Be explicit with blank strings**: Use `.length` or `.trim().length` depending on what "empty" means.
 - **Remember case sensitivity**: Most string checks are case-sensitive.
+- **Watch out for unusual characters**: Emoji and some symbols can make `.length` behave differently than you expect.
 
 ## Summary
 

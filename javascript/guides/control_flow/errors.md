@@ -16,7 +16,9 @@ source:
 **Errors** are objects that represent something going wrong. In JavaScript, errors also affect control flow: when an error is thrown, normal execution stops and JavaScript looks for error-handling code.
 
 ```javascript
-throw new Error("Something went wrong");
+const error = new Error("Something went wrong");
+
+console.log(error.message); // "Something went wrong"
 ```
 
 You usually throw errors when your code cannot continue safely, and you catch errors when you can respond to the problem.
@@ -66,6 +68,16 @@ A `SyntaxError` happens when JavaScript code is not valid syntax. These are usua
 // }
 ```
 
+You can also get a `SyntaxError` at runtime from code that parses text, such as `JSON.parse()`:
+
+```javascript
+try {
+  JSON.parse("{ bad json }");
+} catch (error) {
+  console.log(error.name); // "SyntaxError"
+}
+```
+
 ### `RangeError`
 
 A `RangeError` happens when a value is outside an allowed range:
@@ -86,6 +98,14 @@ function divide(a, b) {
   }
 
   return a / b;
+}
+```
+
+```javascript
+try {
+  console.log(divide(10, 0));
+} catch (error) {
+  console.log(error.message); // "Cannot divide by zero"
 }
 ```
 
@@ -117,6 +137,15 @@ try {
 
 console.log("Program continues");
 ```
+
+**Output:**
+
+```text
+Could not parse JSON: Expected property name or '}' in JSON at position 2
+Program continues
+```
+
+The exact error message can vary by JavaScript environment.
 
 **What happens:**
 
@@ -169,6 +198,10 @@ If you cannot handle an error, rethrow it. Do not silently swallow it.
 A `finally` block always runs, whether an error happened or not:
 
 ```javascript
+function runOperation() {
+  throw new Error("Network failed");
+}
+
 let isLoading = true;
 
 try {
@@ -178,6 +211,8 @@ try {
 } finally {
   isLoading = false;
 }
+
+console.log(isLoading); // false
 ```
 
 Use `finally` for cleanup: resetting loading state, releasing resources, closing connections, or clearing temporary state.
@@ -242,6 +277,36 @@ function getItem(array, index) {
 
 Use `if` statements for expected branches. Use errors when something violates the assumptions your code needs to continue.
 
+## Throwing vs returning a fallback
+
+Throw an error when the caller needs to know that the operation failed.
+
+Return a fallback when the missing or invalid value is expected and easy to handle locally.
+
+```javascript
+function getRequiredUserName(user) {
+  if (!user) {
+    throw new Error("User is required");
+  }
+
+  return user.name;
+}
+```
+
+This function throws because it cannot do its job without a user.
+
+```javascript
+function getDisplayName(user) {
+  if (!user) {
+    return "Guest";
+  }
+
+  return user.name;
+}
+```
+
+This function returns a fallback because `"Guest"` is a valid answer.
+
 ## Custom errors
 
 You can create custom error classes when a specific kind of failure matters:
@@ -271,22 +336,35 @@ Async code needs its own error handling. With `async` / `await`, use `try/catch`
 async function loadUser(id) {
   try {
     const response = await fetch(`/api/users/${id}`);
+
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+
     return await response.json();
   } catch (error) {
-    console.error("Failed to load user:", error);
+    console.error("Failed to load user:", error.message);
     throw error;
   }
 }
 ```
 
+**Important:** `fetch()` rejects for network failures, but it does not reject for HTTP error statuses like `404` or `500`. Check `response.ok` when those statuses should count as errors.
+
 With promises, use `.catch()`:
 
 ```javascript
 fetch("/api/users/1")
-  .then(response => response.json())
-  .then(user => console.log(user))
-  .catch(error => {
-    console.error("Failed to load user:", error);
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+
+    return response.json();
+  })
+  .then((user) => console.log(user))
+  .catch((error) => {
+    console.error("Failed to load user:", error.message);
   });
 ```
 
@@ -332,6 +410,14 @@ Clear validation errors make bugs easier to find.
 ### Handling and rethrowing
 
 ```javascript
+function saveSettings(settings) {
+  if (!settings.theme) {
+    throw new Error("Theme is required");
+  }
+}
+
+const settings = {};
+
 try {
   saveSettings(settings);
 } catch (error) {
@@ -349,7 +435,9 @@ Log or add context when useful, then rethrow if this part of the program cannot 
 - **Do not swallow errors silently**: it hides bugs.
 - **Use descriptive messages**: include what was expected and what went wrong.
 - **Validate inputs early**: fail before doing deeper work.
+- **Return fallbacks for expected missing values** when a fallback is a valid result.
 - **Use normal conditionals for expected branches**: do not use `try/catch` as a replacement for `if`.
+- **Check `response.ok` with `fetch()`** when HTTP error statuses should count as failures.
 - **Rethrow errors you cannot handle**.
 - **Use `finally` for cleanup** when cleanup must happen either way.
 

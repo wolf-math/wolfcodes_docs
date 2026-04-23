@@ -115,6 +115,20 @@ isOpen = !isOpen;
 console.log(isOpen); // true
 ```
 
+### Logical operators return values
+
+`&&` and `||` do not always return `true` or `false`. They return one of the original values.
+
+```javascript
+console.log("Alice" && "Admin"); // "Admin"
+console.log("" && "Admin");      // ""
+
+console.log("" || "Guest");      // "Guest"
+console.log("Alice" || "Guest"); // "Alice"
+```
+
+This is why `||` can be used for default values, and why truthy and falsy values matter.
+
 ## Truthy and falsy values
 
 In JavaScript, values do not need to be actual booleans to work in a condition. Values that act like `true` are **truthy**. Values that act like `false` are **falsy**.
@@ -124,14 +138,14 @@ In JavaScript, values do not need to be actual booleans to work in a condition. 
 These values are falsy:
 
 ```javascript
-false;
-0;
--0;
-0n;
-"";
-null;
-undefined;
-NaN;
+console.log(Boolean(false));     // false
+console.log(Boolean(0));         // false
+console.log(Boolean(-0));        // false
+console.log(Boolean(0n));        // false
+console.log(Boolean(""));        // false
+console.log(Boolean(null));      // false
+console.log(Boolean(undefined)); // false
+console.log(Boolean(NaN));       // false
 ```
 
 Everything else is truthy.
@@ -141,10 +155,10 @@ Everything else is truthy.
 Some values may look empty or false-like, but they are truthy:
 
 ```javascript
-Boolean("false"); // true
-Boolean("0");     // true
-Boolean([]);      // true
-Boolean({});      // true
+console.log(Boolean("false")); // true
+console.log(Boolean("0"));     // true
+console.log(Boolean([]));      // true
+console.log(Boolean({}));      // true
 ```
 
 This happens because non-empty strings, arrays, and objects are truthy.
@@ -154,18 +168,18 @@ This happens because non-empty strings, arrays, and objects are truthy.
 Use `Boolean(value)` to convert a value to `true` or `false`:
 
 ```javascript
-Boolean(1);       // true
-Boolean(0);       // false
-Boolean("hello"); // true
-Boolean("");      // false
-Boolean(null);    // false
+console.log(Boolean(1));       // true
+console.log(Boolean(0));       // false
+console.log(Boolean("hello")); // true
+console.log(Boolean(""));      // false
+console.log(Boolean(null));    // false
 ```
 
 You may also see double negation:
 
 ```javascript
-!!"hello"; // true
-!!0;       // false
+console.log(!!"hello"); // true
+console.log(!!0);       // false
 ```
 
 For beginner-facing code, `Boolean(value)` is clearer.
@@ -177,6 +191,11 @@ For beginner-facing code, `Boolean(value)` is clearer.
 With `&&`, JavaScript stops at the first falsy value:
 
 ```javascript
+function getValue() {
+  console.log("This does not run");
+  return "value";
+}
+
 const result = false && getValue();
 
 console.log(result); // false
@@ -257,15 +276,33 @@ if (items.length > 0) {
 ### Loose equality can hide type bugs
 
 ```javascript
-0 == false;  // true
-"" == false; // true
+console.log(0 == false);  // true
+console.log("" == false); // true
 ```
 
 Use strict equality instead:
 
 ```javascript
-0 === false;  // false
-"" === false; // false
+console.log(0 === false);  // false
+console.log("" === false); // false
+```
+
+### Comparing to `true` or `false`
+
+When a value is already a boolean, use it directly in a condition:
+
+```javascript
+const isActive = true;
+
+// Prefer this
+if (isActive) {
+  console.log("User is active");
+}
+
+// This works, but adds noise:
+// if (isActive === true) {
+//   console.log("User is active");
+// }
 ```
 
 ## Common patterns
@@ -329,6 +366,7 @@ if (typeof value === "boolean") {
 - **Be explicit when values matter**: Use `count > 0`, `items.length > 0`, or `value === null` when truthiness is too broad.
 - **Prefer `Boolean(value)` for conversion**: It is clearer than `!!value` for beginners.
 - **Use `??` for nullish defaults**: It preserves valid falsy values like `0` and `""`.
+- **Use boolean values directly**: Prefer `if (isActive)` over `if (isActive === true)`.
 - **Keep conditions readable**: Move complex logic into a well-named variable or function.
 
 ## Summary

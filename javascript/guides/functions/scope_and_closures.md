@@ -93,6 +93,12 @@ if (true) {
 // console.log(message); // ReferenceError
 ```
 
+**Output:**
+
+```text
+Inside block
+```
+
 Blocks include:
 
 - `if` statements
@@ -110,6 +116,14 @@ for (let i = 0; i < 3; i++) {
 
 // This would cause an error:
 // console.log(i); // ReferenceError
+```
+
+**Output:**
+
+```text
+0
+1
+2
 ```
 
 ## `var` has function scope
@@ -182,6 +196,8 @@ function greet() {
   const greetingName = "Bob";
   console.log(greetingName);
 }
+
+greet(); // "Bob"
 ```
 
 ## Lexical scope
@@ -290,10 +306,14 @@ for (var i = 0; i < 3; i++) {
     console.log(i);
   }, 100);
 }
-// Output:
-// 3
-// 3
-// 3
+```
+
+**Output:**
+
+```text
+3
+3
+3
 ```
 
 All callbacks share the same function-scoped `i`.
@@ -306,13 +326,75 @@ for (let i = 0; i < 3; i++) {
     console.log(i);
   }, 100);
 }
-// Output:
-// 0
-// 1
-// 2
+```
+
+**Output:**
+
+```text
+0
+1
+2
 ```
 
 This is one of the clearest practical reasons to avoid `var`.
+
+This example uses timer callbacks. Callbacks are covered in more detail in the [callback functions guide](./callbacks).
+
+## Closures remember variables
+
+Closures remember variables from outer scopes, not just the value the variable had at one moment.
+
+```javascript
+function createCounter() {
+  let count = 0;
+
+  return {
+    increment() {
+      count += 1;
+    },
+    getCount() {
+      return count;
+    }
+  };
+}
+
+const counter = createCounter();
+
+counter.increment();
+counter.increment();
+
+console.log(counter.getCount()); // 2
+```
+
+Both methods close over the same `count` variable.
+
+When `increment()` changes `count`, `getCount()` sees the updated value.
+
+## Each function call creates a new scope
+
+Each call to a function creates a new set of local variables.
+
+That means each closure can remember its own state.
+
+```javascript
+function createCounter() {
+  let count = 0;
+
+  return function() {
+    count += 1;
+    return count;
+  };
+}
+
+const firstCounter = createCounter();
+const secondCounter = createCounter();
+
+console.log(firstCounter());  // 1
+console.log(firstCounter());  // 2
+console.log(secondCounter()); // 1
+```
+
+`firstCounter` and `secondCounter` each remember a different `count` variable.
 
 ## Common patterns
 
@@ -375,8 +457,9 @@ function saveUser(user) {
 - **Avoid unnecessary globals**: They are easy to accidentally reuse or overwrite.
 - **Avoid confusing shadowing**: Use clearer names when nested scopes overlap.
 - **Use closures intentionally**: They are useful for private state and specialized functions.
+- **Remember that closures keep variables alive**: If two functions close over the same variable, they see the same changing value.
 - **Use `let` in loops** when callbacks need the current loop value.
 
 ## Summary
 
-Scope controls where variables are available. JavaScript has global scope, function scope, and block scope. The scope chain lets inner functions access outer variables, and closures let functions remember those variables even after the outer function has finished. Prefer `const` and `let`, keep variables in the smallest useful scope, and avoid relying on hoisting.
+Scope controls where variables are available. JavaScript has global scope, function scope, and block scope. The scope chain lets inner functions access outer variables, and closures let functions remember those variables even after the outer function has finished. Closures remember variables, not frozen copies of values. Prefer `const` and `let`, keep variables in the smallest useful scope, and avoid relying on hoisting.

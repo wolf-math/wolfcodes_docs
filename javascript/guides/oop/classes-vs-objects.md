@@ -11,9 +11,30 @@ source:
   canonical_url: https://wolfcodes.dev
 ---
 
-JavaScript gives you both plain objects and classes.
+## What are plain objects and classes?
 
-They overlap, but they are useful in different situations.
+JavaScript gives you both **plain objects** and **classes**.
+
+Plain objects are a simple way to group data.
+
+Classes are a way to create many similar objects that share behavior.
+
+```javascript
+const userObject = { name: "Dirk" };
+
+class User {
+  constructor(name) {
+    this.name = name;
+  }
+}
+
+const userClass = new User("Dirk");
+
+console.log(userObject.name); // "Dirk"
+console.log(userClass.name);  // "Dirk"
+```
+
+Both are objects at runtime. The difference is how you create and organize them.
 
 ## Why the difference matters
 
@@ -31,12 +52,12 @@ A plain object is a direct collection of key-value pairs.
 
 ```javascript
 const user = {
-  name: "Maya",
+  name: "Dirk",
   role: "admin",
   active: true,
 };
 
-console.log(user.name);
+console.log(user.name); // "Dirk"
 ```
 
 Plain objects are common for configuration, API data, and simple records.
@@ -67,9 +88,9 @@ class User {
   }
 }
 
-const user = new User("Maya", "admin");
+const user = new User("Dirk", "admin");
 
-console.log(user.canEdit());
+console.log(user.canEdit()); // true
 ```
 
 Use a class when the data and behavior belong together.
@@ -95,8 +116,8 @@ const second = new TodoItem("Practice classes");
 
 first.complete();
 
-console.log(first.completed);
-console.log(second.completed);
+console.log(first.completed);  // true
+console.log(second.completed); // false
 ```
 
 Each instance has its own state.
@@ -117,7 +138,7 @@ const counter = {
 
 counter.increment();
 
-console.log(counter.value);
+console.log(counter.value); // 1
 ```
 
 This is useful for one-off objects.
@@ -138,22 +159,32 @@ class Product {
 
 const product = new Product("Notebook", 8);
 
-console.log(typeof product);
+console.log(typeof product);             // "object"
+console.log(product instanceof Product); // true
 ```
-
-The value of `typeof product` is `"object"`.
 
 Classes are a structured way to create objects, not a separate kind of value.
 
 ## Choosing the right tool
 
-Choose a plain object when you are grouping data.
+**Default choice:** start with a plain object when you are grouping data.
 
-Choose a plain object when the shape is small and obvious.
+Use a plain object when:
 
-Choose a class when you need constructors, methods, private fields, or many instances.
+- The value is mostly data (config, API response, record-like values).
+- You only need one object or a couple of objects.
+- The shape is small and obvious.
 
-Choose a class when the object has rules that should be enforced through methods.
+Use a class when:
+
+- You need many objects with the same shape.
+- The object owns state and behavior (methods that use `this`).
+- The object has rules (invariants) that should be protected with methods or private fields.
+- You want a constructor to set up consistent instance state.
+
+:::tip
+If you are not sure, start with a plain object. Move to a class once you feel friction: repeated setup, repeated functions, or state you want to protect.
+:::
 
 ## Common patterns
 
@@ -177,6 +208,41 @@ console.log(formatPrice(product.price));
 ```
 
 This can be clearer than creating a class only to hold one helper method.
+
+## Common mistakes
+
+### Making a class for data-only values
+
+If the value is just a record, a class often adds ceremony without clarity.
+
+```javascript
+// Usually fine as a plain object:
+const user = {
+  name: "Dirk",
+  role: "admin",
+};
+```
+
+Prefer a class when you also have behavior, validation, or invariants that the object should enforce.
+
+### Forgetting `this` in object methods
+
+When you use a method on a plain object, it still uses `this`:
+
+```javascript
+const counter = {
+  value: 0,
+  increment() {
+    this.value += 1;
+  },
+};
+
+counter.increment();
+
+console.log(counter.value); // 1
+```
+
+This is one reason classes can be easier for repeated objects: the shape and methods stay consistent across instances.
 
 ## Best practices
 

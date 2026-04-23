@@ -46,7 +46,7 @@ Start with a simple list of users.
 
 ```javascript
 const users = [
-  { id: 1, name: "Maya", active: true, points: 42 },
+  { id: 1, name: "Dirk", active: true, points: 42 },
   { id: 2, name: "Nia", active: false, points: 18 },
   { id: 3, name: "Ari", active: true, points: 31 },
 ];
@@ -195,7 +195,7 @@ export class Scoreboard {
 import { Scoreboard } from "./scoreboard.js";
 
 const users = [
-  { id: 1, name: "Maya", active: true, points: 42 },
+  { id: 1, name: "Dirk", active: true, points: 42 },
   { id: 2, name: "Nia", active: false, points: 18 },
   { id: 3, name: "Ari", active: true, points: 31 },
 ];
@@ -218,7 +218,7 @@ This example uses a promise to imitate loading data.
 ```javascript
 function loadUsers() {
   return Promise.resolve([
-    { id: 1, name: "Maya", active: true, points: 42 },
+    { id: 1, name: "Dirk", active: true, points: 42 },
     { id: 2, name: "Nia", active: false, points: 18 },
     { id: 3, name: "Ari", active: true, points: 31 },
   ]);

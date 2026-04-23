@@ -15,12 +15,18 @@ source:
 
 A **class** is a blueprint for creating objects. An **instance** is an object created from that class.
 
+Classes let you define one reusable shape, then create many objects that follow that shape.
+
 ```javascript
-class Car {}
+class Car {
+  constructor(make) {
+    this.make = make;
+  }
+}
 
-const myCar = new Car();
+const myCar = new Car("Toyota");
 
-console.log(myCar); // Car {}
+console.log(myCar.make); // "Toyota"
 ```
 
 `Car` is the class. `myCar` is an instance.
@@ -34,19 +40,32 @@ Classes are useful when you need many objects with the same shape and behavior. 
 Use `new ClassName()` to create an instance:
 
 ```javascript
-class Car {}
+class Car {
+  constructor(make) {
+    this.make = make;
+  }
+}
 
-const car1 = new Car();
-const car2 = new Car();
+const car1 = new Car("Toyota");
+const car2 = new Car("Honda");
 
 console.log(car1 === car2); // false
+console.log(car1.make);     // "Toyota"
+console.log(car2.make);     // "Honda"
 ```
 
 Each call to `new Car()` creates a fresh object.
 
+**What happens:**
+
+1. JavaScript creates a new empty object.
+2. The class constructor runs.
+3. `this` points to the new object.
+4. The finished object is assigned to the variable.
+
 ## The `constructor`
 
-The `constructor` method runs automatically when you create a new instance. Use it to set up instance data.
+The `constructor` method is a special method that runs automatically when you create a new instance. Use it to set up instance data.
 
 ```javascript
 class Car {
@@ -65,6 +84,12 @@ console.log(car.color); // "Blue"
 ```
 
 Arguments passed to `new Car(...)` become arguments to `constructor`.
+
+The constructor should usually set up the object's starting state. Keep it predictable and avoid doing unrelated work there.
+
+:::warning
+Call a class with `new`. Calling `Car("Toyota", "Camry", "Blue")` without `new` causes an error.
+:::
 
 ## Instance properties
 
@@ -90,6 +115,8 @@ console.log(car2.mileage); // 0
 
 Changing one instance does not change another instance.
 
+This is the main mental model for instances: each instance has its own property values.
+
 ## Adding properties manually
 
 JavaScript objects are flexible, so you can add properties after creation:
@@ -105,6 +132,21 @@ console.log(car.make); // "Toyota"
 ```
 
 This works, but it is easy to forget a property or create inconsistent objects. Prefer setting expected properties in the constructor.
+
+```javascript
+class Car {
+  constructor(make, model) {
+    this.make = make;
+    this.model = model;
+  }
+}
+
+const car = new Car("Toyota", "Camry");
+
+console.log(car.model); // "Camry"
+```
+
+**Rule of thumb:** if every instance should have the property, initialize it in the constructor.
 
 ## Missing properties
 
@@ -131,6 +173,8 @@ if ("year" in car) {
   console.log("No year set");
 }
 ```
+
+Use this kind of check when missing data is expected. If the property should always exist, it is usually better to initialize it in the constructor.
 
 ## Instance methods
 
@@ -161,7 +205,34 @@ console.log(car.drive(100)); // 100
 console.log(car.getInfo());  // "Blue Toyota Camry"
 ```
 
+Instance methods are shared through the class, but they work with the specific instance that calls them.
+
 The next guide covers methods and `this` in more detail.
+
+## Class names and file organization
+
+Class names usually use **PascalCase**, where each word starts with a capital letter:
+
+```javascript
+class UserAccount {}
+class ShoppingCart {}
+class GamePlayer {}
+```
+
+Use names that describe the kind of object the class creates. `UserAccount` is clearer than `Data` or `Manager` when the class represents a user account.
+
+In larger programs, it is common to put one main class in its own module:
+
+```javascript
+// UserAccount.js
+export class UserAccount {
+  constructor(name) {
+    this.name = name;
+  }
+}
+```
+
+This keeps the class easy to find and reuse.
 
 ## Common patterns
 
@@ -192,11 +263,13 @@ class User {
 const users = [
   new User("Alice"),
   new User("Bob"),
-  new User("Charlie")
+  new User("Charlie"),
 ];
 
 console.log(users[0].name); // "Alice"
 ```
+
+Use this pattern when you need a collection of similar objects.
 
 ### Checking an instance's class
 
@@ -208,11 +281,79 @@ const user = new User();
 console.log(user instanceof User); // true
 ```
 
+`instanceof` checks whether an object was created by a class or inherits from it. It is useful for debugging and occasional validation, but most everyday code works better by calling methods or checking the data you actually need.
+
+## Common mistakes
+
+### Forgetting `new`
+
+```javascript
+class User {
+  constructor(name) {
+    this.name = name;
+  }
+}
+
+// This would cause an error:
+// const user = User("Alice");
+
+const user = new User("Alice");
+
+console.log(user.name); // "Alice"
+```
+
+### Sharing state accidentally
+
+Be careful with object or array values that are meant to belong to each instance.
+
+```javascript
+const sharedSongs = [];
+
+class Playlist {
+  constructor(name) {
+    this.name = name;
+    this.songs = sharedSongs;
+  }
+}
+
+const roadTrip = new Playlist("Road trip");
+const focus = new Playlist("Focus");
+
+roadTrip.songs.push("Song A");
+
+console.log(focus.songs); // ["Song A"]
+```
+
+Both playlists point at the same array. That is usually not what you want.
+
+Create arrays and objects inside the constructor when each instance needs its own copy:
+
+```javascript
+class Playlist {
+  constructor(name) {
+    this.name = name;
+    this.songs = [];
+  }
+
+  addSong(song) {
+    this.songs.push(song);
+  }
+}
+
+const roadTrip = new Playlist("Road trip");
+const focus = new Playlist("Focus");
+
+roadTrip.addSong("Song A");
+
+console.log(roadTrip.songs); // ["Song A"]
+console.log(focus.songs);    // []
+```
+
 ## Best practices
 
 - **Use classes for repeated shapes**: Classes are useful when many objects share the same setup and behavior.
-- **Initialize expected properties in `constructor`**.
-- **Use `this` for instance data**.
+- **Initialize expected properties in `constructor`**: This keeps instances consistent.
+- **Use `this` for instance data**: `this.name` means the `name` property on the current instance.
 - **Avoid adding random properties later** unless the object is intentionally flexible.
 - **Keep constructors simple**: Heavy work usually belongs in methods or helper functions.
 - **Use clear class names**: Class names usually use PascalCase, like `UserAccount`.

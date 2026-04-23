@@ -109,7 +109,7 @@ You will see `var` in older code, but avoid it in new code.
 
 - It has function [scope](../functions/scope_and_closures), not block scope.
 - It allows redeclaring the same variable name.
-- It is [hoisted](../functions/scope_and_closures.md) in ways that can surprise beginners.
+- It is [hoisted](../functions/function#hoisting) in ways that can surprise beginners.
 
 Use `const` and `let` instead. They are clearer and match modern JavaScript style.
 
@@ -207,7 +207,7 @@ console.log(count); // 6
 
 Use these when they make the update easier to read.
 
-## Comparison operators
+### Comparison operators
 
 Comparison operators return boolean values: `true` or `false`.
 
@@ -230,11 +230,11 @@ if (age >= 18) {
 }
 ```
 
-## Strict equality: `===` vs `==`
+### Strict equality: `===` vs `==`
 
 JavaScript has two equality operators, but beginners should almost always use `===`.
 
-### `===` checks value and type
+#### `===` checks value and type
 
 `===` is called **strict equality**. It checks that both values are equal and have the same type:
 
@@ -244,7 +244,7 @@ JavaScript has two equality operators, but beginners should almost always use `=
 true === true; // true
 ```
 
-### `==` performs type coercion
+#### `==` performs type coercion
 
 `==` is called **loose equality**. It may convert values before comparing them:
 

@@ -55,6 +55,14 @@ In the browser, no `package.json` is required. Load module code with `type="modu
 
 That tells the browser to treat `main.js` as a module, so it can use `import` and `export`.
 
+Browser module imports usually need the file extension:
+
+```javascript
+import { add } from "./math.js";
+```
+
+Use `./math.js`, not just `./math`, when importing a local file in the browser.
+
 ### In Node.js
 
 In Node.js, you have two common options.
@@ -75,6 +83,31 @@ math.mjs
 ```
 
 This guide focuses on modern ES modules, not older CommonJS.
+
+## Import paths
+
+Use a relative path when importing a file from your project.
+
+```javascript
+import { add } from "./math.js";
+import { formatDate } from "../utils/formatDate.js";
+```
+
+Common relative path pieces:
+
+- `./` means "from the current folder"
+- `../` means "go up one folder"
+- `/` at the beginning means "from the site or project root" in some tools, but the exact meaning depends on the environment
+
+For beginner code, prefer explicit relative imports like `./math.js` and `../utils/formatDate.js`.
+
+Imports from packages use the package name instead of a relative path:
+
+```javascript
+import express from "express";
+```
+
+Package imports depend on tools like Node.js, npm, or a bundler.
 
 ## Named exports
 
@@ -118,6 +151,8 @@ function subtract(a, b) {
 
 export { add, subtract };
 ```
+
+This style can make it easy to see everything the module exports in one place.
 
 ## Default exports
 
@@ -188,6 +223,16 @@ console.log(addNumbers(2, 3)); // 5
 
 Use aliases when names would conflict or when a clearer local name helps.
 
+You can also rename while exporting:
+
+```javascript
+function add(a, b) {
+  return a + b;
+}
+
+export { add as addNumbers };
+```
+
 ## Importing everything
 
 Use `* as name` to import all named exports as an object:
@@ -200,6 +245,24 @@ console.log(math.PI);        // 3.14159
 ```
 
 This can be useful for grouped utilities, but avoid using it to hide unclear module boundaries.
+
+## Side-effect imports
+
+Sometimes a module is imported only because running it does something.
+
+```javascript
+// setup.js
+console.log("App setup complete");
+```
+
+```javascript
+// main.js
+import "./setup.js";
+```
+
+This is called a **side-effect import**.
+
+Use side-effect imports sparingly. They can be useful for setup code, but they make dependencies less obvious because no names are imported.
 
 ## Module scope
 
@@ -228,6 +291,64 @@ console.log(increment()); // 1
 ```
 
 This makes modules a useful way to encapsulate implementation details.
+
+## Imports are static
+
+Static `import` statements must appear at the top level of a module.
+
+```javascript
+import { add } from "./math.js";
+
+console.log(add(2, 3)); // 5
+```
+
+Do not put a static `import` inside an `if` statement or function:
+
+```javascript
+// This would cause an error:
+// if (shouldLoadMath) {
+//   import { add } from "./math.js";
+// }
+```
+
+This top-level structure helps JavaScript and build tools understand module dependencies before the code runs.
+
+There is also a dynamic `import()` function for loading modules later, but that is an advanced pattern.
+
+## Imports are live bindings
+
+Imported values stay connected to the exported value.
+
+```javascript
+// counter.js
+export let count = 0;
+
+export function increment() {
+  count += 1;
+}
+```
+
+```javascript
+// main.js
+import { count, increment } from "./counter.js";
+
+console.log(count); // 0
+
+increment();
+
+console.log(count); // 1
+```
+
+The imported `count` reflects the updated exported value.
+
+You cannot reassign an imported binding from the importing file:
+
+```javascript
+// This would cause an error:
+// count = 10;
+```
+
+In most beginner code, export functions that update internal state instead of exporting mutable variables directly.
 
 ## File organization
 
@@ -268,6 +389,11 @@ import { API_URL } from "./config.js";
 
 export async function fetchUser(id) {
   const response = await fetch(`${API_URL}/users/${id}`);
+
+  if (!response.ok) {
+    throw new Error(`Request failed with status ${response.status}`);
+  }
+
   return response.json();
 }
 ```
@@ -292,7 +418,14 @@ Each file has a focused job:
 Older Node.js code often uses CommonJS:
 
 ```javascript
-const math = require("./math.js");
+// math.cjs
+function add(a, b) {
+  return a + b;
+}
+
+function subtract(a, b) {
+  return a - b;
+}
 
 module.exports = {
   add,
@@ -300,12 +433,27 @@ module.exports = {
 };
 ```
 
+```javascript
+// main.cjs
+const math = require("./math.cjs");
+
+console.log(math.add(5, 3)); // 8
+```
+
 Modern JavaScript uses ES modules:
 
 ```javascript
+// math.js
+export function add(a, b) {
+  return a + b;
+}
+```
+
+```javascript
+// main.js
 import { add } from "./math.js";
 
-export { add };
+console.log(add(5, 3)); // 8
 ```
 
 Use ES modules in new projects unless the project already uses CommonJS.
@@ -368,6 +516,24 @@ export { add } from "./math.js";
 
 Barrel files can make imports shorter, but too many barrels can make dependencies harder to trace.
 
+### Module with private helpers
+
+Keep helper functions private when only the module needs them.
+
+```javascript
+// prices.js
+function roundToCents(amount) {
+  return Math.round(amount * 100) / 100;
+}
+
+export function calculateTotal(items) {
+  const total = items.reduce((sum, item) => sum + item.price, 0);
+  return roundToCents(total);
+}
+```
+
+Other files can import `calculateTotal`, but `roundToCents` stays private.
+
 ## Best practices
 
 - **Use ES modules for new code**: Prefer `import` and `export`.
@@ -375,6 +541,8 @@ Barrel files can make imports shorter, but too many barrels can make dependencie
 - **Prefer named exports for utilities**: They make imports explicit.
 - **Use default exports for one-main-thing files** when that matches the project style.
 - **Export only what other files need**: Keep implementation details private.
+- **Use explicit relative paths**: In browser and Node ES modules, include `.js` for local files.
+- **Keep static imports at the top level**: Use regular `import` statements before the code that depends on them.
 - **Use clear file names**: The filename should hint at the module's purpose.
 - **Avoid circular dependencies**: Move shared code to a separate module.
 - **Keep import paths readable**: Deep, tangled paths often signal organization problems.

@@ -86,7 +86,7 @@ When the body is one expression, you can use an implicit return:
 
 ```javascript
 const add = (a, b) => a + b;
-const square = number => number * number;
+const square = (number) => number * number;
 const greet = () => "Hello";
 
 console.log(square(4)); // 16
@@ -96,10 +96,12 @@ Arrow functions are common for callbacks and array methods:
 
 ```javascript
 const numbers = [1, 2, 3, 4];
-const doubled = numbers.map(number => number * 2);
+const doubled = numbers.map((number) => number * 2);
 
 console.log(doubled); // [2, 4, 6, 8]
 ```
+
+Arrow functions are covered in more detail in the [callback functions guide](./callbacks), where they are used with array methods, timers, and events.
 
 **Important:** Arrow functions handle `this` differently from regular functions. That matters most in object-oriented code and is covered in the [OOP guide](../oop/introduction).
 
@@ -117,8 +119,12 @@ sayHello();
 function sayHello() {
   console.log("Hello");
 }
-// Output:
-// Hello
+```
+
+**Output:**
+
+```text
+Hello
 ```
 
 JavaScript knows about the function declaration before executing the code.
@@ -219,6 +225,31 @@ console.log(greet("Alice", undefined)); // "Hello, Alice!"
 console.log(greet("Alice", null));      // "null, Alice!"
 ```
 
+### Rest parameters
+
+Use a rest parameter when a function should accept any number of arguments.
+
+```javascript
+function addAll(...numbers) {
+  let total = 0;
+
+  for (const number of numbers) {
+    total += number;
+  }
+
+  return total;
+}
+
+console.log(addAll(1, 2, 3));    // 6
+console.log(addAll(5, 10, 15));  // 30
+```
+
+The `...numbers` parameter gathers the remaining arguments into an array.
+
+Use rest parameters when the function naturally works with a list of values.
+
+Rest parameters and spread syntax are covered together in the [rest and spread guide](../data_structures/rest_and_spread).
+
 ## Return values
 
 Use `return` to send a value back to the caller:
@@ -306,12 +337,16 @@ function callTwice(callback) {
 callTwice(() => {
   console.log("Hello");
 });
-// Output:
-// Hello
-// Hello
 ```
 
-This is why functions work so well with array methods and event listeners.
+**Output:**
+
+```text
+Hello
+Hello
+```
+
+This is why functions work so well with array methods and event listeners. The function passed to `callTwice` is a callback, which is covered in more detail in the [callback functions guide](./callbacks).
 
 ## Common patterns
 
@@ -354,12 +389,14 @@ Functions are often passed to array methods:
 ```javascript
 const numbers = [1, 2, 3, 4, 5];
 
-const evens = numbers.filter(number => number % 2 === 0);
-const squares = numbers.map(number => number * number);
+const evens = numbers.filter((number) => number % 2 === 0);
+const squares = numbers.map((number) => number * number);
 
 console.log(evens);   // [2, 4]
 console.log(squares); // [1, 4, 9, 16, 25]
 ```
+
+For a deeper explanation of passing functions into other functions, see the [callback functions guide](./callbacks).
 
 ### Immediately invoked function expressions
 
@@ -405,10 +442,11 @@ function handleIt() {}
 - **Keep functions focused**: One function should do one clear job.
 - **Return values consistently**: Avoid sometimes returning a value and sometimes not unless that behavior is intentional.
 - **Use default parameters for common defaults**.
+- **Use rest parameters** when a function should accept a flexible number of arguments.
 - **Prefer early returns over deep nesting**.
 - **Define functions before calling them** unless you intentionally rely on function declaration hoisting.
 - **Use arrow functions for short callbacks** and regular functions when `this` behavior matters.
 
 ## Summary
 
-Functions package reusable behavior. Function declarations, function expressions, and arrow functions all create callable values, but they differ in syntax and hoisting behavior. Use parameters for inputs, `return` for outputs, and clear names to make code easier to read. Hoisting lets function declarations be called before their definition, but defining functions before use is usually the clearest habit.
+Functions package reusable behavior. Function declarations, function expressions, and arrow functions all create callable values, but they differ in syntax and hoisting behavior. Use parameters for inputs, rest parameters for flexible argument lists, `return` for outputs, and clear names to make code easier to read. Functions are also values, which is why callbacks work. Hoisting lets function declarations be called before their definition, but defining functions before use is usually the clearest habit.

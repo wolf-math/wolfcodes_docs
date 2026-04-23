@@ -65,8 +65,12 @@ if (age >= 18) {
 } else {
   console.log("You are a minor");
 }
-// Output:
-// You are a minor
+```
+
+**Output:**
+
+```text
+You are a minor
 ```
 
 Only one of the two blocks runs.
@@ -87,8 +91,12 @@ if (score >= 90) {
 } else {
   console.log("Grade: F");
 }
-// Output:
-// Grade: B
+```
+
+**Output:**
+
+```text
+Grade: B
 ```
 
 **How it works:**
@@ -98,6 +106,34 @@ if (score >= 90) {
 3. Once it finds a truthy condition, it runs that block and skips the rest.
 
 Only the first matching block runs.
+
+### Order matters
+
+Put more specific checks before broader checks.
+
+```javascript
+const score = 95;
+
+if (score >= 70) {
+  console.log("Passing");
+} else if (score >= 90) {
+  console.log("Excellent");
+}
+```
+
+This prints `"Passing"` because JavaScript stops at the first matching block.
+
+```javascript
+const score = 95;
+
+if (score >= 90) {
+  console.log("Excellent");
+} else if (score >= 70) {
+  console.log("Passing");
+}
+```
+
+Check the narrow condition first when both conditions could be true.
 
 ## Truthy and falsy conditions
 
@@ -131,6 +167,37 @@ const count = 0;
 if (count > 0) {
   console.log("Has items");
 }
+```
+
+## Comparisons in conditions
+
+Comparison operators create boolean values that conditionals can use:
+
+```javascript
+const password = "secret";
+
+if (password.length >= 8) {
+  console.log("Password is long enough");
+} else {
+  console.log("Password is too short");
+}
+```
+
+Use strict equality when comparing exact values:
+
+```javascript
+const role = "admin";
+
+if (role === "admin") {
+  console.log("Show admin tools");
+}
+```
+
+Avoid loose equality in beginner code because it can coerce types:
+
+```javascript
+console.log(0 == false);  // true
+console.log(0 === false); // false
 ```
 
 ## Combining conditions
@@ -167,6 +234,20 @@ if (!isLoading) {
 }
 ```
 
+When a combined condition gets hard to read, move part of it into a named variable:
+
+```javascript
+const age = 25;
+const hasLicense = true;
+const hasInsurance = true;
+
+const isAllowedToDrive = age >= 18 && hasLicense && hasInsurance;
+
+if (isAllowedToDrive) {
+  console.log("Can drive");
+}
+```
+
 ## `switch`
 
 Use `switch` when you are checking one value against several cases:
@@ -191,6 +272,23 @@ switch (day) {
 ```
 
 The `default` case runs when no case matches.
+
+`switch` uses strict comparison, similar to `===`, when matching cases:
+
+```javascript
+const value = "1";
+
+switch (value) {
+  case 1:
+    console.log("number");
+    break;
+  case "1":
+    console.log("string");
+    break;
+}
+```
+
+This prints `"string"` because `"1"` and `1` are different values.
 
 ### `break` in `switch`
 
@@ -222,9 +320,13 @@ switch (day) {
     console.log("Tuesday");
     break;
 }
-// Output:
-// Monday
-// Tuesday
+```
+
+**Output:**
+
+```text
+Monday
+Tuesday
 ```
 
 Only leave out `break` when fall-through is intentional.
@@ -243,6 +345,7 @@ console.log(status); // "adult"
 This is equivalent to:
 
 ```javascript
+const age = 20;
 let status;
 
 if (age >= 18) {
@@ -326,6 +429,7 @@ if (age >= 18 && hasLicense) {
 ## Best practices
 
 - **Keep conditions readable**: Move complex logic into a well-named variable.
+- **Check specific cases first**: In an `else if` chain, the first matching block wins.
 - **Be explicit when values matter**: Use `count > 0` instead of `if (count)` when zero has meaning.
 - **Use strict equality**: Prefer `===` and `!==`.
 - **Avoid deep nesting**: Combine simple conditions or return early.

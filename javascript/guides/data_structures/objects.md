@@ -102,6 +102,45 @@ console.log(settings["font size"]); // 16
 console.log(settings["2faEnabled"]); // true
 ```
 
+If a property does not exist, JavaScript returns `undefined`:
+
+```javascript
+const person = {
+  name: "Alice"
+};
+
+console.log(person.city); // undefined
+```
+
+## Property shorthand and computed keys
+
+When a variable name matches the property name you want, you can use property shorthand:
+
+```javascript
+const name = "Alice";
+const age = 30;
+
+const person = {
+  name,
+  age
+};
+
+console.log(person); // { name: "Alice", age: 30 }
+```
+
+Use computed property names when the key is stored in a variable:
+
+```javascript
+const key = "theme";
+const value = "dark";
+
+const settings = {
+  [key]: value
+};
+
+console.log(settings); // { theme: "dark" }
+```
+
 ## Adding, changing, and removing properties
 
 Objects are mutable. You can add, update, and remove properties after creating the object.
@@ -168,6 +207,18 @@ console.log(user.roles[0]);     // "admin"
 
 Nested data is common in API responses. Keep nesting reasonable; deeply nested objects can become hard to read and update.
 
+Use optional chaining (`?.`) when a nested property might be missing:
+
+```javascript
+const user = {
+  name: "Alice"
+};
+
+console.log(user.address?.city); // undefined
+```
+
+Without `?.`, `user.address.city` would cause an error because `address` is missing.
+
 ## Objects are reference values
 
 Objects are **reference values**. When you assign an object to another variable, both variables refer to the same object:
@@ -196,6 +247,25 @@ console.log(copy.name);     // "Bob"
 
 This is a shallow copy. Nested objects are still shared.
 
+```javascript
+const original = {
+  name: "Alice",
+  address: {
+    city: "Cleveland"
+  }
+};
+
+const copy = { ...original };
+
+copy.address.city = "Boston";
+
+console.log(original.address.city); // "Boston"
+```
+
+The top-level object was copied, but the nested `address` object was still shared.
+
+Rest and spread syntax are covered in more detail in the [rest and spread guide](./rest_and_spread).
+
 ## Looping over objects
 
 There are several ways to loop over an object's properties.
@@ -214,10 +284,14 @@ const person = {
 for (const key of Object.keys(person)) {
   console.log(key, person[key]);
 }
-// Output:
-// name Alice
-// age 30
-// city Cleveland
+```
+
+**Output:**
+
+```text
+name Alice
+age 30
+city Cleveland
 ```
 
 ### `Object.values()`
@@ -234,10 +308,14 @@ const person = {
 for (const value of Object.values(person)) {
   console.log(value);
 }
-// Output:
-// Alice
-// 30
-// Cleveland
+```
+
+**Output:**
+
+```text
+Alice
+30
+Cleveland
 ```
 
 ### `Object.entries()`
@@ -254,10 +332,14 @@ const person = {
 for (const [key, value] of Object.entries(person)) {
   console.log(`${key}: ${value}`);
 }
-// Output:
-// name: Alice
-// age: 30
-// city: Cleveland
+```
+
+**Output:**
+
+```text
+name: Alice
+age: 30
+city: Cleveland
 ```
 
 ### `for...in`
@@ -299,6 +381,7 @@ const person = {
 };
 
 console.log(Object.hasOwn(person, "name")); // true
+console.log(Object.hasOwn(person, "city")); // false
 ```
 
 If you only care whether a property value is not missing, check the value:
@@ -361,6 +444,8 @@ console.log(settings); // { theme: "dark", language: "en" }
 
 Later properties override earlier properties when keys are the same.
 
+For more copying, merging, and destructuring patterns, see the [rest and spread guide](./rest_and_spread).
+
 ## Destructuring
 
 Destructuring lets you pull properties into variables:
@@ -385,6 +470,19 @@ const { name: userName } = person;
 console.log(userName); // "Alice"
 ```
 
+You can also provide a default value while destructuring:
+
+```javascript
+const person = {
+  name: "Alice"
+};
+
+const { name, role = "member" } = person;
+
+console.log(name); // "Alice"
+console.log(role); // "member"
+```
+
 ## Objects vs arrays
 
 Use objects when:
@@ -407,7 +505,7 @@ const users = [
   { id: 2, name: "Bob" }
 ];
 
-const names = users.map(user => user.name);
+const names = users.map((user) => user.name);
 
 console.log(names); // ["Alice", "Bob"]
 ```
@@ -453,9 +551,11 @@ const config = {
 - **Use object literals**: `{}` is the clearest way to create plain objects.
 - **Use dot notation when possible**: It is shorter and easier to read.
 - **Use bracket notation for dynamic keys**: Use it when the property name is stored in a variable.
+- **Use optional chaining for uncertain nested data**: `user.address?.city` avoids errors when a middle property is missing.
 - **Prefer `Object.entries()` for key-value loops**: It makes both pieces visible.
 - **Use `??` for safe defaults**: It preserves valid falsy values like `0` and `""`.
 - **Remember reference behavior**: Copy objects before changing them if the original should stay unchanged.
+- **Remember that spread is shallow**: Nested objects are still shared unless you copy them too.
 - **Avoid deep nesting when possible**: Deep data is harder to update safely.
 
 ## Summary

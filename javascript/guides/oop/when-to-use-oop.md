@@ -15,6 +15,8 @@ Use object-oriented programming when it makes the problem easier to model.
 
 JavaScript supports OOP, but it does not force every problem into classes.
 
+**Rule of thumb:** start with plain objects and functions. Move to classes when state + behavior + rules make the model clearer.
+
 ## Why the choice matters
 
 Good structure makes code easier to change.
@@ -72,13 +74,13 @@ class Player {
   }
 }
 
-const playerOne = new Player("Maya");
+const playerOne = new Player("Dirk");
 const playerTwo = new Player("Nia");
 
 playerOne.addPoint();
 
-console.log(playerOne.score);
-console.log(playerTwo.score);
+console.log(playerOne.score); // 1
+console.log(playerTwo.score); // 0
 ```
 
 Each player has separate state.
@@ -110,6 +112,12 @@ class InventoryItem {
     return this.#quantity;
   }
 }
+
+const item = new InventoryItem("Notebook", 3);
+
+item.remove(1);
+
+console.log(item.quantity); // 2
 ```
 
 The class protects its own state.
@@ -122,7 +130,7 @@ If you only need to group values, a plain object is usually enough.
 
 ```javascript
 const profile = {
-  name: "Maya",
+  name: "Dirk",
   location: "Portland",
   interests: ["JavaScript", "design", "music"],
 };
@@ -139,7 +147,7 @@ function calculateDiscount(price, percent) {
   return price * (percent / 100);
 }
 
-console.log(calculateDiscount(50, 10));
+console.log(calculateDiscount(50, 10)); // 5
 ```
 
 This does not need an object.
@@ -185,7 +193,7 @@ class PaymentService {
 
 const service = new PaymentService(logMessage);
 
-service.charge(25);
+service.charge(25); // Logs "Charging $25"
 ```
 
 The service does not need to inherit from a logging class.
@@ -229,6 +237,55 @@ console.log(formatPrice(cart.getTotal()));
 
 Use each tool where it fits.
 
+## Common mistakes
+
+### Creating classes for data-only values
+
+If a value is mostly data, a plain object is often clearer than a class.
+
+```javascript
+// Usually fine as a plain object:
+const profile = {
+  name: "Dirk",
+  location: "Portland",
+};
+```
+
+Move to a class when you also have behavior, validation, or invariants that the object should enforce.
+
+### Using inheritance only to share a helper
+
+Inheritance should model an is-a relationship, not just "I want a method from somewhere."
+
+```javascript
+class Logger {
+  log(message) {
+    console.log(message);
+  }
+}
+
+// Weak model: a service is not a logger.
+class OrderService extends Logger {
+  createOrder(item) {
+    this.log(`Creating order for ${item}`);
+  }
+}
+```
+
+Prefer composition when one thing just uses another:
+
+```javascript
+class OrderService {
+  constructor(logger) {
+    this.logger = logger;
+  }
+
+  createOrder(item) {
+    this.logger.log(`Creating order for ${item}`);
+  }
+}
+```
+
 ## Decision checklist
 
 Use OOP when the answer to several of these questions is yes:
@@ -240,6 +297,8 @@ Use OOP when the answer to several of these questions is yes:
 - Would a public interface make this easier to use correctly?
 
 Use a simpler pattern when the answer to these questions is no.
+
+If the checklist is mixed, default to the simpler tool first. You can always refactor from a plain object to a class later.
 
 ## Best practices
 

@@ -120,17 +120,17 @@ console.log(amount.toLocaleString()); // "1,234,567.89" in many locales
 User input and API data often arrive as strings. Convert them before doing numeric work:
 
 ```javascript
-Number("42");        // 42
-Number("3.14");      // 3.14
-parseInt("42px");    // 42
-parseFloat("3.14em"); // 3.14
+console.log(Number("42"));         // 42
+console.log(Number("3.14"));       // 3.14
+console.log(parseInt("42px"));     // 42
+console.log(parseFloat("3.14em")); // 3.14
 ```
 
 `Number()` is stricter:
 
 ```javascript
-Number("42px"); // NaN
-parseInt("42px"); // 42
+console.log(Number("42px"));   // NaN
+console.log(parseInt("42px")); // 42
 ```
 
 Use `Number()` when the whole string should be numeric. Use `parseInt()` or `parseFloat()` when you intentionally want to parse from the beginning of a string.
@@ -140,9 +140,9 @@ Use `Number()` when the whole string should be numeric. Use `parseInt()` or `par
 `NaN` means "Not a Number". It appears when a numeric operation cannot produce a meaningful number:
 
 ```javascript
-0 / 0;          // NaN
-"text" / 2;     // NaN
-Math.sqrt(-1);  // NaN
+console.log(0 / 0);         // NaN
+console.log("text" / 2);    // NaN
+console.log(Math.sqrt(-1)); // NaN
 ```
 
 Use `Number.isNaN()` to check for `NaN`:
@@ -163,9 +163,9 @@ console.log(-1 / 0); // -Infinity
 Use `Number.isFinite()` when you need a regular finite number:
 
 ```javascript
-Number.isFinite(42);       // true
-Number.isFinite(Infinity); // false
-Number.isFinite(NaN);      // false
+console.log(Number.isFinite(42));       // true
+console.log(Number.isFinite(Infinity)); // false
+console.log(Number.isFinite(NaN));      // false
 ```
 
 ## Floating-point precision
@@ -173,8 +173,8 @@ Number.isFinite(NaN);      // false
 JavaScript numbers are stored as 64-bit floating-point values. This means decimal math can sometimes look surprising:
 
 ```javascript
-0.1 + 0.2;       // 0.30000000000000004
-0.1 + 0.2 === 0.3; // false
+console.log(0.1 + 0.2);       // 0.30000000000000004
+console.log(0.1 + 0.2 === 0.3); // false
 ```
 
 This is normal for floating-point arithmetic. For money, store integer cents instead of decimal dollars:
@@ -192,15 +192,15 @@ console.log(totalInCents); // 2139
 JavaScript can represent only some integers exactly. The safe integer range is:
 
 ```javascript
-Number.MAX_SAFE_INTEGER; // 9007199254740991
-Number.MIN_SAFE_INTEGER; // -9007199254740991
+console.log(Number.MAX_SAFE_INTEGER); // 9007199254740991
+console.log(Number.MIN_SAFE_INTEGER); // -9007199254740991
 ```
 
 Use `Number.isSafeInteger()` when large integer precision matters:
 
 ```javascript
-Number.isSafeInteger(9007199254740991); // true
-Number.isSafeInteger(9007199254740992); // false
+console.log(Number.isSafeInteger(9007199254740991)); // true
+console.log(Number.isSafeInteger(9007199254740992)); // false
 ```
 
 For integers beyond the safe range, consider `BigInt`.
@@ -210,12 +210,12 @@ For integers beyond the safe range, consider `BigInt`.
 The `Math` object provides common numeric helpers:
 
 ```javascript
-Math.round(4.6); // 5
-Math.floor(4.6); // 4
-Math.ceil(4.1);  // 5
-Math.abs(-10);   // 10
-Math.max(5, 10, 2); // 10
-Math.min(5, 10, 2); // 2
+console.log(Math.round(4.6));    // 5
+console.log(Math.floor(4.6));    // 4
+console.log(Math.ceil(4.1));     // 5
+console.log(Math.abs(-10));      // 10
+console.log(Math.max(5, 10, 2)); // 10
+console.log(Math.min(5, 10, 2)); // 2
 ```
 
 Use spread syntax with arrays:
@@ -226,6 +226,8 @@ const numbers = [5, 10, 2, 8];
 console.log(Math.max(...numbers)); // 10
 console.log(Math.min(...numbers)); // 2
 ```
+
+This is spread syntax. It is covered in more detail in the [rest and spread guide](./rest_and_spread).
 
 ## Common patterns
 

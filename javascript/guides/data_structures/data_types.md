@@ -80,7 +80,9 @@ const temperature = -4;
 const largeNumber = 1e6; // 1000000
 ```
 
-**Important:** JavaScript numbers use floating-point math, so some decimal calculations can look surprising:
+:::note Important 
+
+JavaScript numbers use floating-point math, so some decimal calculations can look surprising:
 
 ```javascript
 0.1 + 0.2;       // 0.30000000000000004
@@ -88,6 +90,8 @@ const largeNumber = 1e6; // 1000000
 ```
 
 This is normal in many programming languages. For money, use integer cents or a decimal library instead of relying on exact decimal equality.
+:::
+
 
 ### BigInts
 
@@ -152,7 +156,9 @@ Symbols are useful in advanced object patterns, but they are uncommon in beginne
 
 ## Reference values
 
-Reference values are values that can hold other values. Objects, arrays, and functions are reference values.
+Reference values are objects, arrays, and functions that JavaScript works with through references.
+
+A useful mental model is: a variable does not hold the whole object directly. It holds a reference to where that object is. If two variables refer to the same object, changes made through one variable can be seen through the other.
 
 ### Objects
 

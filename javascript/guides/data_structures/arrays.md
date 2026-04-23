@@ -140,7 +140,7 @@ Non-mutating methods return a new value and leave the original array unchanged:
 
 ```javascript
 const numbers = [1, 2, 3];
-const doubled = numbers.map(number => number * 2);
+const doubled = numbers.map((number) => number * 2);
 
 console.log(numbers); // [1, 2, 3]
 console.log(doubled); // [2, 4, 6]
@@ -214,7 +214,7 @@ const users = [
   { id: 2, name: "Bob" }
 ];
 
-const user = users.find(user => user.id === 2);
+const user = users.find((user) => user.id === 2);
 
 console.log(user); // { id: 2, name: "Bob" }
 ```
@@ -223,9 +223,18 @@ Use `findIndex()` when you need the matching item's index:
 
 ```javascript
 const names = ["Alice", "Bob", "Charlie"];
-const index = names.findIndex(name => name.startsWith("C"));
+const index = names.findIndex((name) => name.startsWith("C"));
 
 console.log(index); // 2
+```
+
+If no item matches, `find()` returns `undefined` and `findIndex()` returns `-1`:
+
+```javascript
+const names = ["Alice", "Bob", "Charlie"];
+
+console.log(names.find((name) => name === "Dana")); // undefined
+console.log(names.findIndex((name) => name === "Dana")); // -1
 ```
 
 ## Slicing and splicing
@@ -264,10 +273,14 @@ const names = ["Alice", "Bob", "Charlie"];
 for (const name of names) {
   console.log(name);
 }
-// Output:
-// Alice
-// Bob
-// Charlie
+```
+
+**Output:**
+
+```text
+Alice
+Bob
+Charlie
 ```
 
 Prefer `for...of` when you do not need the index.
@@ -282,10 +295,14 @@ const names = ["Alice", "Bob", "Charlie"];
 for (let i = 0; i < names.length; i++) {
   console.log(`${i}: ${names[i]}`);
 }
-// Output:
-// 0: Alice
-// 1: Bob
-// 2: Charlie
+```
+
+**Output:**
+
+```text
+0: Alice
+1: Bob
+2: Charlie
 ```
 
 ### `forEach()`
@@ -300,6 +317,14 @@ names.forEach((name, index) => {
 });
 ```
 
+**Output:**
+
+```text
+0: Alice
+1: Bob
+2: Charlie
+```
+
 Use `forEach()` for simple side effects, like logging or updating the page. Use `map()` when you want to create a new array.
 
 ## Transforming arrays
@@ -310,7 +335,7 @@ Use `forEach()` for simple side effects, like logging or updating the page. Use 
 
 ```javascript
 const numbers = [1, 2, 3, 4];
-const doubled = numbers.map(number => number * 2);
+const doubled = numbers.map((number) => number * 2);
 
 console.log(doubled); // [2, 4, 6, 8]
 ```
@@ -323,7 +348,7 @@ Use `map()` when the output array should have one new item for each original ite
 
 ```javascript
 const numbers = [1, 2, 3, 4, 5, 6];
-const evens = numbers.filter(number => number % 2 === 0);
+const evens = numbers.filter((number) => number % 2 === 0);
 
 console.log(evens); // [2, 4, 6]
 ```
@@ -343,6 +368,8 @@ console.log(sum); // 10
 
 Use `reduce()` for totals, grouped objects, and other "combine everything" operations. If `reduce()` makes the code hard to read, a loop is fine.
 
+**Rule of thumb:** Include the starting value, like `0` in the example above. It keeps the behavior clear and avoids errors with empty arrays.
+
 ### Chaining methods
 
 You can chain array methods to process data step by step:
@@ -351,8 +378,8 @@ You can chain array methods to process data step by step:
 const numbers = [1, 2, 3, 4, 5, 6];
 
 const result = numbers
-  .filter(number => number % 2 === 0)
-  .map(number => number * number)
+  .filter((number) => number % 2 === 0)
+  .map((number) => number * number)
   .reduce((total, number) => total + number, 0);
 
 console.log(result); // 56
@@ -387,6 +414,19 @@ console.log(copy); // [1, 2, 3]
 
 This is a shallow copy. Nested objects and arrays are still shared.
 
+```javascript
+const original = [{ name: "Alice" }];
+const copy = [...original];
+
+copy[0].name = "Bob";
+
+console.log(original[0].name); // "Bob"
+```
+
+The array was copied, but the object inside it was still shared.
+
+Rest and spread syntax are covered in more detail in the [rest and spread guide](./rest_and_spread).
+
 ### Combining arrays
 
 Use spread syntax or `concat()`:
@@ -407,6 +447,16 @@ console.log(combined); // [1, 2, 3, 4]
 ```javascript
 const numbers = [10, 5, 40, 25];
 
+numbers.sort();
+
+console.log(numbers); // [10, 25, 40, 5]
+```
+
+That result happens because the default sort compares values as strings.
+
+```javascript
+const numbers = [10, 5, 40, 25];
+
 numbers.sort((a, b) => a - b);
 
 console.log(numbers); // [5, 10, 25, 40]
@@ -421,6 +471,20 @@ const sorted = [...numbers].sort((a, b) => a - b);
 console.log(numbers); // [10, 5, 40, 25]
 console.log(sorted);  // [5, 10, 25, 40]
 ```
+
+### Checking whether a value is an array
+
+Use `Array.isArray()` when you need to confirm that a value is an array:
+
+```javascript
+const items = ["a", "b"];
+const user = { name: "Alice" };
+
+console.log(Array.isArray(items)); // true
+console.log(Array.isArray(user));  // false
+```
+
+Do not use `typeof` for this check. Arrays are objects, so `typeof []` returns `"object"`.
 
 ## Arrays vs objects
 
@@ -454,6 +518,7 @@ const user = {
 - **Know which methods mutate**: Be careful with `sort()`, `reverse()`, `splice()`, and push/pop methods.
 - **Use `map()` for transformation**: Do not use it just for side effects.
 - **Keep chains readable**: Split long chains into named steps.
+- **Use `Array.isArray()` for array checks**: `typeof` cannot tell arrays and plain objects apart.
 - **Use objects for named data**: If each value needs a label, an object may be clearer than an array.
 
 ## Summary
