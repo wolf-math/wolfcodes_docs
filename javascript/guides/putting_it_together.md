@@ -70,6 +70,14 @@ console.log(activeUsers);
 
 `filter` creates a new array containing only the users where `user.active` is `true`.
 
+**Output:**
+
+```text
+[ { id: 1, name: 'Dirk', active: true, points: 42 }, { id: 3, name: 'Ari', active: true, points: 31 } ]
+```
+
+The exact formatting can vary by JavaScript environment.
+
 ## Adding a derived value
 
 Programs often need to turn raw data into a useful result.
@@ -87,6 +95,12 @@ console.log(totalPoints);
 `reduce` combines the array into one value.
 
 In this case, it adds up the `points` values for all active users.
+
+**Output:**
+
+```text
+73
+```
 
 ## Formatting output
 
@@ -106,6 +120,12 @@ console.log(formatUserSummary(users));
 This function combines other functions instead of doing all the work itself.
 
 That is a common pattern in JavaScript: write small functions, then compose them into larger behavior.
+
+**Output:**
+
+```text
+2 active users have 73 total points.
+```
 
 ## Adding decisions
 
@@ -132,6 +152,14 @@ for (const user of users) {
 The `for...of` loop reads each user.
 
 The function decides which message to return.
+
+**Output:**
+
+```text
+Dirk is a top contributor.
+Nia is inactive.
+Ari is active.
+```
 
 ## Grouping behavior with a class
 
@@ -166,6 +194,12 @@ console.log(scoreboard.getSummary());
 The `Scoreboard` class owns the list of users.
 
 Its methods describe the operations that belong to that list.
+
+**Output:**
+
+```text
+2 active users have 73 total points.
+```
 
 ## Organizing code with modules
 
@@ -209,6 +243,12 @@ Modules help you keep each file focused.
 
 They also make code easier to reuse and test.
 
+**Output:**
+
+```text
+73
+```
+
 ## Handling async work
 
 Some work finishes later, such as reading from a database or calling an API.
@@ -241,6 +281,12 @@ main();
 
 Then the rest of the code can use the loaded users like normal data.
 
+**Output:**
+
+```text
+91
+```
+
 ## Handling errors
 
 Real programs need to handle failure.
@@ -271,6 +317,12 @@ The `try` block contains the work that might fail.
 
 The `catch` block decides what to do with the error.
 
+**Output:**
+
+```text
+Could not load users
+```
+
 ## A complete example
 
 Here is a small program that combines the same ideas.
@@ -279,14 +331,17 @@ Here is a small program that combines the same ideas.
 class TodoList {
   constructor(todos) {
     this.todos = todos;
+    this.nextId = Math.max(0, ...todos.map((t) => t.id)) + 1;
   }
 
   addTodo(text) {
     this.todos.push({
-      id: this.todos.length + 1,
+      id: this.nextId,
       text,
       completed: false,
     });
+
+    this.nextId += 1;
   }
 
   completeTodo(id) {
@@ -331,6 +386,12 @@ async function main() {
 }
 
 main();
+```
+
+**Output:**
+
+```text
+1 todos left.
 ```
 
 This program uses:
@@ -382,6 +443,12 @@ For Node.js projects, learn:
 - Environment variables
 - HTTP servers
 - Command-line scripts
+
+For data-heavy programs, learn:
+
+- JSON parsing and stringifying
+- Input validation
+- Schema validation libraries
 
 For larger applications, learn:
 
