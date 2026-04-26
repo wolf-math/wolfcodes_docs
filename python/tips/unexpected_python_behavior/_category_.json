@@ -1,0 +1,8 @@
+{
+  "label": "Unexpected Behavior",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "Python behavior that you might find confusing."
+  }
+}
