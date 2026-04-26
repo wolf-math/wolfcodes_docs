@@ -277,7 +277,7 @@ This OOP section covers:
 - Classes vs plain objects
 - When to use OOP
 
-Start with [Classes and Instances](./classes.md), then move through methods, encapsulation, inheritance, and the final guide on choosing when to use OOP.
+Start with [Classes and Instances](./classes), then move through methods, encapsulation, inheritance, and the final guide on choosing when to use OOP.
 
 ## What this section does not cover
 

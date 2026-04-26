@@ -397,6 +397,6 @@ For broader frontend performance habits, see [Performance & Best Practices](../b
 
 ## Next up
 
-- [DOM introduction](/Users/aaron/code/wolf_codes/docs/javascript/web/dom/dom_intro.md)
-- [Manipulating the DOM](/Users/aaron/code/wolf_codes/docs/javascript/web/dom/manipulating_dom.md)
-- [DOM events](/Users/aaron/code/wolf_codes/docs/javascript/web/events/dom_events.md)
+- [DOM introduction](./dom_intro)
+- [Manipulating the DOM](./manipulating_dom)
+- [DOM events](../events/dom_events)
