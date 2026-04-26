@@ -13,7 +13,7 @@ source:
 
 ## What are forms and user input?
 
-**Forms and user input** are how users send information to your page. JavaScript can read those values, validate them, respond to changes, and control what happens when a form is submitted.
+**Forms and user input** are how users send information to your page. JavaScript can read those values, validate them, respond to changes, and control what happens when a form is submitted with [events](./dom_events).
 
 ### Smallest working example
 
@@ -43,7 +43,7 @@ Most interactive web pages depend on user input:
 
 ## Reading input values
 
-Different form controls expose their values in slightly different ways.
+Different form controls expose their values in slightly different ways, but all of them start with [selecting the right element](../dom/selecting_elements).
 
 ### Text inputs
 
@@ -161,6 +161,8 @@ Rule of thumb: use `.value` for text-like fields, `.checked` for checkboxes, and
 
 By default, forms submit to the server and reload the page. In many JavaScript-driven interfaces, you want to handle submission yourself.
 
+This is one of the most common examples of combining [event handling](./dom_events), [state](../state/application_state), and [network requests](../browser_api/networking).
+
 ### Prevent form submission
 
 ```html
@@ -197,6 +199,8 @@ Without `preventDefault()`, the browser submits the form right away and usually 
 ## Validating form input
 
 Validation helps make sure the user entered acceptable data before you continue.
+
+If your form has multiple moving parts, it often helps to keep validation state separate from the DOM and treat the DOM as a rendered result of that state. See [Application State in the Browser](../state/application_state).
 
 ### HTML5 validation
 
@@ -528,6 +532,8 @@ function previousStep() {
   showStep(currentStep);
 }
 ```
+
+For more help organizing larger form code, see [Structuring Frontend JavaScript](../best_practice/structuring_frontend).
 
 ## Summary
 

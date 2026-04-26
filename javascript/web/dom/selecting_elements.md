@@ -13,7 +13,7 @@ source:
 
 ## What does it mean to select elements?
 
-**Selecting elements** means asking the browser for one or more elements from the DOM so your JavaScript can read them, update them, or attach event listeners.
+**Selecting elements** means asking the browser for one or more elements from the [DOM](./dom_intro) so your JavaScript can read them, update them, or attach [event listeners](../events/dom_events).
 
 ### Smallest working example
 
@@ -31,7 +31,7 @@ if (button) {
 
 ## Why selecting elements matters
 
-Before you can manipulate elements with JavaScript, you need to select them and store a reference.
+Before you can [manipulate elements](./manipulating_dom) with JavaScript, you need to select them and store a reference.
 
 JavaScript provides several methods for selecting elements, each with different use cases.
 
@@ -307,6 +307,8 @@ console.log(liveItems.length); // 4 (live collection)
 
 ## Working with selected elements
 
+Once you have a reference to an element, the next step is usually to [change its content, classes, attributes, or position in the DOM](./manipulating_dom).
+
 ### Single element
 
 ```javascript
@@ -384,6 +386,8 @@ document.getElementById("myId");
 // Also works, but slightly slower
 document.querySelector("#myId");
 ```
+
+For broader frontend performance habits, see [Performance & Best Practices](../best_practice/performance_best_practices).
 
 ## Summary
 

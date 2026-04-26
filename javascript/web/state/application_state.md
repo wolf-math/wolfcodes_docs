@@ -59,6 +59,8 @@ State gives your UI something reliable to display and update:
 - It lets the DOM reflect the current app condition
 - It helps avoid bugs caused by scattered or duplicated data
 
+This idea connects directly to [manipulating the DOM](../dom/manipulating_dom), [handling events](../events/dom_events), and [structuring frontend code](../best_practice/structuring_frontend).
+
 ## State vs the DOM
 
 This is the key distinction:
@@ -168,7 +170,7 @@ Rule of thumb: keep one clear source of truth for each piece of data. If you hav
 
 ## Syncing state to the DOM
 
-When state changes, update the DOM to match it.
+When state changes, update the DOM to match it. That usually means combining state updates with [rendering code](../dom/manipulating_dom) and event handlers from [the events section](../events/dom_events).
 
 ```javascript
 let count = 0;
@@ -467,6 +469,8 @@ This example uses a full re-render after each change because it is simple and ea
 - **Use a framework or state library** when the UI becomes large and many parts of the app share the same data
 
 Learn more about persistence in the [Web Storage guide](../browser_api/browser_storage).
+
+If state starts to feel scattered across too many files, [Structuring Frontend JavaScript](../best_practice/structuring_frontend) is the next helpful page.
 
 ## Summary
 

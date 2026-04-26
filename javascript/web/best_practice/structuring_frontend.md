@@ -15,7 +15,7 @@ source:
 
 As frontend code grows, structure becomes just as important as correctness. A project with clear files, clear responsibilities, and predictable flow is easier to debug, extend, and keep fast over time.
 
-This page focuses on practical structure patterns for vanilla JavaScript in the browser.
+This page focuses on practical structure patterns for vanilla JavaScript in the browser, especially around [DOM work](../dom/dom_intro), [events](../events/dom_events), [state](../state/application_state), and [Web APIs](../browser_api/intro).
 
 ## Why structure matters
 
@@ -62,7 +62,7 @@ js/
   ├── dom.js          # DOM manipulation
   ├── api.js          # API calls
   └── utils.js        # Utility functions
-  ```
+```
 
 This kind of split makes it easier to see what each file is for:
 
@@ -129,14 +129,14 @@ This often scales better once the app has several distinct features:
 js/
   ├── app.js
   ├── todo/
-  |     ├── todo.js
-  |     ├── todo-state.js
-  |     └── todo-ui.js
+  │   ├── todo.js
+  │   ├── todo-state.js
+  │   └── todo-ui.js
   ├── user/
-  |     ├── user.js
-  |     └── user-api.js
+  │   ├── user.js
+  │   └── user-api.js
   └── utils/
-        └── helpers.js
+      └── helpers.js
 ```
 
 Feature-based structure is often easier when each feature has its own UI, state, and API logic.
@@ -147,9 +147,11 @@ Rule of thumb: if you keep jumping between many unrelated folders to understand 
 
 ## Separate responsibilities clearly
 
-One of the biggest improvements you can make is to keep data, DOM work, and wiring separate.
+One of the biggest improvements you can make is to keep data, DOM work, and wiring separate. If those responsibilities blur together, bugs become harder to trace in [Debugging Frontend JavaScript](./debugging_frontend).
 
 ### State vs DOM updates
+
+This pattern pairs naturally with [Application State in the Browser](../state/application_state).
 
 ```javascript
 // state.js
@@ -213,7 +215,7 @@ if (addButton) {
 
 ### Events vs business logic
 
-Event handlers should usually gather input and call other functions, not hold all of the application logic themselves.
+Event handlers should usually gather input and call other functions, not hold all of the application logic themselves. This keeps them easier to reason about when you return later to [debug event behavior](./debugging_frontend).
 
 ```javascript
 // events.js
@@ -296,6 +298,8 @@ document.addEventListener("DOMContentLoaded", () => {
 This is helpful when your app has multiple moving parts that need one owner.
 
 ## Use progressive enhancement when possible
+
+This also fits naturally with the [Forms and User Input](../events/forms_input) guide.
 
 A good frontend structure does not assume JavaScript is the only thing making the page usable.
 
@@ -398,6 +402,8 @@ export class ApiService {
 ```
 
 Use this pattern when you want network logic in one clear place instead of spreading `fetch()` calls across the app.
+
+It pairs especially well with the [Fetch API](../browser_api/networking) guide.
 
 ## Practical best practices
 
