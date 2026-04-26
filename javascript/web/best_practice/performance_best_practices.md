@@ -11,231 +11,331 @@ source:
   canonical_url: https://wolfcodes.dev
 ---
 
-## Minimizing DOM updates
+## What this page is about
 
-DOM manipulation is one of the slowest operations in JavaScript. Minimize updates for better performance.
+Performance in browser JavaScript is mostly about doing less unnecessary work. The biggest wins usually come from reducing DOM work, handling events carefully, and avoiding code patterns that keep the browser busy longer than needed.
+
+This page focuses on practical habits that make frontend code faster and easier to maintain.
+
+## Why performance matters
+
+When browser JavaScript does too much work, users feel it quickly:
+
+- The page responds slowly to clicks and typing
+- Animations feel janky
+- Scrolling stutters
+- Memory usage grows over time
+
+Good performance work is usually not about micro-optimizing every line. It is more often about choosing better patterns.
+
+## Start with the biggest wins
+
+In most frontend codebases, these changes matter more than small syntax-level optimizations:
+
+- Reduce unnecessary DOM reads and writes
+- Reuse DOM queries instead of repeating them
+- Use fewer event listeners when delegation works
+- Limit how often expensive handlers run
+- Clean up timers, listeners, and references when they are no longer needed
+
+## DOM work is expensive
+
+The DOM is slower to work with than plain JavaScript data. That means performance often improves when you do more work in JavaScript first and then make fewer DOM changes.
 
 ### Batch DOM updates
 
 ```javascript
-// Bad: multiple DOM updates
+// Bad: update the DOM many times
 for (let i = 0; i < 100; i++) {
-  const div = document.createElement('div');
-  div.textContent = `Item ${i}`;
-  container.appendChild(div);  // Triggers reflow each time
+  const item = document.createElement("div");
+  item.textContent = `Item ${i}`;
+  container.appendChild(item);
 }
+```
 
-// Good: build fragment, add once
+```javascript
+// Better: build first, append once
 const fragment = document.createDocumentFragment();
+
 for (let i = 0; i < 100; i++) {
-  const div = document.createElement('div');
-  div.textContent = `Item ${i}`;
-  fragment.appendChild(div);
+  const item = document.createElement("div");
+  item.textContent = `Item ${i}`;
+  fragment.appendChild(item);
 }
-container.appendChild(fragment);  // Single reflow
+
+container.appendChild(fragment);
 ```
 
-### Update classes, not styles
+### Prefer class changes over many inline style changes
 
 ```javascript
-// Slower: multiple style updates
-element.style.color = 'red';
-element.style.fontSize = '18px';
-element.style.backgroundColor = 'blue';
-
-// Faster: single class update
-element.classList.add('highlighted');
-// CSS: .highlighted { color: red; font-size: 18px; background: blue; }
+// More work in JavaScript
+element.style.color = "red";
+element.style.fontSize = "18px";
+element.style.backgroundColor = "blue";
 ```
 
-### Read, then write
-
-Batch reads and writes separately:
-
 ```javascript
-// Bad: alternating reads and writes
-const width1 = element1.offsetWidth;  // Read
-element1.style.width = width1 + 10 + 'px';  // Write
-const width2 = element2.offsetWidth;  // Read
-element2.style.width = width2 + 10 + 'px';  // Write
-
-// Good: batch reads, then writes
-const width1 = element1.offsetWidth;  // Read
-const width2 = element2.offsetWidth;  // Read
-element1.style.width = width1 + 10 + 'px';  // Write
-element2.style.width = width2 + 10 + 'px';  // Write
+// Usually cleaner and easier to maintain
+element.classList.add("highlighted");
 ```
 
-## Avoiding layout thrashing (conceptual)
-
-**Layout thrashing** happens when you repeatedly read layout properties (like `offsetWidth`, `offsetHeight`) after making changes, forcing the browser to recalculate layout.
-
-### The problem
+### Cache DOM queries
 
 ```javascript
-// Bad: forces layout recalculation
+// Bad: same query repeated
+function updateItem() {
+  document.querySelector("#item").textContent = "a";
+  document.querySelector("#item").classList.add("active");
+  document.querySelector("#item").setAttribute("data-ready", "true");
+}
+```
+
+```javascript
+// Better: query once
+const item = document.querySelector("#item");
+
+function updateItem() {
+  if (!item) {
+    return;
+  }
+
+  item.textContent = "a";
+  item.classList.add("active");
+  item.setAttribute("data-ready", "true");
+}
+```
+
+## Avoid layout thrashing
+
+The browser has to calculate layout when you ask for size or position information. If your code keeps switching back and forth between layout reads and DOM writes, the browser may be forced to recalculate layout repeatedly.
+
+### Read first, then write
+
+```javascript
+// Bad: read, write, read, write
+const width1 = element1.offsetWidth;
+element1.style.width = `${width1 + 10}px`;
+
+const width2 = element2.offsetWidth;
+element2.style.width = `${width2 + 10}px`;
+```
+
+```javascript
+// Better: batch reads, then batch writes
+const width1 = element1.offsetWidth;
+const width2 = element2.offsetWidth;
+
+element1.style.width = `${width1 + 10}px`;
+element2.style.width = `${width2 + 10}px`;
+```
+
+### Bigger example
+
+```javascript
+// Bad: layout can be recalculated repeatedly
 elements.forEach(element => {
-  const width = element.offsetWidth;  // Forces layout calculation
-  element.style.width = width * 2 + 'px';  // Triggers layout
-  const height = element.offsetHeight;  // Forces layout again!
+  const width = element.offsetWidth;
+  element.style.width = `${width * 2}px`;
+  const height = element.offsetHeight;
+  element.style.height = `${height * 2}px`;
 });
 ```
 
-### The solution
-
 ```javascript
-// Good: batch reads, then writes
-const dimensions = elements.map(el => ({
-  element: el,
-  width: el.offsetWidth,
-  height: el.offsetHeight
+// Better: collect measurements first
+const dimensions = elements.map(element => ({
+  element,
+  width: element.offsetWidth,
+  height: element.offsetHeight
 }));
 
 dimensions.forEach(({ element, width, height }) => {
-  element.style.width = width * 2 + 'px';
-  element.style.height = height * 2 + 'px';
+  element.style.width = `${width * 2}px`;
+  element.style.height = `${height * 2}px`;
 });
 ```
 
-**Key principle:** Read layout properties once, make all changes, then read again if needed.
+:::tip
+Rule of thumb: if you need layout information, do your reads together and your writes together.
+:::
 
-## Efficient event handling
+## Handle events efficiently
 
-### Use event delegation
+Event listeners are essential, but they can become expensive if you attach too many or let heavy handlers run too often.
+
+### Use event delegation when many similar elements need the same behavior
 
 ```javascript
-// Bad: listener on every item
+// Bad: one listener per item
 items.forEach(item => {
-  item.addEventListener('click', handleClick);
+  item.addEventListener("click", handleClick);
 });
+```
 
-// Good: single listener
-container.addEventListener('click', function(e) {
-  if (e.target.classList.contains('item')) {
-    handleClick(e);
+```javascript
+// Better: one listener on a parent
+container.addEventListener("click", event => {
+  if (event.target.classList.contains("item")) {
+    handleClick(event);
   }
 });
 ```
 
-### Debounce/throttle expensive operations
+### Debounce or throttle expensive handlers
 
 ```javascript
-// Debounce search input
-const debouncedSearch = debounce(function(query) {
-  // Expensive search operation
+const debouncedSearch = debounce(query => {
   performSearch(query);
 }, 300);
 
-searchInput.addEventListener('input', function() {
-  debouncedSearch(this.value);
+searchInput.addEventListener("input", () => {
+  debouncedSearch(searchInput.value);
 });
+```
 
-// Throttle scroll handler
-const throttledScroll = throttle(function() {
-  // Expensive scroll operation
+```javascript
+const throttledScroll = throttle(() => {
   updateScrollPosition();
 }, 100);
 
-window.addEventListener('scroll', throttledScroll);
+window.addEventListener("scroll", throttledScroll);
 ```
 
-### Remove unused listeners
+Use:
+
+- **Debounce** when you care about the final action, like a search box
+- **Throttle** when you want regular updates, like scroll position
+
+### Remove listeners you no longer need
 
 ```javascript
-// Store listener function
 function handleClick() {
-  console.log('Clicked');
+  console.log("Clicked");
 }
 
-element.addEventListener('click', handleClick);
+element.addEventListener("click", handleClick);
 
-// Remove when no longer needed
-element.removeEventListener('click', handleClick);
+element.removeEventListener("click", handleClick);
 ```
 
-## Memory leaks in the browser
+## Watch for memory leaks
 
-Memory leaks occur when JavaScript holds references to objects that are no longer needed.
+Memory leaks happen when JavaScript keeps references to things that should be gone.
 
 ### Common causes
 
 ```javascript
-// Leak: global variable holding large data
-let largeData = new Array(1000000).fill('data');
+// Large data kept alive unnecessarily
+let largeData = new Array(1000000).fill("data");
+```
 
-// Leak: event listeners not removed
-function setupListeners() {
-  element.addEventListener('click', function() {
-    // Handler still references element even if element removed
-  });
+```javascript
+// Listener not cleaned up
+function setupListeners(element) {
+  function handleClick() {
+    console.log("Clicked");
+  }
+
+  element.addEventListener("click", handleClick);
 }
+```
 
-// Leak: closures holding references
-function createHandler() {
-  const data = largeObject;
-  return function() {
-    // Closure holds reference to largeObject
-    console.log(data);
+```javascript
+// Closure keeps a reference alive
+function createHandler(largeObject) {
+  return function () {
+    console.log(largeObject);
   };
 }
 ```
 
-### How to avoid
+### Practical cleanup
 
 ```javascript
-// Clean up when done
-function cleanup() {
-  largeData = null;  // Release reference
-  element.removeEventListener('click', handler);
-}
+let largeData = new Array(1000000).fill("data");
 
-// Use weak references when possible (advanced)
-// Use WeakMap/WeakSet for temporary references
+function cleanup(element, handler) {
+  largeData = null;
+  element.removeEventListener("click", handler);
+}
 ```
 
-### Check for leaks
+### How to investigate leaks
 
-Use browser DevTools Memory tab:
-1. Take heap snapshot
-2. Perform actions
+Use browser DevTools memory tools:
+
+1. Take a heap snapshot
+2. Perform the action you suspect
 3. Take another snapshot
-4. Compare to find growing memory
+4. Compare whether memory keeps growing
 
-## Writing readable, maintainable vanilla js
+## Choose safer, simpler DOM patterns
 
-### Organize code into functions
+These are not huge optimizations on their own, but they are good defaults.
+
+### Prefer `textContent` when you only need text
 
 ```javascript
-// Good: organized functions
+element.textContent = userInput;
+```
+
+```javascript
+element.innerHTML = userInput;
+```
+
+`textContent` is usually the better default because it is simpler and avoids accidentally inserting unsafe HTML.
+
+### Minimize global state
+
+```javascript
+// Harder to manage
+var counter = 0;
+var userName = "";
+var settings = {};
+```
+
+```javascript
+// Clearer organization
+const app = {
+  counter: 0,
+  userName: "",
+  settings: {}
+};
+```
+
+Keeping data organized makes performance bugs easier to reason about because there are fewer moving parts.
+
+## Keep the code maintainable too
+
+Fast code that is hard to understand often becomes slow again later because it is harder to debug and improve.
+
+### Break work into focused functions
+
+```javascript
 function initializeApp() {
   loadUserData();
   setupEventListeners();
   renderInitialUI();
 }
 
-function loadUserData() {
-  // Load data
-}
-
-function setupEventListeners() {
-  // Setup events
-}
-
-function renderInitialUI() {
-  // Render UI
-}
+function loadUserData() {}
+function setupEventListeners() {}
+function renderInitialUI() {}
 ```
 
 ### Use meaningful names
 
 ```javascript
-// Bad: unclear names
-function doStuff() { }
+// Hard to understand
+function doStuff() {}
 const x = getData();
 const temp = process(x);
+```
 
-// Good: descriptive names
-function initializeUserProfile() { }
+```javascript
+// Easier to understand
+function initializeUserProfile() {}
 const userData = fetchUserData();
 const processedUser = processUserData(userData);
 ```
@@ -243,116 +343,71 @@ const processedUser = processUserData(userData);
 ### Keep functions focused
 
 ```javascript
-// Bad: function does too much
+// Too much responsibility
 function handleUser() {
-  // Validate
-  // Save to server
-  // Update UI
-  // Show notification
-  // Log analytics
+  // validate
+  // save
+  // update UI
+  // show notification
+  // log analytics
 }
-
-// Good: single responsibility
-function validateUser(user) { }
-function saveUser(user) { }
-function updateUserUI(user) { }
-function showNotification(message) { }
-function logAnalytics(event) { }
 ```
 
-### Comment complex logic
+```javascript
+function validateUser(user) {}
+function saveUser(user) {}
+function updateUserUI(user) {}
+function showNotification(message) {}
+function logAnalytics(event) {}
+```
+
+### Comment the why, not the obvious what
 
 ```javascript
-// Good: explain why, not what
 function calculateDiscount(price, user) {
-  // Apply loyalty discount for members who've been active > 1 year
+  // Apply a loyalty discount for long-term members
   if (user.isMember && user.membershipDuration > 365) {
-    return price * 0.15;  // 15% discount
+    return price * 0.15;
   }
+
   return 0;
 }
 ```
 
-## Additional best practices
+## Handle failure paths cleanly
 
-### Cache DOM queries
-
-```javascript
-// Bad: querying repeatedly
-function update() {
-  document.querySelector('#item').textContent = 'a';
-  document.querySelector('#item').textContent = 'b';
-  document.querySelector('#item').textContent = 'c';
-}
-
-// Good: query once
-const item = document.querySelector('#item');
-function update() {
-  item.textContent = 'a';
-  item.textContent = 'b';
-  item.textContent = 'c';
-}
-```
-
-### Use `textContent` over `innerHTML`
+Performance and reliability often go together. If data loading fails and your page gets stuck in a broken state, the user experience is poor even if the code is technically fast.
 
 ```javascript
-// Safer and faster
-element.textContent = userInput;  // Good
-
-element.innerHTML = userInput;  // Avoid unless you need HTML
-```
-
-### Minimize global variables
-
-```javascript
-// Bad: global pollution
-var counter = 0;
-var userName = '';
-var settings = {};
-
-// Good: namespace or module
-const App = {
-  counter: 0,
-  userName: '',
-  settings: {}
-};
-
-// Or use modules (best)
-// app.js
-export const App = {
-  counter: 0
-};
-```
-
-### Handle errors gracefully
-
-```javascript
-// Always handle errors
 async function loadData() {
   try {
-    const data = await fetch('/api/data').then(r => r.json());
+    const response = await fetch("/api/data");
+    const data = await response.json();
     displayData(data);
   } catch (error) {
-    console.error('Failed to load data:', error);
-    showErrorMessage('Unable to load data. Please try again.');
+    console.error("Failed to load data:", error);
+    showErrorMessage("Unable to load data. Please try again.");
   }
 }
 ```
 
 ## Performance checklist
 
-- ✅ Cache DOM queries
-- ✅ Use document fragments for batch updates
-- ✅ Use event delegation
-- ✅ Debounce/throttle expensive operations
-- ✅ Remove unused event listeners
-- ✅ Minimize global variables
-- ✅ Use `textContent` instead of `innerHTML` when possible
-- ✅ Batch DOM reads and writes
-- ✅ Clean up references when done
-- ✅ Use CSS classes instead of inline styles when possible
+- Cache DOM queries you reuse
+- Batch DOM updates when possible
+- Group layout reads and writes instead of mixing them
+- Use delegation for many similar event targets
+- Debounce or throttle expensive handlers
+- Remove timers and listeners you no longer need
+- Prefer `textContent` unless you truly need HTML
+- Keep state and logic organized so problems are easier to fix
+
+## Summary
+
+- The biggest frontend performance wins usually come from reducing DOM work and unnecessary repeated work.
+- Start with better patterns before worrying about tiny optimizations.
+- Good performance is closely tied to good structure, cleanup, and readability.
 
 ## Next steps
 
-Performance matters, but so does code organization. Let's learn about [structuring frontend JavaScript](./structuring_frontend) to keep your code maintainable as projects grow.
+Performance matters, but structure matters too. Continue with [Structuring Frontend JavaScript](./structuring_frontend) to make larger codebases easier to manage.

@@ -11,13 +11,30 @@ source:
   canonical_url: https://wolfcodes.dev
 ---
 
-## Organizing files
+## What this page is about
 
-As your project grows, organizing code into files becomes essential.
+As frontend code grows, structure becomes just as important as correctness. A project with clear files, clear responsibilities, and predictable flow is easier to debug, extend, and keep fast over time.
 
-### Basic structure
+This page focuses on practical structure patterns for vanilla JavaScript in the browser.
 
-```
+## Why structure matters
+
+Good structure helps you answer questions quickly:
+
+- Where does this data live?
+- Which file updates the DOM?
+- Where are event listeners set up?
+- What is responsible for talking to the server?
+
+If those answers are unclear, even small projects become harder to change safely.
+
+## Start with simple file organization
+
+You do not need a huge architecture for a small app, but you do need clear boundaries.
+
+### A simple project structure
+
+```text
 my-app/
   ├── index.html
   ├── css/
@@ -32,361 +49,411 @@ my-app/
       └── images/
 ```
 
-### Separation of concerns
+This is enough for many small projects.
 
-```
+### Separate by responsibility
+
+As the app grows, clearer splits usually help:
+
+```text
 js/
   ├── app.js          # Main application logic
   ├── state.js        # State management
   ├── dom.js          # DOM manipulation
   ├── api.js          # API calls
   └── utils.js        # Utility functions
-```
+  ```
 
-## Using es modules in the browser
+This kind of split makes it easier to see what each file is for:
 
-ES modules let you split code across files and import what you need.
+- `app.js`: startup and wiring
+- `state.js`: application data
+- `dom.js`: rendering and DOM updates
+- `api.js`: server communication
+- `utils.js`: shared helpers
 
-### Setting up modules
+## Use ES modules in the browser
 
-In your HTML:
+ES modules let you split code into focused files and import only what you need.
+
+### Basic setup
 
 ```html
 <script type="module" src="js/app.js"></script>
 ```
 
-### Module structure
+### Small example
 
 ```javascript
 // utils.js
 export function formatCurrency(amount) {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD'
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD"
   }).format(amount);
 }
+```
 
-export function debounce(func, delay) {
-  let timeoutId;
-  return function(...args) {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => func.apply(this, args), delay);
-  };
-}
-
+```javascript
 // app.js
-import { formatCurrency, debounce } from './utils.js';
+import { formatCurrency } from "./utils.js";
 
 const price = formatCurrency(100);
+console.log(price);
 ```
 
-### Organizing by feature
+## Choose a structure that matches the app
 
+There is no single perfect folder layout. The right structure depends on the project size and how the features relate to each other.
+
+### Structure by technical role
+
+This works well when the app is still small:
+
+```text
+js/
+  ├── app.js
+  ├── state.js
+  ├── dom.js
+  ├── api.js
+  └── utils.js
 ```
+
+### Structure by feature
+
+This often scales better once the app has several distinct features:
+
+
+
+```text
 js/
   ├── app.js
   ├── todo/
-  │   ├── todo.js
-  │   ├── todo-state.js
-  │   └── todo-ui.js
+  |     ├── todo.js
+  |     ├── todo-state.js
+  |     └── todo-ui.js
   ├── user/
-  │   ├── user.js
-  │   └── user-api.js
+  |     ├── user.js
+  |     └── user-api.js
   └── utils/
-      └── helpers.js
+        └── helpers.js
 ```
 
-## Separating concerns
+Feature-based structure is often easier when each feature has its own UI, state, and API logic.
 
-Keep different responsibilities separate:
+:::tip
+Rule of thumb: if you keep jumping between many unrelated folders to understand one feature, feature-based structure may be a better fit.
+:::
 
-### Logic vs DOM updates
+## Separate responsibilities clearly
+
+One of the biggest improvements you can make is to keep data, DOM work, and wiring separate.
+
+### State vs DOM updates
 
 ```javascript
-// state.js - manages data
+// state.js
 export const todos = {
   items: [],
   add(text) {
-    this.items.push({ id: Date.now(), text, completed: false });
+    this.items.push({
+      id: Date.now(),
+      text,
+      completed: false
+    });
   },
   toggle(id) {
-    const todo = this.items.find(t => t.id === id);
-    if (todo) todo.completed = !todo.completed;
+    const todo = this.items.find(item => item.id === id);
+    if (todo) {
+      todo.completed = !todo.completed;
+    }
   }
 };
+```
 
-// ui.js - handles DOM updates
-import { todos } from './state.js';
+```javascript
+// ui.js
+import { todos } from "./state.js";
 
 export function renderTodos() {
-  const list = document.querySelector('#todo-list');
-  list.innerHTML = '';
+  const list = document.querySelector("#todo-list");
+  if (!list) {
+    return;
+  }
+
+  list.innerHTML = "";
+
   todos.items.forEach(todo => {
-    const li = document.createElement('li');
-    li.textContent = todo.text;
-    if (todo.completed) li.classList.add('completed');
-    list.appendChild(li);
-  });
-}
+    const listItem = document.createElement("li");
+    listItem.textContent = todo.text;
 
-// app.js - wires everything together
-import { todos } from './state.js';
-import { renderTodos } from './ui.js';
-
-document.querySelector('#add-btn').addEventListener('click', () => {
-  todos.add('New todo');
-  renderTodos();
-});
-```
-
-### Events vs logic
-
-```javascript
-// events.js - event handlers
-import { todos } from './state.js';
-import { renderTodos } from './ui.js';
-
-export function setupEventListeners() {
-  document.querySelector('#add-btn').addEventListener('click', () => {
-    const input = document.querySelector('#todo-input');
-    todos.add(input.value);
-    input.value = '';
-    renderTodos();
-  });
-  
-  document.querySelector('#todo-list').addEventListener('click', (e) => {
-    if (e.target.classList.contains('delete')) {
-      const id = parseInt(e.target.dataset.id);
-      todos.remove(id);
-      renderTodos();
+    if (todo.completed) {
+      listItem.classList.add("completed");
     }
+
+    list.appendChild(listItem);
   });
 }
-
-// app.js - initialization
-import { setupEventListeners } from './events.js';
-import { renderTodos } from './ui.js';
-
-setupEventListeners();
-renderTodos();
 ```
-
-## Progressive enhancement mindset
-
-**Progressive enhancement** means building a functional base that works everywhere, then adding JavaScript enhancements.
-
-### HTML first
-
-```html
-<!-- Works without JavaScript -->
-<form action="/api/submit" method="POST">
-  <input type="text" name="username" required />
-  <button type="submit">Submit</button>
-</form>
-```
-
-### Enhance with JavaScript
-
-```javascript
-// Enhance form with JavaScript
-const form = document.querySelector('form');
-
-form.addEventListener('submit', function(e) {
-  e.preventDefault();
-  
-  // Enhanced behavior: show loading, handle errors, etc.
-  submitFormWithFeedback(this);
-});
-```
-
-**Benefits:**
-- Works even if JavaScript fails
-- Better for SEO
-- Faster initial load
-- More accessible
-
-## Common patterns
-
-### App initialization pattern
 
 ```javascript
 // app.js
+import { todos } from "./state.js";
+import { renderTodos } from "./ui.js";
+
+const addButton = document.querySelector("#add-btn");
+
+if (addButton) {
+  addButton.addEventListener("click", () => {
+    todos.add("New todo");
+    renderTodos();
+  });
+}
+```
+
+### Events vs business logic
+
+Event handlers should usually gather input and call other functions, not hold all of the application logic themselves.
+
+```javascript
+// events.js
+import { todos } from "./state.js";
+import { renderTodos } from "./ui.js";
+
+export function setupEventListeners() {
+  const addButton = document.querySelector("#add-btn");
+  const input = document.querySelector("#todo-input");
+  const list = document.querySelector("#todo-list");
+
+  if (addButton && input) {
+    addButton.addEventListener("click", () => {
+      todos.add(input.value);
+      input.value = "";
+      renderTodos();
+    });
+  }
+
+  if (list) {
+    list.addEventListener("click", event => {
+      if (event.target.classList.contains("delete")) {
+        const id = Number(event.target.dataset.id);
+        todos.remove(id);
+        renderTodos();
+      }
+    });
+  }
+}
+```
+
+## Keep initialization predictable
+
+Every app needs a clear place where setup happens.
+
+### Simple initialization flow
+
+```javascript
+function initializeApp() {
+  loadInitialState();
+  setupEventListeners();
+  render();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  initializeApp();
+});
+```
+
+This works well because the app has one clear entry point.
+
+### Class-based app wrapper
+
+```javascript
 class App {
   constructor() {
     this.state = {};
     this.components = {};
   }
-  
+
   init() {
     this.loadState();
     this.initComponents();
     this.setupEvents();
     this.render();
   }
-  
-  loadState() {
-    // Load from localStorage, API, etc.
-  }
-  
-  initComponents() {
-    // Initialize components
-  }
-  
-  setupEvents() {
-    // Setup event listeners
-  }
-  
-  render() {
-    // Initial render
-  }
+
+  loadState() {}
+  initComponents() {}
+  setupEvents() {}
+  render() {}
 }
 
-// Start app when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   const app = new App();
   app.init();
 });
 ```
 
-### Component pattern
+This is helpful when your app has multiple moving parts that need one owner.
+
+## Use progressive enhancement when possible
+
+A good frontend structure does not assume JavaScript is the only thing making the page usable.
+
+### Start with working HTML
+
+```html
+<form action="/api/submit" method="POST">
+  <input type="text" name="username" required />
+  <button type="submit">Submit</button>
+</form>
+```
+
+### Add JavaScript enhancements
 
 ```javascript
-// components/todo-list.js
+const form = document.querySelector("form");
+
+if (form) {
+  form.addEventListener("submit", event => {
+    event.preventDefault();
+    submitFormWithFeedback(form);
+  });
+}
+```
+
+This approach often improves resilience, accessibility, and long-term maintainability.
+
+## Common patterns
+
+### Component-style classes
+
+```javascript
 export class TodoList {
   constructor(container, todos) {
     this.container = container;
     this.todos = todos;
   }
-  
+
   render() {
-    this.container.innerHTML = '';
+    if (!this.container) {
+      return;
+    }
+
+    this.container.innerHTML = "";
+
     this.todos.forEach(todo => {
       const item = this.createTodoItem(todo);
       this.container.appendChild(item);
     });
   }
-  
+
   createTodoItem(todo) {
-    const li = document.createElement('li');
-    li.textContent = todo.text;
-    if (todo.completed) li.classList.add('completed');
-    return li;
+    const listItem = document.createElement("li");
+    listItem.textContent = todo.text;
+
+    if (todo.completed) {
+      listItem.classList.add("completed");
+    }
+
+    return listItem;
   }
 }
-
-// app.js
-import { TodoList } from './components/todo-list.js';
-
-const todoList = new TodoList(
-  document.querySelector('#todo-list'),
-  todos.items
-);
-todoList.render();
 ```
 
-### Service pattern
+Use this pattern when one piece of UI has its own rendering behavior and internal logic.
+
+### Service-style classes
 
 ```javascript
-// services/api.js
 export class ApiService {
   constructor(baseUrl) {
     this.baseUrl = baseUrl;
   }
-  
+
   async get(endpoint) {
     const response = await fetch(`${this.baseUrl}${endpoint}`);
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
     return response.json();
   }
-  
+
   async post(endpoint, data) {
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify(data)
     });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
     return response.json();
   }
 }
-
-// app.js
-import { ApiService } from './services/api.js';
-
-const api = new ApiService('https://api.example.com');
-const users = await api.get('/users');
 ```
 
-## Best practices
+Use this pattern when you want network logic in one clear place instead of spreading `fetch()` calls across the app.
 
-### 1. One responsibility per file
+## Practical best practices
+
+### Give each file one main responsibility
 
 ```javascript
-// Good: focused file
-// utils/formatting.js
-export function formatCurrency() { }
-export function formatDate() { }
-
-// Bad: everything in one file
-// utils.js
-export function formatCurrency() { }
-export function formatDate() { }
-export function apiCall() { }
-export function domManipulation() { }
-```
-
-### 2. Use descriptive file names
-
-```
 // Good
+// utils/formatting.js
+export function formatCurrency() {}
+export function formatDate() {}
+```
+
+```javascript
+// Harder to maintain
+// utils.js
+export function formatCurrency() {}
+export function formatDate() {}
+export function apiCall() {}
+export function domManipulation() {}
+```
+
+### Use descriptive file names
+
+```text
 todo-manager.js
 user-service.js
 form-validator.js
-
-// Bad
-stuff.js
-helpers.js
-utils.js
 ```
 
-### 3. Export what's needed
+Avoid vague names like `stuff.js` or giant catch-all files like `utils.js` when the project grows.
+
+### Export only what should be public
 
 ```javascript
-// Good: explicit exports
-export function publicFunction() { }
+export function publicFunction() {}
 export const publicConstant = 123;
 
-function privateFunction() { }  // Not exported
-
-// Bad: everything exported
-export function everything() { }
-export function isPublic() { }
+function privateFunction() {}
 ```
 
-### 4. Keep dependencies clear
+### Keep dependencies obvious
 
 ```javascript
-// Good: clear dependencies
-import { formatCurrency } from './utils/formatting.js';
-import { ApiService } from './services/api.js';
-
-// Bad: unclear where things come from
-import * from './utils.js';
+import { formatCurrency } from "./utils/formatting.js";
+import { ApiService } from "./services/api.js";
 ```
 
-### 5. Document structure
+This is easier to follow than broad imports that hide where things come from.
 
-```javascript
-/**
- * Manages todo items state and operations
- * @module todo/state
- */
+## Summary
 
-/**
- * Adds a new todo item
- * @param {string} text - Todo text
- */
-export function addTodo(text) {
-  // ...
-}
-```
+- Good structure makes frontend code easier to understand, change, and debug.
+- Separate state, DOM updates, events, and API work so each part has a clearer role.
+- Use modules and file organization that match the size and shape of the app.
+- Favor predictable initialization and simple boundaries over clever architecture.
+
+## Next steps
+
+Once your code is structured well, the next skill is finding problems quickly. Continue with [Debugging Frontend JavaScript](./debugging_frontend).
