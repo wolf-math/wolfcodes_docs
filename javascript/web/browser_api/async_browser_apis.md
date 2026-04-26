@@ -1,6 +1,6 @@
 ---
-title: Asynchronous Browser APIs
-sidebar_position: 9
+title: Timers, Scheduling, and Animation
+sidebar_position: 11
 author:
   name: Aaron Wolf
   url: https://wolfcodes.dev
@@ -11,162 +11,196 @@ source:
   canonical_url: https://wolfcodes.dev
 ---
 
-## Why async matters in the browser
+## What are timers, scheduling, and animation APIs?
 
-The browser needs to handle many things simultaneously: user input, animations, network requests, and more. **Asynchronous APIs** let JavaScript start operations and continue with other code while waiting for them to complete.
+**Timers, scheduling, and animation APIs** let JavaScript delay work, repeat work, or run code just before the browser paints the next frame. These are foundational Web APIs for building responsive interfaces.
 
-This prevents the browser from freezing while waiting for operations to finish.
+### Smallest working example
 
-## `setTimeout`
+```javascript
+console.log("Start");
 
-`setTimeout` executes code after a specified delay (in milliseconds).
+setTimeout(() => {
+  console.log("This runs later");
+}, 1000);
+
+console.log("End");
+```
+
+**What happens:**
+1. `"Start"` logs first.
+2. `"End"` logs right away.
+3. After about 1 second, `"This runs later"` logs.
+
+## Why this matters
+
+The browser often has to wait for something:
+
+- A delay before showing or hiding UI
+- Repeated updates like timers or polling
+- The next paint during an animation
+- A burst of user input that should not trigger heavy work every time
+
+If this work blocked the page, the UI would feel frozen.
+
+## `setTimeout()`
+
+`setTimeout()` runs code once after a delay.
 
 ### Basic usage
 
 ```javascript
-setTimeout(function() {
-  console.log('This runs after 1 second');
-}, 1000);  // 1000 milliseconds = 1 second
+setTimeout(() => {
+  console.log("This runs after 1 second");
+}, 1000);
 
-// Continue with other code immediately
-console.log('This runs immediately');
-// Output: "This runs immediately"
-// (after 1 second) "This runs after 1 second"
+console.log("This runs immediately");
 ```
 
 ### Clearing timeouts
 
-`setTimeout` returns an ID you can use to cancel it:
+`setTimeout()` returns an ID that you can cancel:
 
 ```javascript
-const timeoutId = setTimeout(function() {
-  console.log('This will not run');
+const timeoutId = setTimeout(() => {
+  console.log("This will not run");
 }, 5000);
 
-// Cancel it
 clearTimeout(timeoutId);
 ```
 
-### Common use cases
+### Common uses
 
 ```javascript
-// Show message temporarily
 function showMessage(message) {
-  const div = document.createElement('div');
-  div.textContent = message;
-  document.body.appendChild(div);
-  
-  setTimeout(() => {
-    div.remove();
-  }, 3000);  // Remove after 3 seconds
-}
+  const container = document.querySelector("#messages");
+  if (!container) {
+    return;
+  }
 
-// Delay an action
-button.addEventListener('click', function() {
+  const messageElement = document.createElement("div");
+  messageElement.textContent = message;
+  container.appendChild(messageElement);
+
   setTimeout(() => {
-    window.location.href = '/next-page';
-  }, 500);  // Navigate after 500ms
-});
+    messageElement.remove();
+  }, 3000);
+}
 ```
 
-## `setInterval`
+```javascript
+const button = document.querySelector("#next-button");
 
-`setInterval` executes code repeatedly at specified intervals.
+if (button) {
+  button.addEventListener("click", () => {
+    setTimeout(() => {
+      window.location.href = "/next-page";
+    }, 500);
+  });
+}
+```
+
+## `setInterval()`
+
+`setInterval()` runs code repeatedly after a fixed amount of time.
 
 ### Basic usage
 
 ```javascript
-setInterval(function() {
-  console.log('This runs every second');
+const intervalId = setInterval(() => {
+  console.log("This runs every second");
 }, 1000);
 ```
 
 ### Clearing intervals
 
 ```javascript
-const intervalId = setInterval(function() {
-  console.log('Ticking...');
+const intervalId = setInterval(() => {
+  console.log("Ticking...");
 }, 1000);
 
-// Stop after 10 seconds
 setTimeout(() => {
   clearInterval(intervalId);
 }, 10000);
 ```
 
-### Example: Countdown timer
+### Example: countdown timer
 
 ```javascript
 let count = 10;
+const timerElement = document.querySelector("#timer");
 
-const intervalId = setInterval(function() {
-  document.querySelector('#timer').textContent = count;
-  count--;
-  
+const intervalId = setInterval(() => {
+  if (!timerElement) {
+    clearInterval(intervalId);
+    return;
+  }
+
+  timerElement.textContent = `${count}`;
+  count -= 1;
+
   if (count < 0) {
     clearInterval(intervalId);
-    document.querySelector('#timer').textContent = 'Time\'s up!';
+    timerElement.textContent = "Time's up!";
   }
-}, 1000);  // Update every second
+}, 1000);
 ```
 
-## `requestAnimationFrame`
+:::tip
+Use `setTimeout()` for one future action and `setInterval()` for repeated actions.
+:::
 
-`requestAnimationFrame` is optimized for animations. It runs before the next browser repaint (usually 60 times per second).
+## `requestAnimationFrame()`
+
+`requestAnimationFrame()` asks the browser to run your code before the next repaint. It is the best default for visual animations.
 
 ### Basic usage
 
 ```javascript
+const box = document.querySelector("#box");
+let position = 0;
+
 function animate() {
-  // Update animation
-  element.style.left = position + 'px';
+  if (!box) {
+    return;
+  }
+
+  box.style.transform = `translateX(${position}px)`;
   position += 1;
-  
-  // Continue animation
+
   requestAnimationFrame(animate);
 }
 
-// Start animation
 requestAnimationFrame(animate);
 ```
 
-### Why use `requestAnimationFrame`?
+### Why use `requestAnimationFrame()`?
 
-- **Smooth animations** — synced with browser's refresh rate
-- **Performance** — browser optimizes it
-- **Battery efficient** — pauses when tab is hidden
-- **Better than `setInterval`** for animations
+- **Matches the browser's paint cycle**: smoother motion
+- **Improves efficiency**: the browser can optimize when it runs
+- **Pauses in hidden tabs**: better battery usage than many timer loops
 
-### Example: Smooth movement
+### Example: stop an animation
 
 ```javascript
+const box = document.querySelector("#box");
 let position = 0;
+let animationId = 0;
 
-function move() {
+function animate() {
+  if (!box) {
+    return;
+  }
+
   position += 2;
-  element.style.transform = `translateX(${position}px)`;
-  
+  box.style.transform = `translateX(${position}px)`;
+
   if (position < 500) {
-    requestAnimationFrame(move);
+    animationId = requestAnimationFrame(animate);
   }
 }
 
-requestAnimationFrame(move);
-```
-
-### Stopping animations
-
-```javascript
-let animationId;
-
 function startAnimation() {
-  function animate() {
-    // Update animation
-    updatePosition();
-    
-    animationId = requestAnimationFrame(animate);
-  }
-  
   animationId = requestAnimationFrame(animate);
 }
 
@@ -175,54 +209,61 @@ function stopAnimation() {
 }
 ```
 
-## Debouncing and throttling (conceptual)
+## Related patterns: debouncing and throttling
 
-These patterns limit how often functions execute, which is important for performance.
+These are patterns for limiting how often a function runs.
 
 ### Debouncing
 
-**Debouncing** delays function execution until the user stops performing the action.
+**Debouncing** waits until the user stops triggering the action for a certain amount of time.
 
-**Use case:** Search input that queries API as user types.
+Use it for:
+- Search inputs
+- Auto-save after typing
+- Resize handling when you only care about the final size
 
 ```javascript
 function debounce(func, delay) {
   let timeoutId;
-  return function(...args) {
-    clearTimeout(timeoutId);  // Cancel previous timeout
+
+  return function (...args) {
+    clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
       func.apply(this, args);
     }, delay);
   };
 }
 
-// Usage
-const searchInput = document.querySelector('#search');
-const debouncedSearch = debounce(function(query) {
-  console.log('Searching for:', query);
-  // Make API call
-}, 300);  // Wait 300ms after user stops typing
+const searchInput = document.querySelector("#search");
+const debouncedSearch = debounce(query => {
+  console.log("Searching for:", query);
+}, 300);
 
-searchInput.addEventListener('input', function() {
-  debouncedSearch(this.value);
-});
+if (searchInput) {
+  searchInput.addEventListener("input", () => {
+    debouncedSearch(searchInput.value);
+  });
+}
 ```
-
-**How it works:** Each time the user types, the previous timeout is cancelled and a new one starts. The function only runs after the user stops typing for 300ms.
 
 ### Throttling
 
-**Throttling** limits function execution to at most once per time period.
+**Throttling** limits a function so it runs at most once during a time window.
 
-**Use case:** Scroll events that trigger expensive operations.
+Use it for:
+- Scroll handlers
+- Mouse movement tracking
+- Resize handlers that update layout while resizing
 
 ```javascript
 function throttle(func, limit) {
-  let inThrottle;
-  return function(...args) {
+  let inThrottle = false;
+
+  return function (...args) {
     if (!inThrottle) {
       func.apply(this, args);
       inThrottle = true;
+
       setTimeout(() => {
         inThrottle = false;
       }, limit);
@@ -230,61 +271,41 @@ function throttle(func, limit) {
   };
 }
 
-// Usage
-const throttledScroll = throttle(function() {
-  console.log('Scrolled');
-  // Expensive operation
-}, 100);  // Run at most once per 100ms
+const throttledScroll = throttle(() => {
+  console.log("Scrolled");
+}, 100);
 
-window.addEventListener('scroll', throttledScroll);
+window.addEventListener("scroll", throttledScroll);
 ```
 
-**How it works:** The function runs immediately, then ignores all calls for the next 100ms. After 100ms, it can run again.
+### Choosing between them
 
-### When to use each
-
-- **Debounce** — wait for user to finish (search, resize, typing)
-- **Throttle** — limit frequency (scroll, mousemove, resize)
+- **Use debounce** when only the final action matters
+- **Use throttle** when regular updates matter but full frequency is too expensive
 
 ## Common patterns
 
-### Delayed execution
+### Delayed tooltip
 
 ```javascript
-// Show tooltip after delay
-let tooltipTimeout;
+const element = document.querySelector("#help-icon");
+let tooltipTimeoutId = 0;
 
-element.addEventListener('mouseenter', function() {
-  tooltipTimeout = setTimeout(() => {
-    showTooltip();
-  }, 500);  // Show after 500ms
-});
+function showTooltip() {}
+function hideTooltip() {}
 
-element.addEventListener('mouseleave', function() {
-  clearTimeout(tooltipTimeout);
-  hideTooltip();
-});
-```
+if (element) {
+  element.addEventListener("mouseenter", () => {
+    tooltipTimeoutId = setTimeout(() => {
+      showTooltip();
+    }, 500);
+  });
 
-### Polling
-
-```javascript
-// Check for updates every 5 seconds
-function pollForUpdates() {
-  fetch('/api/updates')
-    .then(response => response.json())
-    .then(data => {
-      updateUI(data);
-    });
+  element.addEventListener("mouseleave", () => {
+    clearTimeout(tooltipTimeoutId);
+    hideTooltip();
+  });
 }
-```
-
-Learn more about the [`fetch` API](/docs/javascript/web/browser_api/networking) for making HTTP requests.
-
-const pollInterval = setInterval(pollForUpdates, 5000);
-
-// Stop polling when needed
-clearInterval(pollInterval);
 ```
 
 ### Animation loop
@@ -292,18 +313,24 @@ clearInterval(pollInterval);
 ```javascript
 let animationRunning = false;
 
+function updateAnimation() {}
+
 function animate() {
-  if (!animationRunning) return;
-  
-  // Update animation
+  if (!animationRunning) {
+    return;
+  }
+
   updateAnimation();
-  
   requestAnimationFrame(animate);
 }
 
 function startAnimation() {
+  if (animationRunning) {
+    return;
+  }
+
   animationRunning = true;
-  animate();
+  requestAnimationFrame(animate);
 }
 
 function stopAnimation() {
@@ -311,53 +338,93 @@ function stopAnimation() {
 }
 ```
 
-## Performance considerations
+## Common pitfalls
 
-### Avoid too many timers
+### Forgetting to clean up timers
 
 ```javascript
-// Bad: creates many timers
+function updateClock() {}
+
+// Bad: starts a timer and never stops it
+const intervalId = setInterval(() => {
+  updateClock();
+}, 1000);
+```
+
+```javascript
+function updateClock() {}
+
+// Good: keep the ID so you can stop it later
+const intervalId = setInterval(() => {
+  updateClock();
+}, 1000);
+
+function cleanup() {
+  clearInterval(intervalId);
+}
+```
+
+### Using `setInterval()` for animations
+
+```javascript
+function animate() {}
+
+// Less ideal for visual animation
+setInterval(() => {
+  animate();
+}, 16);
+```
+
+```javascript
+function updateAnimation() {}
+
+// Better for visual animation
+function animate() {
+  updateAnimation();
+  requestAnimationFrame(animate);
+}
+```
+
+### Starting too many timers
+
+```javascript
+const elements = document.querySelectorAll(".item");
+
+function updateElement(element) {
+  console.log(element);
+}
+
+// Bad: one interval per element
 elements.forEach(element => {
   setInterval(() => {
     updateElement(element);
   }, 1000);
 });
+```
 
-// Good: single timer updates all
+```javascript
+const elements = document.querySelectorAll(".item");
+
+function updateElement(element) {
+  console.log(element);
+}
+
+// Better: one interval updates everything
 setInterval(() => {
   elements.forEach(updateElement);
 }, 1000);
 ```
 
-### Clean up timers
+## Summary
 
-```javascript
-// Remember to clean up
-const timeouts = [];
+- Use `setTimeout()` for one delayed action.
+- Use `setInterval()` for repeated work, but remember to stop it when you no longer need it.
+- Use `requestAnimationFrame()` for visual animation instead of timer-based loops.
+- Use debounce and throttle when repeated events would otherwise run too often.
 
-function scheduleAction(callback, delay) {
-  const id = setTimeout(callback, delay);
-  timeouts.push(id);
-  return id;
-}
+## Next up
 
-function cleanup() {
-  timeouts.forEach(clearTimeout);
-  timeouts.length = 0;
-}
-```
-
-### Use `requestAnimationFrame` for animations
-
-```javascript
-// Bad: use setInterval for animations
-setInterval(() => {
-  animate();
-}, 16);  // ~60fps but not synced
-
-// Good: use requestAnimationFrame
-function animate() {
-  // Animation code
-  requestAnimationFrame(animate);
-}
-```
+- [How JavaScript Processes Code](./how_js_processes_code)
+- [Fetch API](./networking)
+- [Web Storage](./browser_storage)
+- [Events](../events/dom_events)

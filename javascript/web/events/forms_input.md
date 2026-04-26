@@ -540,4 +540,4 @@ function previousStep() {
 
 - [Events](./dom_events)
 - [Selecting elements](../dom/selecting_elements)
-- [Networking](../browser_api/networking)
+- [Fetch API](../browser_api/networking)

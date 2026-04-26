@@ -1,6 +1,6 @@
 ---
-title: Browser Storage
-sidebar_position: 11
+title: Web Storage
+sidebar_position: 13
 author:
   name: Aaron Wolf
   url: https://wolfcodes.dev
@@ -11,275 +11,229 @@ source:
   canonical_url: https://wolfcodes.dev
 ---
 
-## Localstorage
+## What is web storage?
 
-`localStorage` stores data in the browser that persists even after the browser is closed.
+**Web storage** lets your JavaScript save small amounts of data in the browser. The two main APIs are `localStorage` and `sessionStorage`.
+
+### Smallest working example
+
+```javascript
+localStorage.setItem("theme", "dark");
+
+const theme = localStorage.getItem("theme");
+console.log(theme); // "dark"
+```
+
+## Why this matters
+
+Web storage is useful when your page needs to remember something:
+
+- User preferences like theme or language
+- Draft form values
+- Small pieces of UI state
+- Data that should survive a refresh
+
+## `localStorage`
+
+`localStorage` stores data that stays available after the browser is closed and reopened.
 
 ### Basic usage
 
 ```javascript
-// Save data
-localStorage.setItem('username', 'Alice');
-localStorage.setItem('theme', 'dark');
+localStorage.setItem("username", "Alice");
+localStorage.setItem("theme", "dark");
 
-// Read data
-const username = localStorage.getItem('username');
-console.log(username);  // "Alice"
+const username = localStorage.getItem("username");
+console.log(username); // "Alice"
 
-// Remove data
-localStorage.removeItem('username');
-
-// Clear all
+localStorage.removeItem("username");
 localStorage.clear();
 ```
 
 ### Storing objects
 
-`localStorage` only stores strings. Store objects as JSON:
+`localStorage` only stores strings, so objects need JSON:
 
 ```javascript
 const user = {
-  name: 'Alice',
-  email: 'alice@example.com',
-  preferences: { theme: 'dark' }
+  name: "Alice",
+  email: "alice@example.com",
+  preferences: {
+    theme: "dark"
+  }
 };
 
-// Save (convert to JSON)
-localStorage.setItem('user', JSON.stringify(user));
+localStorage.setItem("user", JSON.stringify(user));
 
-// Read (parse JSON)
-const savedUser = JSON.parse(localStorage.getItem('user'));
-console.log(savedUser.name);  // "Alice"
+const rawUser = localStorage.getItem("user");
+if (rawUser) {
+  const savedUser = JSON.parse(rawUser);
+  console.log(savedUser.name);
+}
 ```
 
-### Checking if key exists
+### Checking whether a key exists
 
 ```javascript
-const username = localStorage.getItem('username');
-if (username) {
-  console.log('Username:', username);
+const username = localStorage.getItem("username");
+
+if (username !== null) {
+  console.log("Username:", username);
 } else {
-  console.log('No username stored');
-}
-
-// Or check if null
-if (localStorage.getItem('username') !== null) {
-  // Key exists
+  console.log("No username stored");
 }
 ```
 
-## Sessionstorage
+## `sessionStorage`
 
-`sessionStorage` works like `localStorage`, but data only lasts for the browser tab session (cleared when tab closes).
-
-### Usage
+`sessionStorage` uses the same API as `localStorage`, but its data lasts only for the current browser tab session.
 
 ```javascript
-// Same API as localStorage
-sessionStorage.setItem('tempData', 'value');
-const data = sessionStorage.getItem('tempData');
-sessionStorage.removeItem('tempData');
+sessionStorage.setItem("tempData", "value");
+
+const data = sessionStorage.getItem("tempData");
+console.log(data);
+
+sessionStorage.removeItem("tempData");
 ```
 
-### When to use sessionStorage
+## Choosing the right storage
 
-- Temporary data that shouldn't persist
-- Data specific to one tab/session
-- Sensitive data (automatically cleared when tab closes)
+- **Use `localStorage`** when the data should still be there after the browser closes
+- **Use `sessionStorage`** when the data should belong only to the current tab session
+- **Use plain JavaScript variables** when the data only needs to exist while the page is open
+- **Use IndexedDB** when the data is larger, more structured, or more complex than simple key-value storage
+
+:::tip
+Rule of thumb: if you only need to store a few strings or small JSON objects, `localStorage` is often enough. If you start storing lots of records or more complex app data, Web Storage is probably the wrong tool.
+:::
 
 ## When storage is appropriate
 
-### Good use cases
+Good fits for Web Storage:
 
-✅ **User preferences** — theme, language, settings  
-✅ **Form drafts** — save progress before submission  
-✅ **Shopping cart** — persist cart between sessions  
-✅ **Authentication tokens** — remember login (though be careful with security)  
-✅ **Application state** — save UI state (scroll position, filters)
+- User preferences
+- Draft form data
+- Small persisted app state
+- Shopping cart state for simple apps
 
-### Not appropriate
+Poor fits for Web Storage:
 
-❌ **Large data** — localStorage has size limits (~5-10MB)  
-❌ **Sensitive data** — passwords, credit cards (use secure server storage)  
-❌ **Temporary data** — use variables or sessionStorage  
-❌ **Frequently changing data** — can be slow
+- Large datasets
+- Sensitive information like passwords
+- Frequently changing high-volume data
+- Complex relational or offline-first application data
 
 ## Persisting application state
 
-Save and restore application state:
-
 ```javascript
-// Save state
-function saveState() {
+function saveState(todos, currentTheme) {
   const state = {
-    todos: todos.items,
+    items: todos.items,
     filter: todos.filter,
     theme: currentTheme
   };
-  localStorage.setItem('appState', JSON.stringify(state));
+
+  localStorage.setItem("appState", JSON.stringify(state));
 }
 
-// Load state
 function loadState() {
-  const saved = localStorage.getItem('appState');
-  if (saved) {
-    const state = JSON.parse(saved);
-    todos.items = state.todos || [];
-    todos.filter = state.filter || 'all';
-    currentTheme = state.theme || 'light';
-    renderTodos();
+  const saved = localStorage.getItem("appState");
+  if (!saved) {
+    return null;
   }
-}
 
-// Save on every change
-function addTodo(text) {
-  todos.items.push({ id: Date.now(), text, completed: false });
-  renderTodos();
-  saveState();  // Persist to localStorage
+  return JSON.parse(saved);
 }
-
-// Load on page load
-window.addEventListener('DOMContentLoaded', loadState);
 ```
 
-### Example: Save form drafts
+### Example: save a form draft
 
 ```javascript
-const form = document.querySelector('#contact-form');
+const form = document.querySelector("#contact-form");
 
-// Save form data as user types
-form.addEventListener('input', function() {
-  const formData = new FormData(form);
-  const data = Object.fromEntries(formData);
-  localStorage.setItem('formDraft', JSON.stringify(data));
-});
+if (form) {
+  form.addEventListener("input", () => {
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    localStorage.setItem("formDraft", JSON.stringify(data));
+  });
 
-// Load saved draft
-const draft = localStorage.getItem('formDraft');
-if (draft) {
-  const data = JSON.parse(draft);
-  Object.keys(data).forEach(key => {
-    const input = form.querySelector(`[name="${key}"]`);
-    if (input) input.value = data[key];
+  const draft = localStorage.getItem("formDraft");
+  if (draft) {
+    const data = JSON.parse(draft);
+
+    Object.keys(data).forEach(key => {
+      const input = form.querySelector(`[name="${key}"]`);
+      if (input) {
+        input.value = data[key];
+      }
+    });
+  }
+
+  form.addEventListener("submit", () => {
+    localStorage.removeItem("formDraft");
   });
 }
-
-// Clear draft on submit
-form.addEventListener('submit', function() {
-  localStorage.removeItem('formDraft');
-});
 ```
 
 ## Storage events
 
-Listen for storage changes (useful for syncing between tabs):
+The browser can tell other tabs when storage changed:
 
 ```javascript
-window.addEventListener('storage', function(e) {
-  console.log('Storage changed:', e.key);
-  console.log('Old value:', e.oldValue);
-  console.log('New value:', e.newValue);
-  
-  // Update UI if key changed
-  if (e.key === 'theme') {
-    updateTheme(e.newValue);
-  }
+window.addEventListener("storage", event => {
+  console.log("Storage changed:", event.key);
+  console.log("Old value:", event.oldValue);
+  console.log("New value:", event.newValue);
 });
 ```
 
-**Note:** Storage events only fire in **other tabs/windows**, not the one that made the change.
+:::note
+The `storage` event fires in other tabs or windows, not in the same tab that made the change.
+:::
 
-## Storage limitations
+## Limitations and errors
 
 ### Size limits
 
-- **localStorage/sessionStorage**: ~5-10MB per origin (varies by browser)
-- **Exceeding limit**: throws `QuotaExceededError`
+Web Storage is intentionally small:
 
-### Handling quota errors
+- `localStorage` / `sessionStorage` are usually around 5-10 MB per origin
+- Limits vary by browser
+- Going over the limit throws a `QuotaExceededError`
+
+### Handling storage failures
 
 ```javascript
 try {
-  localStorage.setItem('largeData', largeString);
-} catch (e) {
-  if (e.name === 'QuotaExceededError') {
-    console.error('Storage quota exceeded');
-    // Handle: clear old data, compress, etc.
+  localStorage.setItem("largeData", largeString);
+} catch (error) {
+  if (error.name === "QuotaExceededError") {
+    console.error("Storage quota exceeded");
   }
 }
 ```
 
-### Privacy mode
+### Checking availability
 
-Some browsers disable localStorage in private/incognito mode:
+Some environments or privacy modes may restrict storage:
 
 ```javascript
 function isStorageAvailable() {
   try {
-    localStorage.setItem('test', 'test');
-    localStorage.removeItem('test');
+    localStorage.setItem("test", "test");
+    localStorage.removeItem("test");
     return true;
-  } catch (e) {
+  } catch (error) {
     return false;
   }
-}
-
-if (isStorageAvailable()) {
-  // Use localStorage
-} else {
-  // Fallback to sessionStorage or memory
 }
 ```
 
 ## Best practices
 
-### 1. Use `try`/`catch`
-
-```javascript
-try {
-  localStorage.setItem('key', 'value');
-} catch (e) {
-  console.error('Failed to save:', e);
-}
-```
-
-### 2. Check before reading
-
-```javascript
-const data = localStorage.getItem('key');
-if (data) {
-  const parsed = JSON.parse(data);
-  // Use parsed data
-}
-```
-
-### 3. Don't store sensitive data
-
-```javascript
-// Bad: storing passwords
-localStorage.setItem('password', password);  // DON'T DO THIS!
-
-// Good: store only what's necessary
-localStorage.setItem('username', username);
-// Password handled by server
-```
-
-### 4. Clean up old data
-
-```javascript
-function cleanupOldData() {
-  const keys = Object.keys(localStorage);
-  keys.forEach(key => {
-    const data = localStorage.getItem(key);
-    // Check if data is old/stale
-    if (isStale(data)) {
-      localStorage.removeItem(key);
-    }
-  });
-}
-```
-
-### 5. Use helper functions
+### Wrap storage access in helpers
 
 ```javascript
 const storage = {
@@ -287,32 +241,61 @@ const storage = {
     try {
       localStorage.setItem(key, JSON.stringify(value));
       return true;
-    } catch (e) {
-      console.error('Storage error:', e);
+    } catch (error) {
+      console.error("Storage error:", error);
       return false;
     }
   },
-  
+
   get(key) {
     try {
       const item = localStorage.getItem(key);
       return item ? JSON.parse(item) : null;
-    } catch (e) {
-      console.error('Storage error:', e);
+    } catch (error) {
+      console.error("Storage error:", error);
       return null;
     }
   },
-  
+
   remove(key) {
     localStorage.removeItem(key);
-  },
-  
-  clear() {
-    localStorage.clear();
   }
 };
-
-// Usage
-storage.set('user', { name: 'Alice' });
-const user = storage.get('user');
 ```
+
+### Do not store sensitive data
+
+```javascript
+// Bad
+localStorage.setItem("password", password);
+```
+
+```javascript
+// Better
+localStorage.setItem("username", username);
+```
+
+### Expect stale or missing data
+
+```javascript
+const settings = storage.get("settings");
+
+if (settings) {
+  applySettings(settings);
+} else {
+  applyDefaultSettings();
+}
+```
+
+## Summary
+
+- Web Storage gives you simple browser-side key-value storage.
+- Use `localStorage` for data that should survive browser restarts and `sessionStorage` for tab-scoped data.
+- Store objects as JSON strings and parse them when reading.
+- Web Storage is best for small, simple data, not large or sensitive information.
+
+## Next up
+
+- [Fetch API](./networking)
+- [Application State in the Browser](../state/application_state)
+- [Forms and User Input](../events/forms_input)

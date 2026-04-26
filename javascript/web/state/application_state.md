@@ -466,7 +466,7 @@ This example uses a full re-render after each change because it is simple and ea
 - **Use `localStorage`** when you need state to survive page refreshes
 - **Use a framework or state library** when the UI becomes large and many parts of the app share the same data
 
-Learn more about persistence in the [browser storage guide](../browser_api/browser_storage).
+Learn more about persistence in the [Web Storage guide](../browser_api/browser_storage).
 
 ## Summary
 
@@ -477,6 +477,6 @@ Learn more about persistence in the [browser storage guide](../browser_api/brows
 
 ## Next up
 
-- [Browser storage](../browser_api/browser_storage)
+- [Web Storage](../browser_api/browser_storage)
 - [Events](../events/dom_events)
 - [Manipulating the DOM](../dom/manipulating_dom)

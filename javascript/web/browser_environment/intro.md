@@ -142,9 +142,9 @@ if (button) {
 }
 ```
 
-### Browser APIs
+### Web APIs
 
-Browsers provide many APIs:
+Browsers provide many Web APIs:
 
 - **Fetch API** — make HTTP requests
 - **Storage APIs** — `localStorage` and `sessionStorage`
@@ -153,7 +153,7 @@ Browsers provide many APIs:
 - **WebSockets** — real-time communication
 - And many more...
 
-These are **browser features**, not JavaScript language features. They're only available when JavaScript runs in a browser.
+These are **web platform features**, not JavaScript language features. They're only available when JavaScript runs in a browser.
 
 ## JavaScript vs the web platform
 
