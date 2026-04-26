@@ -11,9 +11,27 @@ source:
   canonical_url: https://wolfcodes.dev
 ---
 
+## What does it mean to select elements?
+
+**Selecting elements** means asking the browser for one or more elements from the DOM so your JavaScript can read them, update them, or attach event listeners.
+
+### Smallest working example
+
+```html
+<button id="saveButton">Save</button>
+```
+
+```javascript
+const button = document.querySelector("#saveButton");
+
+if (button) {
+  button.textContent = "Saved";
+}
+```
+
 ## Why selecting elements matters
 
-Before you can manipulate elements with JavaScript, you need to **select** them—get a reference to the element(s) you want to work with.
+Before you can manipulate elements with JavaScript, you need to select them and store a reference.
 
 JavaScript provides several methods for selecting elements, each with different use cases.
 
@@ -26,8 +44,11 @@ Selects a **single element** by its `id` attribute.
 ```
 
 ```javascript
-const button = document.getElementById('myButton');
-button.textContent = 'Clicked!';
+const button = document.getElementById("myButton");
+
+if (button) {
+  button.textContent = "Clicked!";
+}
 ```
 
 **Returns:** A single element (or `null` if not found)
@@ -47,12 +68,12 @@ Selects **all elements** with a specific class name.
 ```
 
 ```javascript
-const items = document.getElementsByClassName('item');
-console.log(items.length);  // 3
+const items = document.getElementsByClassName("item");
+console.log(items.length); // 3
 
 // Loop through items
 for (let i = 0; i < items.length; i++) {
-  items[i].style.color = 'blue';
+  items[i].style.color = "blue";
 }
 ```
 
@@ -73,10 +94,10 @@ Selects **all elements** with a specific tag name.
 ```
 
 ```javascript
-const paragraphs = document.getElementsByTagName('p');
-console.log(paragraphs.length);  // 3
+const paragraphs = document.getElementsByTagName("p");
+console.log(paragraphs.length); // 3
 
-paragraphs[0].textContent = 'First paragraph';
+paragraphs[0].textContent = "First paragraph";
 ```
 
 **Returns:** A **live HTMLCollection**
@@ -96,17 +117,19 @@ Selects the **first element** matching a CSS selector.
 
 ```javascript
 // Select by class
-const first = document.querySelector('.highlight');
-console.log(first.textContent);  // "First paragraph"
+const first = document.querySelector(".highlight");
+if (first) {
+  console.log(first.textContent); // "First paragraph"
+}
 
 // Select by ID
-const container = document.querySelector('#container');
+const container = document.querySelector("#container");
 
 // Select by tag
-const div = document.querySelector('div');
+const div = document.querySelector("div");
 
 // Complex selectors
-const firstInContainer = document.querySelector('.container .highlight');
+const firstInContainer = document.querySelector(".container .highlight");
 ```
 
 **Returns:** A single element (or `null` if not found)
@@ -127,16 +150,16 @@ Selects **all elements** matching a CSS selector.
 
 ```javascript
 // Select all items
-const items = document.querySelectorAll('.item');
-console.log(items.length);  // 3
+const items = document.querySelectorAll(".item");
+console.log(items.length); // 3
 
 // Select specific items
-const special = document.querySelectorAll('.item.special');
-console.log(special.length);  // 1
+const special = document.querySelectorAll(".item.special");
+console.log(special.length); // 1
 
 // Use forEach (works with NodeList)
 items.forEach(item => {
-  item.style.color = 'blue';
+  item.style.color = "blue";
 });
 ```
 
@@ -156,13 +179,13 @@ CSS selectors are powerful and flexible:
 
 ```javascript
 // Select first child
-document.querySelector('.container > :first-child');
+document.querySelector(".container > :first-child");
 
 // Select elements with attribute
 document.querySelector('[data-id="123"]');
 
 // Select based on multiple conditions
-document.querySelector('button.primary:not(.disabled)');
+document.querySelector("button.primary:not(.disabled)");
 ```
 
 ### 2. Consistency
@@ -171,10 +194,10 @@ Both methods use the same selector syntax:
 
 ```javascript
 // Single element
-document.querySelector('.item');
+document.querySelector(".item");
 
 // Multiple elements
-document.querySelectorAll('.item');
+document.querySelectorAll(".item");
 ```
 
 ### 3. Works with NodeList
@@ -182,7 +205,7 @@ document.querySelectorAll('.item');
 `querySelectorAll` returns a NodeList that supports `forEach`:
 
 ```javascript
-document.querySelectorAll('.item').forEach(item => {
+document.querySelectorAll(".item").forEach(item => {
   console.log(item.textContent);
 });
 ```
@@ -193,19 +216,27 @@ Most modern code uses `querySelector`/`querySelectorAll`.
 
 **Recommendation:** Use `querySelector`/`querySelectorAll` for most cases. Use `getElementById` when you specifically need the fastest ID lookup (though the difference is usually negligible).
 
+:::tip
+Rule of thumb: use `querySelector()` for one element, `querySelectorAll()` for multiple elements, and `getElementById()` when an ID lookup is the clearest choice.
+:::
+
 ## Common mistakes when selecting elements
 
 ### Mistake 1: Forgetting elements might not exist
 
 ```javascript
 // Bad: assumes element exists
-const button = document.getElementById('myButton');
-button.addEventListener('click', handler);  // Error if button is null!
+const button = document.getElementById("myButton");
+button.addEventListener("click", () => {
+  console.log("Clicked");
+}); // Error if button is null!
 
 // Good: check first
-const button = document.getElementById('myButton');
+const button = document.getElementById("myButton");
 if (button) {
-  button.addEventListener('click', handler);
+  button.addEventListener("click", () => {
+    console.log("Clicked");
+  });
 }
 ```
 
@@ -213,15 +244,15 @@ if (button) {
 
 ```javascript
 // Bad: HTMLCollection doesn't have forEach
-const items = document.getElementsByClassName('item');
-items.forEach(item => { });  // Error!
+const items = document.getElementsByClassName("item");
+items.forEach(item => {}); // Error!
 
 // Good: convert to array or use querySelectorAll
-const items = Array.from(document.getElementsByClassName('item'));
-items.forEach(item => { });
+const itemsArray = Array.from(document.getElementsByClassName("item"));
+itemsArray.forEach(item => {});
 
 // Or use querySelectorAll (NodeList has forEach)
-document.querySelectorAll('.item').forEach(item => { });
+document.querySelectorAll(".item").forEach(item => {});
 ```
 
 ### Mistake 3: Selecting before DOM is ready
@@ -229,7 +260,7 @@ document.querySelectorAll('.item').forEach(item => { });
 ```javascript
 // Bad: script runs before DOM loads
 <script>
-  const button = document.getElementById('myButton');  // null!
+  const button = document.getElementById("myButton"); // null!
 </script>
 <body>
   <button id="myButton">Click</button>
@@ -237,8 +268,8 @@ document.querySelectorAll('.item').forEach(item => { });
 
 // Good: wait for DOM
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const button = document.getElementById('myButton');
+  document.addEventListener("DOMContentLoaded", () => {
+    const button = document.getElementById("myButton");
   });
 </script>
 ```
@@ -247,31 +278,31 @@ document.querySelectorAll('.item').forEach(item => { });
 
 ```javascript
 // Bad: wrong syntax for querySelector
-document.querySelector('getElementById');  // Looking for element with tag name!
+document.querySelector("getElementById"); // Looking for element with tag name!
 
 // Good: use CSS selector syntax
-document.querySelector('#myId');
-document.querySelector('.myClass');
-document.querySelector('div');
+document.querySelector("#myId");
+document.querySelector(".myClass");
+document.querySelector("div");
 ```
 
 ### Mistake 5: Expecting live updates with querySelectorAll
 
 ```javascript
 // querySelectorAll returns static collection
-const items = document.querySelectorAll('.item');
-console.log(items.length);  // 3
+const items = document.querySelectorAll(".item");
+console.log(items.length); // 3
 
 // Add new item
-const newItem = document.createElement('div');
-newItem.className = 'item';
+const newItem = document.createElement("div");
+newItem.className = "item";
 document.body.appendChild(newItem);
 
-console.log(items.length);  // Still 3! (static snapshot)
+console.log(items.length); // Still 3! (static snapshot)
 
 // If you need live updates, use getElementsByClassName
-const liveItems = document.getElementsByClassName('item');
-console.log(liveItems.length);  // 4 (live collection)
+const liveItems = document.getElementsByClassName("item");
+console.log(liveItems.length); // 4 (live collection)
 ```
 
 ## Working with selected elements
@@ -279,32 +310,34 @@ console.log(liveItems.length);  // 4 (live collection)
 ### Single element
 
 ```javascript
-const button = document.querySelector('button');
+const button = document.querySelector("button");
 
-// Modify it
-button.textContent = 'New text';
-button.style.color = 'red';
-button.classList.add('active');
+if (button) {
+  // Modify it
+  button.textContent = "New text";
+  button.style.color = "red";
+  button.classList.add("active");
+}
 ```
 
 ### Multiple elements
 
 ```javascript
 // Method 1: Loop with for
-const items = document.querySelectorAll('.item');
+const items = document.querySelectorAll(".item");
 for (let i = 0; i < items.length; i++) {
-  items[i].style.color = 'blue';
+  items[i].style.color = "blue";
 }
 
 // Method 2: forEach (preferred)
-document.querySelectorAll('.item').forEach(item => {
-  item.style.color = 'blue';
+document.querySelectorAll(".item").forEach(item => {
+  item.style.color = "blue";
 });
 
 // Method 3: Convert to array
-const items = Array.from(document.querySelectorAll('.item'));
-items.forEach(item => {
-  item.style.color = 'blue';
+const itemsArray = Array.from(document.querySelectorAll(".item"));
+itemsArray.forEach(item => {
+  item.style.color = "blue";
 });
 ```
 
@@ -315,13 +348,18 @@ items.forEach(item => {
 ```javascript
 // Bad: querying repeatedly
 for (let i = 0; i < 1000; i++) {
-  document.querySelector('.item').style.color = 'red';  // Queries 1000 times!
+  const item = document.querySelector(".item");
+  if (item) {
+    item.style.color = "red"; // Queries 1000 times!
+  }
 }
 
 // Good: query once
-const item = document.querySelector('.item');
-for (let i = 0; i < 1000; i++) {
-  item.style.color = 'red';
+const item = document.querySelector(".item");
+if (item) {
+  for (let i = 0; i < 1000; i++) {
+    item.style.color = "red";
+  }
 }
 ```
 
@@ -329,10 +367,10 @@ for (let i = 0; i < 1000; i++) {
 
 ```javascript
 // Slower: searches entire document
-document.querySelector('.item');
+document.querySelector(".item");
 
 // Faster: more specific (if possible)
-document.querySelector('#container .item');
+document.querySelector("#container .item");
 ```
 
 ### Use getElementById for IDs
@@ -341,8 +379,20 @@ For simple ID lookups, `getElementById` is slightly faster:
 
 ```javascript
 // Fastest for IDs
-document.getElementById('myId');
+document.getElementById("myId");
 
 // Also works, but slightly slower
-document.querySelector('#myId');
+document.querySelector("#myId");
 ```
+
+## Summary
+
+- Selecting elements means getting references to DOM elements so your JavaScript can work with them.
+- Use `querySelector()` and `querySelectorAll()` as the default modern tools for most cases.
+- Always remember that single-element selectors can return `null`, so check before you use the result.
+
+## Next up
+
+- [DOM introduction](/Users/aaron/code/wolf_codes/docs/javascript/web/dom/dom_intro.md)
+- [Manipulating the DOM](/Users/aaron/code/wolf_codes/docs/javascript/web/dom/manipulating_dom.md)
+- [DOM events](/Users/aaron/code/wolf_codes/docs/javascript/web/events/dom_events.md)

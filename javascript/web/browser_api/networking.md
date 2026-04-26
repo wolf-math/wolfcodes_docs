@@ -1,6 +1,6 @@
 ---
-title: Networking
-sidebar_position: 10
+title: Fetch API
+sidebar_position: 12
 author:
   name: Aaron Wolf
   url: https://wolfcodes.dev
@@ -11,79 +11,68 @@ source:
   canonical_url: https://wolfcodes.dev
 ---
 
-## The `fetch` API
+## What is the `fetch()` API?
 
-The **Fetch API** is the modern way to make HTTP requests in the browser. It uses [promises](/docs/javascript/guides/async/promises), making it clean and easy to work with.
+The **`fetch()` API** is the standard way to make HTTP requests in the browser. It lets your JavaScript load data from a server, send form data, and react to responses without reloading the page.
 
-```javascript
-fetch('https://api.example.com/data')
-  .then(response => response.json())
-  .then(data => {
-    console.log(data);
-  });
-```
-
-## Making get requests
-
-The simplest use of `fetch` is getting data:
+### Smallest working example
 
 ```javascript
-fetch('https://api.example.com/users')
+fetch("/api/users")
   .then(response => response.json())
   .then(users => {
     console.log(users);
-    // Display users in UI
   });
 ```
 
-### Handling the response
+## Why this matters
 
-The `fetch` promise resolves with a `Response` object:
+Most modern web apps need to load or send data:
+
+- Load a list of users, posts, or products
+- Submit a form without a full page refresh
+- Save changes to the server
+- Poll for updates in the background
+
+## Making a basic request
+
+The simplest use of `fetch()` is a `GET` request:
 
 ```javascript
-fetch('https://api.example.com/data')
-  .then(response => {
-    console.log(response.status);    // 200, 404, etc.
-    console.log(response.ok);        // true if status 200-299
-    console.log(response.headers);   // Response headers
-    
-    return response.json();  // Parse as JSON
-  })
-  .then(data => {
-    console.log(data);
+fetch("/api/users")
+  .then(response => response.json())
+  .then(users => {
+    console.log(users);
   });
 ```
 
-### Checking for errors
+### Understanding the response
 
-`fetch` only rejects on network errors, not HTTP errors:
+`fetch()` resolves to a `Response` object:
 
 ```javascript
-fetch('https://api.example.com/data')
+fetch("/api/users")
   .then(response => {
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    console.log(response.status); // 200, 404, 500, and so on
+    console.log(response.ok); // true for 200-299
+    console.log(response.headers);
+
     return response.json();
   })
   .then(data => {
     console.log(data);
-  })
-  .catch(error => {
-    console.error('Error:', error);
   });
 ```
 
 ## Handling JSON
 
-Most APIs return JSON. Parse it with `.json()`:
+Most browser-to-server APIs use JSON:
 
 ```javascript
-fetch('https://api.example.com/users')
-  .then(response => response.json())  // Parse JSON
-  .then(data => {
-    // data is a JavaScript object
-    data.forEach(user => {
+fetch("/api/users")
+  .then(response => response.json())
+  .then(users => {
+    users.forEach(user => {
       console.log(user.name);
     });
   });
@@ -92,285 +81,312 @@ fetch('https://api.example.com/users')
 ### Other response types
 
 ```javascript
-// Text
-fetch('/api/data.txt')
+fetch("/api/data.txt")
   .then(response => response.text())
-  .then(text => console.log(text));
-
-// Blob (for images, files)
-fetch('/api/image.jpg')
-  .then(response => response.blob())
-  .then(blob => {
-    const imageUrl = URL.createObjectURL(blob);
-    img.src = imageUrl;
+  .then(text => {
+    console.log(text);
   });
 ```
 
-## Error handling
+```javascript
+const image = document.querySelector("#avatar");
 
-Always handle errors:
+fetch("/api/image.jpg")
+  .then(response => response.blob())
+  .then(blob => {
+    if (image) {
+      image.src = URL.createObjectURL(blob);
+    }
+  });
+```
+
+## Handling errors
+
+One important detail: `fetch()` only rejects for network-level problems. HTTP errors like `404` and `500` still give you a resolved `Response`.
 
 ```javascript
-fetch('https://api.example.com/data')
+fetch("/api/users")
   .then(response => {
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }
+
     return response.json();
   })
-  .then(data => {
-    // Handle success
-    displayData(data);
+  .then(users => {
+    console.log(users);
   })
   .catch(error => {
-    // Handle errors
-    console.error('Fetch failed:', error);
-    showError('Failed to load data');
+    console.error("Fetch failed:", error);
   });
 ```
 
-### Using async/await
+:::warning
+Do not assume `fetch()` succeeded just because the promise resolved. Check `response.ok` before treating the request as successful.
+:::
 
-`fetch` works great with [async/await](/docs/javascript/guides/async/async_await):
+## Using `async` / `await`
 
-```javascript
-async function fetchData() {
-  try {
-    const response = await fetch('https://api.example.com/data');
-    
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-    
-    const data = await response.json();
-    displayData(data);
-  } catch (error) {
-    console.error('Error:', error);
-    showError('Failed to load data');
-  }
-}
-```
-
-## Loading states
-
-Show loading indicators while fetching:
+`fetch()` often reads more clearly with `async` / `await`:
 
 ```javascript
 async function loadUsers() {
-  const loadingDiv = document.querySelector('#loading');
-  const errorDiv = document.querySelector('#error');
-  const usersDiv = document.querySelector('#users');
-  
-  // Show loading
-  loadingDiv.style.display = 'block';
-  errorDiv.style.display = 'none';
-  usersDiv.innerHTML = '';
-  
   try {
-    const response = await fetch('/api/users');
-    if (!response.ok) throw new Error('Failed to load');
-    
+    const response = await fetch("/api/users");
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
     const users = await response.json();
-    
-    // Hide loading, show data
-    loadingDiv.style.display = 'none';
-    displayUsers(users);
+    console.log(users);
   } catch (error) {
-    // Hide loading, show error
-    loadingDiv.style.display = 'none';
-    errorDiv.style.display = 'block';
-    errorDiv.textContent = 'Failed to load users';
+    console.error("Failed to load users:", error);
   }
 }
 ```
 
-## Post requests
+## Showing loading and error states
 
-Send data to the server:
+Good UI usually shows what is happening while data loads:
 
 ```javascript
-fetch('https://api.example.com/users', {
-  method: 'POST',
+async function loadUsers() {
+  const loadingElement = document.querySelector("#loading");
+  const errorElement = document.querySelector("#error");
+  const usersElement = document.querySelector("#users");
+
+  if (loadingElement) {
+    loadingElement.hidden = false;
+  }
+
+  if (errorElement) {
+    errorElement.hidden = true;
+    errorElement.textContent = "";
+  }
+
+  if (usersElement) {
+    usersElement.innerHTML = "";
+  }
+
+  try {
+    const response = await fetch("/api/users");
+    if (!response.ok) {
+      throw new Error("Failed to load users");
+    }
+
+    const users = await response.json();
+
+    if (usersElement) {
+      users.forEach(user => {
+        const listItem = document.createElement("li");
+        listItem.textContent = user.name;
+        usersElement.appendChild(listItem);
+      });
+    }
+  } catch (error) {
+    if (errorElement) {
+      errorElement.hidden = false;
+      errorElement.textContent = "Failed to load users";
+    }
+  } finally {
+    if (loadingElement) {
+      loadingElement.hidden = true;
+    }
+  }
+}
+```
+
+## Sending data with `fetch()`
+
+### Sending JSON
+
+```javascript
+fetch("/api/users", {
+  method: "POST",
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json"
   },
   body: JSON.stringify({
-    name: 'Alice',
-    email: 'alice@example.com'
+    name: "Alice",
+    email: "alice@example.com"
   })
 })
   .then(response => response.json())
   .then(data => {
-    console.log('User created:', data);
+    console.log("User created:", data);
   });
 ```
 
 ### Sending form data
 
-Learn more about [form handling](/docs/javascript/web/events/forms_input) in the events guide.
+Learn more about [forms and user input](../events/forms_input) in the events section.
 
 ```javascript
-const form = document.querySelector('form');
+const form = document.querySelector("form");
 
-form.addEventListener('submit', async function(e) {
-  e.preventDefault();
-  
-  const formData = new FormData(form);
-  
-  const response = await fetch('/api/submit', {
-    method: 'POST',
-    body: formData  // FormData works directly
-  });
-  
-  const result = await response.json();
-  console.log('Submitted:', result);
-});
-```
+if (form) {
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
 
-## Other HTTP methods
+    const formData = new FormData(form);
 
-```javascript
-// PUT - update
-fetch('/api/users/123', {
-  method: 'PUT',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ name: 'Bob' })
-});
-
-// DELETE
-fetch('/api/users/123', {
-  method: 'DELETE'
-});
-
-// PATCH - partial update
-fetch('/api/users/123', {
-  method: 'PATCH',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ name: 'Charlie' })
-});
-```
-
-## Basic security considerations
-
-### CORS (Cross-Origin Resource Sharing)
-
-Browsers block requests to different origins (different domain, port, or protocol) unless the server allows it:
-
-```javascript
-// This will fail if api.example.com doesn't allow CORS
-fetch('https://api.example.com/data')
-  .catch(error => {
-    console.error('CORS error:', error);
-  });
-```
-
-**Solutions:**
-- Server must send CORS headers
-- Use a proxy server
-- Make requests to the same origin
-
-### Same-origin policy
-
-Requests to the same origin work without CORS:
-
-```javascript
-// Same origin - works fine
-fetch('/api/data')  // Same domain, protocol, port
-  .then(response => response.json());
-```
-
-### Avoiding XSS
-
-Never trust data from APIs without validation:
-
-```javascript
-// Dangerous: directly inserting API data
-fetch('/api/comments')
-  .then(response => response.json())
-  .then(comments => {
-    comments.forEach(comment => {
-      div.innerHTML += `<p>${comment.text}</p>`;  // XSS risk!
+    const response = await fetch("/api/submit", {
+      method: "POST",
+      body: formData
     });
-  });
 
-// Safe: use textContent
-fetch('/api/comments')
-  .then(response => response.json())
-  .then(comments => {
-    comments.forEach(comment => {
-      const p = document.createElement('p');
-      p.textContent = comment.text;  // Safe
-      div.appendChild(p);
-    });
+    const result = await response.json();
+    console.log("Submitted:", result);
   });
+}
+```
+
+### Other HTTP methods
+
+```javascript
+fetch("/api/users/123", {
+  method: "PUT",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ name: "Bob" })
+});
+```
+
+```javascript
+fetch("/api/users/123", {
+  method: "DELETE"
+});
+```
+
+```javascript
+fetch("/api/users/123", {
+  method: "PATCH",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ name: "Charlie" })
+});
 ```
 
 ## Common patterns
 
-### Reusable fetch function
+### Reusable request helper
 
 ```javascript
 async function apiRequest(url, options = {}) {
-  try {
-    const response = await fetch(url, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-      }
-    });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers
     }
-    
-    return await response.json();
-  } catch (error) {
-    console.error('API request failed:', error);
-    throw error;
-  }
-}
+  });
 
-// Usage
-const users = await apiRequest('/api/users');
-const user = await apiRequest('/api/users/123', {
-  method: 'PUT',
-  body: JSON.stringify({ name: 'Alice' })
-});
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  return response.json();
+}
 ```
 
-### Handling multiple requests
+### Parallel requests
 
 ```javascript
-// Sequential
-const user = await fetch('/api/user/123').then(r => r.json());
-const posts = await fetch('/api/user/123/posts').then(r => r.json());
-
-// Parallel (faster)
 const [user, posts] = await Promise.all([
-  fetch('/api/user/123').then(r => r.json()),
-  fetch('/api/user/123/posts').then(r => r.json())
+  fetch("/api/user/123").then(response => response.json()),
+  fetch("/api/user/123/posts").then(response => response.json())
 ]);
 ```
 
-Learn more about [`Promise.all()`](/docs/javascript/guides/async/promises#promiseall--wait-for-all-promises) in the promises guide.
-```
+Learn more about [`Promise.all()`](/docs/javascript/guides/async/promises#promiseall--wait-for-all-promises).
 
-### Retry logic
+### Polling for updates
+
+If your page needs to check for new data regularly, `fetch()` is often paired with a timer:
 
 ```javascript
-async function fetchWithRetry(url, retries = 3) {
-  for (let i = 0; i < retries; i++) {
-    try {
-      const response = await fetch(url);
-      if (response.ok) {
-        return await response.json();
-      }
-    } catch (error) {
-      if (i === retries - 1) throw error;
-      await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+function updateUI(data) {
+  console.log("Update UI with:", data);
+}
+
+async function pollForUpdates() {
+  try {
+    const response = await fetch("/api/updates");
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
     }
+
+    const data = await response.json();
+    updateUI(data);
+  } catch (error) {
+    console.error("Polling failed:", error);
   }
+}
+
+const pollIntervalId = setInterval(pollForUpdates, 5000);
+
+function stopPolling() {
+  clearInterval(pollIntervalId);
 }
 ```
 
+## Security and browser rules
+
+### CORS
+
+Browsers block many cross-origin requests unless the server allows them:
+
+```javascript
+fetch("https://api.example.com/data")
+  .catch(error => {
+    console.error("CORS or network error:", error);
+  });
+```
+
+### Same-origin requests
+
+Requests to the same origin are the simplest case:
+
+```javascript
+fetch("/api/data")
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+  });
+```
+
+### Avoid unsafe HTML insertion
+
+```javascript
+const commentsContainer = document.querySelector("#comments");
+
+fetch("/api/comments")
+  .then(response => response.json())
+  .then(comments => {
+    if (!commentsContainer) {
+      return;
+    }
+
+    comments.forEach(comment => {
+      const paragraph = document.createElement("p");
+      paragraph.textContent = comment.text;
+      commentsContainer.appendChild(paragraph);
+    });
+  });
+```
+
+## Summary
+
+- `fetch()` is the standard browser API for loading and sending data.
+- Always check `response.ok` before treating a response as successful.
+- Use loading states and error states so the UI stays understandable while requests are in flight.
+- `fetch()` works well with `async` / `await`, `FormData`, and patterns like polling.
+
+## Next up
+
+- [Web Storage](./browser_storage)
+- [Timers, Scheduling, and Animation](./async_browser_apis)
+- [Forms and User Input](../events/forms_input)

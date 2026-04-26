@@ -11,79 +11,117 @@ source:
   canonical_url: https://wolfcodes.dev
 ---
 
-## What "state" means
+## What is application state?
 
-**State** is the data that represents your application's current condition. It's what your app "remembers" and what changes as users interact with it.
+**Application state** is the data that represents your app's current condition. It is what your app "remembers" while the user interacts with it.
 
 Examples of state:
-- User's shopping cart items
-- Current page number in a list
-- Whether a modal is open or closed
-- Form input values before submission
-- User authentication status
+- Shopping cart items
+- The current page in a paginated list
+- Whether a modal is open
+- Form values before submission
+- Whether a user is logged in
 
-## State vs DOM
+### Smallest working example
 
-This is a crucial distinction:
+```html
+<p id="count">0</p>
+<button id="increment">Increment</button>
+```
 
-- **State** — data in JavaScript (variables, objects, arrays)
-- **DOM** — the HTML elements users see
+```javascript
+let count = 0;
 
-**The DOM should reflect the state, not be the source of truth.**
+const countElement = document.querySelector("#count");
+const incrementButton = document.querySelector("#increment");
+
+function render() {
+  if (countElement) {
+    countElement.textContent = `${count}`;
+  }
+}
+
+if (incrementButton) {
+  incrementButton.addEventListener("click", () => {
+    count += 1;
+    render();
+  });
+}
+
+render();
+```
+
+## Why this matters
+
+State gives your UI something reliable to display and update:
+
+- It keeps track of what the user has done
+- It lets the DOM reflect the current app condition
+- It helps avoid bugs caused by scattered or duplicated data
+
+## State vs the DOM
+
+This is the key distinction:
+
+- **State**: data in JavaScript variables, arrays, and objects
+- **DOM**: the HTML elements the user sees
+
+**The DOM should reflect state, not be the source of truth.**
 
 ### The wrong way
 
 ```javascript
-// Bad: reading from DOM
 function getCartItems() {
   const items = [];
-  document.querySelectorAll('.cart-item').forEach(item => {
-    items.push(item.textContent);
+
+  document.querySelectorAll(".cart-item").forEach(item => {
+    items.push(item.textContent ?? "");
   });
+
   return items;
 }
 ```
 
-The problem: If you need to know what's in the cart, you're reading from the DOM. This is fragile and error-prone.
+The problem is that the app has to read the UI to figure out its own data. That is fragile and easy to break.
 
 ### The right way
 
 ```javascript
-// Good: state is source of truth
-let cartState = [];
+const cartState = [];
 
 function addToCart(item) {
-  cartState.push(item);  // Update state
-  updateCartUI();        // Then update DOM
+  cartState.push(item);
+  renderCart();
 }
 
-function updateCartUI() {
-  const cartList = document.querySelector('#cart');
-  cartList.innerHTML = '';
+function renderCart() {
+  const cartList = document.querySelector("#cart");
+  if (!cartList) {
+    return;
+  }
+
+  cartList.innerHTML = "";
+
   cartState.forEach(item => {
-    const li = document.createElement('li');
-    li.textContent = item;
-    cartList.appendChild(li);
+    const listItem = document.createElement("li");
+    listItem.textContent = item;
+    cartList.appendChild(listItem);
   });
 }
 ```
-
-**State drives the DOM, not the other way around.**
 
 ## Keeping state in JavaScript
 
 Store state in JavaScript variables:
 
 ```javascript
-// Simple state
 let count = 0;
 let isModalOpen = false;
 let currentUser = null;
 
-// Complex state (object)
 const appState = {
   user: {
-    name: 'Alice',
+    name: "Alice",
     isLoggedIn: true
   },
   cart: {
@@ -91,61 +129,66 @@ const appState = {
     total: 0
   },
   settings: {
-    theme: 'light',
-    language: 'en'
+    theme: "light",
+    language: "en"
   }
 };
 ```
 
 ### State object pattern
 
-Organize related state in objects:
+Related state often fits best in one object:
 
 ```javascript
 const state = {
   todos: [],
-  filter: 'all',  // 'all', 'active', 'completed'
-  inputValue: ''
+  filter: "all",
+  inputValue: ""
 };
 
-// Update state
 function addTodo(text) {
   state.todos.push({
     id: Date.now(),
-    text: text,
+    text,
     completed: false
   });
 }
 
 function toggleTodo(id) {
-  const todo = state.todos.find(t => t.id === id);
+  const todo = state.todos.find(item => item.id === id);
   if (todo) {
     todo.completed = !todo.completed;
   }
 }
 ```
 
+:::tip
+Rule of thumb: keep one clear source of truth for each piece of data. If you have to wonder which value is the "real" one, your state is probably split in the wrong place.
+:::
+
 ## Syncing state to the DOM
 
-When state changes, update the DOM to reflect it:
+When state changes, update the DOM to match it.
 
 ```javascript
-// State
 let count = 0;
 
-// Update state
+const countElement = document.querySelector("#counter");
+const incrementButton = document.querySelector("#increment-btn");
+
 function increment() {
-  count++;
-  render();  // Update DOM after state change
+  count += 1;
+  render();
 }
 
-// Render function updates DOM based on state
 function render() {
-  document.querySelector('#counter').textContent = count;
-  
-  // Update button state based on count
-  const button = document.querySelector('#increment-btn');
-  button.disabled = count >= 10;
+  if (countElement) {
+    countElement.textContent = `${count}`;
+  }
+
+  if (incrementButton) {
+    incrementButton.disabled = count >= 10;
+  }
 }
 ```
 
@@ -154,127 +197,143 @@ function render() {
 Always update state first, then render:
 
 ```javascript
+const items = [];
+
 function addItem(name) {
-  // 1. Update state
   items.push(name);
-  
-  // 2. Update DOM to match state
   renderItems();
 }
 
 function renderItems() {
-  const list = document.querySelector('#items');
-  list.innerHTML = '';
+  const list = document.querySelector("#items");
+  if (!list) {
+    return;
+  }
+
+  list.innerHTML = "";
+
   items.forEach(item => {
-    const li = document.createElement('li');
-    li.textContent = item;
-    list.appendChild(li);
+    const listItem = document.createElement("li");
+    listItem.textContent = item;
+    list.appendChild(listItem);
   });
 }
 ```
 
 ## Common state bugs
 
-### Bug 1: State and DOM out of sync
+### State and DOM get out of sync
 
 ```javascript
-// Bad: directly manipulating DOM without updating state
+// Bad: DOM changed, state did not
 function addItem() {
-  const li = document.createElement('li');
-  li.textContent = 'New item';
-  document.querySelector('#list').appendChild(li);
-  // State not updated! Now state and DOM don't match
+  const list = document.querySelector("#list");
+  if (!list) {
+    return;
+  }
+
+  const listItem = document.createElement("li");
+  listItem.textContent = "New item";
+  list.appendChild(listItem);
 }
 
-// Good: update state, then render
+// Good: state changes first, then UI updates
+const items = [];
+
 function addItem() {
-  items.push('New item');  // Update state
-  renderItems();           // Update DOM
+  items.push("New item");
+  renderItems();
 }
 ```
 
-### Bug 2: Reading from DOM instead of state
+### Reading from the DOM instead of state
 
 ```javascript
-// Bad: reading from DOM
+// Bad
 function getItemCount() {
-  return document.querySelectorAll('.item').length;  // What if DOM is wrong?
+  return document.querySelectorAll(".item").length;
 }
 
-// Good: read from state
+// Good
 function getItemCount() {
-  return items.length;  // Always accurate
+  return items.length;
 }
 ```
 
-### Bug 3: Multiple sources of truth
+### Multiple sources of truth
 
 ```javascript
-// Bad: state scattered everywhere
-let count1 = 0;  // One counter
-let count2 = 0;  // Another counter
-// Which one is correct?
+// Bad
+let count1 = 0;
+let count2 = 0;
 
-// Good: single source of truth
+// Good
 const state = {
   counter: 0
 };
 ```
 
-### Bug 4: Forgetting to re-render
+### Forgetting to re-render
 
 ```javascript
-// Bad: state updated but DOM not refreshed
-function updateCount() {
-  count = 10;  // State updated
-  // DOM still shows old value!
-}
-
-// Good: always render after state change
+// Bad
 function updateCount() {
   count = 10;
-  render();  // Update DOM
+}
+
+// Good
+function updateCount() {
+  count = 10;
+  render();
 }
 ```
 
-## State management patterns
+## Common patterns
 
-### Pattern 1: Simple state + render
+### Simple state plus render
 
-For small apps:
+For smaller apps, a state variable plus one render function works well:
 
 ```javascript
-let state = {
+const state = {
   todos: [],
-  filter: 'all'
+  filter: "all"
 };
 
 function render() {
-  // Clear and rebuild DOM based on state
-  const todos = state.filter === 'all' 
-    ? state.todos 
-    : state.todos.filter(t => 
-        state.filter === 'active' ? !t.completed : t.completed
-      );
-  
-  const list = document.querySelector('#todo-list');
-  list.innerHTML = '';
-  todos.forEach(todo => {
-    const li = document.createElement('li');
-    li.textContent = todo.text;
-    if (todo.completed) li.classList.add('completed');
-    list.appendChild(li);
+  const list = document.querySelector("#todo-list");
+  if (!list) {
+    return;
+  }
+
+  const visibleTodos =
+    state.filter === "all"
+      ? state.todos
+      : state.todos.filter(todo =>
+          state.filter === "active" ? !todo.completed : todo.completed
+        );
+
+  list.innerHTML = "";
+
+  visibleTodos.forEach(todo => {
+    const listItem = document.createElement("li");
+    listItem.textContent = todo.text;
+
+    if (todo.completed) {
+      listItem.classList.add("completed");
+    }
+
+    list.appendChild(listItem);
   });
 }
 
-// All state changes trigger render
 function addTodo(text) {
   state.todos.push({ id: Date.now(), text, completed: false });
   render();
 }
 
 function toggleTodo(id) {
-  const todo = state.todos.find(t => t.id === id);
+  const todo = state.todos.find(item => item.id === id);
   if (todo) {
     todo.completed = !todo.completed;
     render();
@@ -282,107 +341,142 @@ function toggleTodo(id) {
 }
 ```
 
-### Pattern 2: Event-driven updates
+### Event-driven updates
 
-Separate concerns:
+Another common pattern is to keep state and render logic together:
 
 ```javascript
-// State
 const app = {
   state: {
     count: 0
   },
-  
-  // Methods that update state
+
   increment() {
-    this.state.count++;
+    this.state.count += 1;
     this.render();
   },
-  
+
   decrement() {
-    this.state.count--;
+    this.state.count -= 1;
     this.render();
   },
-  
-  // Render method
+
   render() {
-    document.querySelector('#count').textContent = this.state.count;
+    const countElement = document.querySelector("#count");
+    if (countElement) {
+      countElement.textContent = `${this.state.count}`;
+    }
   }
 };
 
-// Event listeners call app methods
-document.querySelector('#increment').addEventListener('click', () => {
-  app.increment();
-});
+const incrementButton = document.querySelector("#increment");
+
+if (incrementButton) {
+  incrementButton.addEventListener("click", () => {
+    app.increment();
+  });
+}
 ```
 
 ## Example: todo app state
 
-Here's how state works in a complete todo app:
+Here is a slightly larger example that keeps todo data in state and renders the UI from that state.
 
 ```javascript
-// State
-const todos = {
+const todoState = {
   items: [],
   nextId: 1
 };
 
-// Add todo
 function addTodo(text) {
-  todos.items.push({
-    id: todos.nextId++,
-    text: text,
+  todoState.items.push({
+    id: todoState.nextId,
+    text,
     completed: false
   });
+
+  todoState.nextId += 1;
   renderTodos();
 }
 
-// Toggle todo
 function toggleTodo(id) {
-  const todo = todos.items.find(t => t.id === id);
+  const todo = todoState.items.find(item => item.id === id);
   if (todo) {
     todo.completed = !todo.completed;
     renderTodos();
   }
 }
 
-// Delete todo
 function deleteTodo(id) {
-  todos.items = todos.items.filter(t => t.id !== id);
+  todoState.items = todoState.items.filter(item => item.id !== id);
   renderTodos();
 }
 
-// Render todos based on state
 function renderTodos() {
-  const list = document.querySelector('#todo-list');
-  list.innerHTML = '';
-  
-  todos.items.forEach(todo => {
-    const li = document.createElement('li');
-    li.innerHTML = `
-      <input type="checkbox" ${todo.completed ? 'checked' : ''} 
-             onchange="toggleTodo(${todo.id})" />
-      <span class="${todo.completed ? 'completed' : ''}">${todo.text}</span>
-      <button onclick="deleteTodo(${todo.id})">Delete</button>
-    `;
-    list.appendChild(li);
+  const list = document.querySelector("#todo-list");
+  const countElement = document.querySelector("#count");
+
+  if (!list || !countElement) {
+    return;
+  }
+
+  list.innerHTML = "";
+
+  todoState.items.forEach(todo => {
+    const listItem = document.createElement("li");
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = todo.completed;
+    checkbox.addEventListener("change", () => {
+      toggleTodo(todo.id);
+    });
+
+    const label = document.createElement("span");
+    label.textContent = todo.text;
+    if (todo.completed) {
+      label.classList.add("completed");
+    }
+
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+    deleteButton.addEventListener("click", () => {
+      deleteTodo(todo.id);
+    });
+
+    listItem.appendChild(checkbox);
+    listItem.appendChild(label);
+    listItem.appendChild(deleteButton);
+    list.appendChild(listItem);
   });
-  
-  // Update count
-  const count = todos.items.filter(t => !t.completed).length;
-  document.querySelector('#count').textContent = 
-    `${count} item${count !== 1 ? 's' : ''} remaining`;
+
+  const remainingCount = todoState.items.filter(item => !item.completed).length;
+  countElement.textContent =
+    `${remainingCount} item${remainingCount !== 1 ? "s" : ""} remaining`;
 }
 ```
 
-**Key principle:** State is the source of truth. DOM reflects state.
+:::note
+This example uses a full re-render after each change because it is simple and easy to reason about. For small apps, that tradeoff is often worth it.
+:::
 
-## When to use external state management
+## Choosing where state should live
 
-For simple apps, JavaScript variables are enough. For complex apps, consider:
+- **Use plain JavaScript variables or objects** when the app is small and the state is local
+- **Use `localStorage`** when you need state to survive page refreshes
+- **Use a framework or state library** when the UI becomes large and many parts of the app share the same data
 
-- **LocalStorage** — persist state across page refreshes (covered in [browser storage guide](../browser_api/browser_storage))
-- **State management libraries** — Redux, Zustand (beyond this guide's scope)
-- **Frameworks** — React, Vue (they manage state automatically)
+Learn more about persistence in the [Web Storage guide](../browser_api/browser_storage).
 
-But understanding how to manage state in vanilla JavaScript is essential before using these tools.
+## Summary
+
+- Application state is the data that describes what your app currently knows.
+- Keep state in JavaScript, not in the DOM.
+- Update state first, then render the DOM from that state.
+- One source of truth is safer and easier to debug than duplicated or scattered values.
+
+## Next up
+
+- [Web Storage](../browser_api/browser_storage)
+- [Events](../events/dom_events)
+- [Manipulating the DOM](../dom/manipulating_dom)
