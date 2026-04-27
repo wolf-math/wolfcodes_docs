@@ -1,6 +1,6 @@
 ---
 title: Polymorphism
-sidebar_position: 6
+sidebar_position: 7
 author:
   name: Aaron Wolf
   url: https://wolfcodes.dev
@@ -300,4 +300,3 @@ ABCs make the interface explicit and prevent you from accidentally creating inco
 5. **Use ABCs sparingly** — only when you need to enforce an interface or provide shared default implementations
 
 Polymorphism is one of OOP's most powerful tools. Combined with Python's duck typing, it lets you write flexible, extensible code that adapts easily to new requirements.
-

@@ -1,6 +1,6 @@
 ---
 title: Dunder Methods
-sidebar_position: 7
+sidebar_position: 8
 author:
   name: Aaron Wolf
   url: https://wolfcodes.dev

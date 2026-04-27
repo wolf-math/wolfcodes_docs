@@ -1,6 +1,6 @@
 ---
 title: Class Methods, Static Methods, and Properties
-sidebar_position: 3
+sidebar_position: 4
 author:
   name: Aaron Wolf
   url: https://wolfcodes.dev

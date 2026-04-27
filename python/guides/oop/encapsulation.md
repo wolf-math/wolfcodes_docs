@@ -1,6 +1,6 @@
 ---
 title: Encapsulation
-sidebar_position: 5
+sidebar_position: 6
 author:
   name: Aaron Wolf
   url: https://wolfcodes.dev
@@ -288,5 +288,4 @@ Here, `_cache` is an internal detail; `public_api` is the public function other 
 - Good encapsulation protects invariants and makes it easier to evolve your classes without breaking callers.
 
 As you design classes, think in terms of: *“What should other code be allowed to do with this object?”* Then use encapsulation tools to keep that contract clear and stable.
-
 
