@@ -6,7 +6,9 @@ from actions import (
     save_records,
     search_by_artist,
     sell_record,
+    view_capstone_report,
     view_records,
+    view_sales_history,
     view_stats,
 )
 from ui import pause_for_menu, print_menu
@@ -41,13 +43,19 @@ def main() -> None:
             view_stats(collection)
             pause_for_menu()
         elif choice == "8":
-            save_records(collection)
+            view_sales_history(collection)
             pause_for_menu()
         elif choice == "9":
+            view_capstone_report(collection)
+            pause_for_menu()
+        elif choice == "0":
+            save_records(collection)
+            pause_for_menu()
+        elif choice.casefold() == "x":
             print("Goodbye. Keep spinning records.")
             break
         else:
-            print("Please enter a number from 1 to 9.")
+            print("Please enter a number from 1 to 11.")
 
 
 if __name__ == "__main__":

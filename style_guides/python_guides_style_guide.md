@@ -36,6 +36,23 @@ That project is the recurring thread that connects the guides. It gives continui
 
 This does **not** mean every guide must be rebuilt around the project. It means revisions should gently align examples, transitions, and project applications where that improves continuity.
 
+## Canonical project reference
+
+The canonical implementation of the shared project lives in:
+
+- `docs/python/guides/final_project`
+
+Use that directory as the concrete reference point for guide revisions, examples, terminology, and project continuity.
+
+That means:
+
+- The style guide is referring to the real final project in `final_project`, not to a hypothetical version of it.
+- Guide examples should align with the data model, naming, and domain of that project whenever practical.
+- When choosing example fields, record attributes, helper function names, or class names, prefer the names already used in the final project unless there is a clear teaching reason to simplify or vary them.
+- If the final project evolves, the guides and this style guide should evolve with it.
+
+The final project is the shared source of truth for the project world used across the Python guides.
+
 ## Revision-first principle
 
 Treat this guide as an **editing guide**, not a blank-page content spec.
@@ -64,6 +81,8 @@ The page should never depend on the reader having finished previous guides. The 
 
 In revision work, this usually means adding missing connective tissue rather than rebuilding the lesson from the ground up.
 
+Across the full section, the guides should cumulatively explain the ideas that are eventually present in `docs/python/guides/final_project`.
+
 ## The project arc
 
 The shared project is a terminal-based vinyl record library tracker. Over time, the reader learns how to:
@@ -80,6 +99,8 @@ The shared project is a terminal-based vinyl record library tracker. Over time, 
 
 This is the end state. Individual guides should only build one layer at a time, and revisions should only introduce the amount of project context that the existing page can support cleanly.
 
+The long-term goal is for the final project to reflect nearly all major guide concepts except foundational environment topics such as REPL vs. script and how Python runs code.
+
 ## Project rules
 
 To keep the project useful and teachable, follow these rules:
@@ -89,6 +110,7 @@ To keep the project useful and teachable, follow these rules:
 - Use a terminal app mindset throughout. Avoid web framework or database assumptions.
 - Introduce only the minimum project complexity needed to teach the concept.
 - Do not force every guide to touch the project if the connection would feel artificial, but most guides should include a short project application.
+- Prefer examples, names, and structures that can plausibly map back to `docs/python/guides/final_project`.
 
 When revising an existing guide, a brief paragraph, one example, or one short section is often enough to create the connection.
 
@@ -218,6 +240,8 @@ This rule applies even when the snippet is only teaching a basic concept like va
 
 The goal is for the entire guide set to feel like it belongs to one coherent project and one coherent creative world.
 
+Whenever possible, examples should feel like smaller slices, earlier drafts, or simplified cousins of the code and data shapes used in `docs/python/guides/final_project`.
+
 ## Example domain guidance
 
 When choosing example values, prefer:
@@ -264,6 +288,13 @@ favorite_color = "blue"
 
 If a neutral example is dramatically clearer for a specific teaching moment, it is allowed, but that should be the exception rather than the default.
 
+If there is a choice between:
+
+- a generic example that could belong to any tutorial
+- and an equally clear example that resembles the final project
+
+choose the example that resembles the final project.
+
 ## Voice and tone
 
 The tone should be:
@@ -304,6 +335,7 @@ Use these habits consistently:
 - Use beginner-readable variable names.
 - Prefer concrete domain values over placeholders when the example benefits from it.
 - Keep example names and values inside the shared music/vinyl project world whenever practical.
+- Use the final project as the preferred source for recurring names, entities, and example shapes.
 
 When the shared project appears, use names like:
 

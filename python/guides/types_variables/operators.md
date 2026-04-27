@@ -12,459 +12,277 @@ source:
 ---
 ## What are operators?
 
-**Operators** are special symbols that perform operations on values. You've already used some operators like `+` for addition and `==` for comparison. Python has many operators for different tasks like doing math, comparing values, and modifying variables.
+**Operators** are symbols and keywords that perform operations on values.
+
+```python
+purchase_price = 18.0
+estimated_value = 31.5
+profit = estimated_value - purchase_price
+```
+
+In this example, `-` is an operator. It takes two values and produces a result.
 
 ## Why this matters
 
-Operators are the building blocks of Python expressions. They let you:
-- Perform calculations (add, subtract, multiply, divide)
-- Compare values (check if something is equal, greater than, etc.)
-- Modify variables (increment, decrement, and more)
-- Combine conditions (using `and`, `or`, `not`)
+Operators are part of almost every useful Python expression.
 
-Understanding operators is essential for writing any useful Python code. You'll use them constantly, from simple math to complex conditionals.
+You use them to:
+
+- do math
+- compare values
+- update variables
+- combine conditions
+
+The vinyl tracker project depends on operators for things like comparing years, calculating profits, checking conditions, and building printed labels.
 
 ## Arithmetic operators
 
-Arithmetic operators perform mathematical operations on numbers:
+Arithmetic operators work with numbers.
 
-| Operator | Name | Example | Result |
-|----------|------|---------|--------|
-| `+` | Addition | `5 + 3` | `8` |
-| `-` | Subtraction | `10 - 4` | `6` |
-| `*` | Multiplication | `3 * 4` | `12` |
-| `/` | Division | `10 / 2` | `5.0` |
-| `//` | Floor division | `10 // 3` | `3` |
-| `%` | Modulo (remainder) | `10 % 3` | `1` |
-| `**` | Exponentiation | `2 ** 3` | `8` |
+| Operator | Name | Example |
+|----------|------|---------|
+| `+` | addition | `18 + 4` |
+| `-` | subtraction | `31.5 - 18.0` |
+| `*` | multiplication | `3 * 12` |
+| `/` | division | `45 / 2` |
+| `//` | floor division | `45 // 2` |
+| `%` | modulo | `45 % 2` |
+| `**` | exponentiation | `2 ** 3` |
 
 ### Basic arithmetic
 
 ```python
->>> 5 + 3
-8
-
->>> 10 - 4
-6
-
->>> 3 * 4
-12
-
->>> 10 / 2
-5.0
+purchase_price = 18.0
+estimated_value = 31.5
+profit = estimated_value - purchase_price
 ```
 
-Notice that division (`/`) always returns a float (decimal number), even if the result is a whole number.
+```python
+profit  # 13.5
+```
+
+You can also use operators directly:
+
+```python
+1959 + 10
+24.0 / 2
+```
 
 ### Floor division and modulo
 
-**Floor division** (`//`) divides and rounds down to the nearest whole number:
+Floor division rounds down:
 
 ```python
->>> 10 // 3
-3
-
->>> 7 // 2
-3
+45 // 2  # 22
 ```
 
-**Modulo** (`%`) gives you the remainder after division:
+Modulo gives the remainder:
 
 ```python
->>> 10 % 3
-1    # 10 divided by 3 is 3 with remainder 1
-
->>> 7 % 2
-1    # 7 divided by 2 is 3 with remainder 1
-
->>> 8 % 2
-0    # 8 divided by 2 is 4 with no remainder
+45 % 2  # 1
 ```
 
-Modulo is useful for checking if a number is even or odd:
-- If `number % 2 == 0`, the number is even
-- If `number % 2 == 1`, the number is odd
+These are useful when you want to group values, split quantities, or check patterns like even and odd numbers.
 
 ### Exponentiation
 
-The `**` operator raises a number to a power:
+`**` raises a value to a power:
 
 ```python
->>> 2 ** 3
-8    # 2 to the power of 3 = 2 × 2 × 2
-
->>> 5 ** 2
-25   # 5 to the power of 2 = 5 × 5
-
->>> 10 ** 0
-1    # Any number to the power of 0 is 1
+2 ** 3  # 8
 ```
 
 ## Comparison operators
 
-Comparison operators compare two values and return `True` or `False`. You've already seen these in [conditionals](/docs/python/guides/control_flow/conditionals):
+Comparison operators compare values and return `True` or `False`.
 
-| Operator | Name | Example | Result |
-|----------|------|---------|--------|
-| `==` | Equal to | `5 == 5` | `True` |
-| `!=` | Not equal to | `5 != 3` | `True` |
-| `>` | Greater than | `5 > 3` | `True` |
-| `<` | Less than | `5 < 10` | `True` |
-| `>=` | Greater than or equal to | `5 >= 5` | `True` |
-| `<=` | Less than or equal to | `5 <= 5` | `True` |
+| Operator | Name | Example |
+|----------|------|---------|
+| `==` | equal to | `year == 1977` |
+| `!=` | not equal to | `genre != "Jazz"` |
+| `>` | greater than | `estimated_value > purchase_price` |
+| `<` | less than | `year < 1980` |
+| `>=` | greater than or equal to | `record_count >= 10` |
+| `<=` | less than or equal to | `year <= 1967` |
 
 ```python
->>> 5 == 5
-True
-
->>> 5 != 3
-True
-
->>> 5 > 3
-True
-
->>> 5 < 10
-True
-
->>> 5 >= 5
-True
-
->>> 5 <= 5
-True
+year = 1977
+year == 1977
+year < 1980
 ```
 
+These comparisons are the basis for later conditionals.
+
 :::important
-**Remember:** `==` checks if values are equal, while `=` assigns a value to a variable. These are different!
-- `x = 5` means "assign 5 to x"
-- `x == 5` means "is x equal to 5?"
+`=` assigns a value.
+
+`==` compares values.
+
+They do different jobs.
 :::
 
 ## Assignment operators
 
-Assignment operators combine assignment (`=`) with an operation. They're shortcuts for common operations.
-
-### Basic assignment
-
 The `=` operator assigns a value to a variable:
 
 ```python
-x = 5
-y = 10
+record_count = 3
 ```
 
-### Augmented assignment operators
-
-These operators perform an operation and assign the result back to the variable:
-
-| Operator | Equivalent to | Example |
-|----------|---------------|---------|
-| `+=` | `x = x + y` | `x += 5` |
-| `-=` | `x = x - y` | `x -= 3` |
-| `*=` | `x = x * y` | `x *= 2` |
-| `/=` | `x = x / y` | `x /= 2` |
-| `//=` | `x = x // y` | `x //= 3` |
-| `%=` | `x = x % y` | `x %= 3` |
-| `**=` | `x = x ** y` | `x **= 2` |
-
-### Examples
+Python also supports augmented assignment:
 
 ```python
-# Instead of writing:
-count = 5
-count = count + 1
-print(count)  # 6
-
-# You can write:
-count = 5
-count += 1
-print(count)  # 6
-
-# More examples:
-x = 10
-x += 5    # x is now 15 (same as x = x + 5)
-x -= 3    # x is now 12 (same as x = x - 3)
-x *= 2    # x is now 24 (same as x = x * 2)
-x /= 4    # x is now 6.0 (same as x = x / 4)
+record_count += 1
+estimated_value -= 2.5
 ```
 
-These operators are especially useful when you need to modify a variable's value. They're shorter and often clearer than writing the full assignment.
+These are shortcuts for:
+
+```python
+record_count = record_count + 1
+estimated_value = estimated_value - 2.5
+```
+
+They are especially useful when a variable changes over time.
 
 ## Logical operators
 
-Logical operators work with boolean values (`True` and `False`) and truthiness. You will see more on these in [conditionals](/docs/python/guides/control_flow/conditionals) and [truthiness](./truthiness).
+Logical operators combine conditions.
 
-| Operator | Name | Example | Result |
-|----------|------|---------|--------|
-| `and` | Logical AND | `True and False` | `False` |
-| `or` | Logical OR | `True or False` | `True` |
-| `not` | Logical NOT | `not True` | `False` |
-
-```python
->>> True and True
-True
-
->>> True and False
-False
-
->>> True or False
-True
-
->>> not True
-False
-```
-
-These operators work with truthiness too:
+| Operator | Name | Example |
+|----------|------|---------|
+| `and` | logical AND | `year >= 1950 and year < 1960` |
+| `or` | logical OR | `genre == "Jazz" or genre == "Rock"` |
+| `not` | logical NOT | `not is_duplicate_copy` |
 
 ```python
->>> "hello" and "world"
-"world"
+year = 1959
+genre = "Jazz"
 
->>> "" or "default"
-"default"
-
->>> not ""
-True
+year >= 1950 and year < 1960
+genre == "Jazz" or genre == "Rock"
 ```
 
-You'll learn more about how these work with truthiness in the [truthiness guide](./truthiness).
+These become especially important in conditionals and truthiness checks.
 
 ## Operator precedence
 
-When Python evaluates an expression with multiple operators, it follows a specific order (called "precedence"). This is similar to math order of operations.
+When an expression has multiple operators, Python follows an order of operations.
 
 ```python
->>> 2 + 3 * 4
-14    # Not 20! Multiplication happens first: 3 * 4 = 12, then 2 + 12 = 14
+2 + 3 * 4
 ```
 
-You can use parentheses to control the order:
+This evaluates to `14`, not `20`, because multiplication happens before addition.
+
+Use parentheses when you want to make the order explicit:
 
 ```python
->>> (2 + 3) * 4
-20    # Parentheses force addition first: 2 + 3 = 5, then 5 * 4 = 20
+(2 + 3) * 4
 ```
 
-**General order (from highest to lowest precedence):**
-1. Parentheses `()` - highest priority
-2. Exponentiation `**`
-3. Multiplication, Division, Floor division, Modulo `*`, `/`, `//`, `%`
-4. Addition, Subtraction `+`, `-`
-5. Comparison operators `==`, `!=`, `>`, `<`, `>=`, `<=`
-6. Logical operators `not`, `and`, `or`
+That evaluates to `20`.
 
-When in doubt, use parentheses to make your intent clear!
-
-## Common patterns
-
-### Incrementing and decrementing
-
-```python
-count = 0
-count += 1    # Increment by 1
-count += 1    # Increment by 1 again
-print(count)  # 2
-
-count -= 1    # Decrement by 1
-print(count)  # 1
-```
-
-### Checking ranges
-
-```python
-age = 25
-
-if age >= 18 and age <= 65:
-    print("Working age")
-```
-
-### Calculating with variables
-
-```python
-price = 10.50
-quantity = 3
-total = price * quantity
-print(total)  # 31.5
-```
-
-## Best practices
-
-1. **Use parentheses for clarity**: Even if you know the precedence rules, parentheses make your code easier to read:
-   ```python
-   # Clear - shows the intended grouping
-   result = (a * b) + (c * d)
-   
-   # Less clear (but correct) - same result due to operator precedence
-   result = a * b + c * d
-   ```
-
-2. **Use augmented assignment when appropriate**: `x += 1` is clearer than `x = x + 1` when you're modifying a variable.
-
-3. **Be careful with division**: Remember that `/` always returns a float. If you need an integer, use `//` (floor division).
-
-4. **Use `==` for comparison, `=` for assignment**: Don't mix these up!
+When in doubt, use parentheses for clarity.
 
 ## Operations between different types
 
-When you use operators with different types, Python's behavior depends on the types involved. Some operations work, some don't, and some require type conversion.
+Some mixed-type operations work, and some do not.
 
 ### What works
 
-**String concatenation and repetition:**
-```python
->>> "Hello" + " " + "World"
-"Hello World"
-
->>> "Hi" * 3
-"HiHiHi"
-```
-
-**Numeric operations with mixed number types:**
-```python
->>> 5 + 3.5
-8.5    # int + float = float
-
->>> 10 * 2.5
-25.0   # int * float = float
-```
-
-Python automatically converts integers to floats when needed.
-
-**Comparisons between compatible types:**
-```python
->>> 5 == 5.0
-True    # Python compares the values, not the types
-
->>> "5" == 5
-False   # String "5" is not equal to integer 5
-```
-
-### What doesn't work
-
-**Arithmetic between incompatible types:**
-```python
->>> 5 + "hello"
-Traceback (most recent call last):
-  ...
-TypeError: unsupported operand type(s) for +: 'int' and 'str'
-```
-
-You can't add a number to a string. Python doesn't know how to combine them.
-
-**Other incompatible operations:**
-```python
->>> 10 - "5"
-TypeError: unsupported operand type(s) for -: 'int' and 'str'
-
->>> "hello" * "world"
-TypeError: can't multiply sequence by non-int of type 'str'
-```
-
-### Converting types for operations
-
-If you need to perform operations between different types, convert them first:
+Strings can be joined:
 
 ```python
-# Convert string to number for math
->>> age_str = "25"
->>> age = int(age_str)
->>> age + 5
-30
-
-# Convert number to string for concatenation
->>> age = 25
->>> message = "I am " + str(age) + " years old"
->>> message
-"I am 25 years old"
+"Blue " + "Train"
 ```
 
-**Common conversions:**
-- `int(value)` - Convert to integer
-- `float(value)` - Convert to float
-- `str(value)` - Convert to string
+Numbers of different numeric types can combine:
 
 ```python
->>> int("42")
-42
-
->>> float("3.14")
-3.14
-
->>> str(42)
-"42"
+18 + 2.5
 ```
 
-### String operations
+Python will usually promote the result to a float when needed.
 
-Strings have some special behaviors with operators:
+### What does not work
 
-**Concatenation (`+`):**
-```python
->>> "Hello" + "World"
-"HelloWorld"
-
->>> "Hello" + " " + "World"
-"Hello World"
-```
-
-**Repetition (`*`):**
-```python
->>> "Hi" * 3
-"HiHiHi"
-
->>> "-" * 10
-"----------"
-```
-
-**Note:** You can only use `*` with a string and an integer (not two strings).
-
-### Comparison between types
-
-Python can compare some different types, but the results might surprise you:
+This causes an error:
 
 ```python
->>> 5 == 5.0
-True    # Numeric values are compared
-
->>> "5" == 5
-False   # String and number are different types
-
->>> "apple" < "banana"
-True    # Strings are compared alphabetically
-
->>> "10" < "2"
-True    # String comparison! "1" comes before "2" alphabetically
+18 + " dollars"
 ```
 
-:::warning
-When comparing strings that look like numbers, Python compares them as text, not as numbers. `"10" < "2"` is `True` because "1" comes before "2" in alphabetical order. To compare as numbers, convert them first: `int("10") < int("2")` is `False`.
-:::
+Python does not know how to add a number directly to a string.
 
-### Best practices
+If you want to combine them, convert the number first:
 
-1. **Convert types explicitly when needed**: Don't rely on Python to guess what you want. Convert strings to numbers (or vice versa) before operations.
+```python
+"Paid: $" + str(18)
+```
 
-2. **Be careful with string comparisons**: If you're comparing numbers stored as strings, convert them first.
+## Common patterns
 
-3. **Use `str()` for string formatting**: When combining numbers with strings, convert numbers to strings first:
-   ```python
-   # Good
-   message = "I have " + str(count) + " items"
-   
-   # Error
-   message = "I have " + count + " items"  # TypeError!
-   ```
+### Incrementing a value
 
-4. **Check types if unsure**: Use `type()` or `isinstance()` to check types before operations if you're not sure what type a value is.
+```python
+record_count = 3
+record_count += 1
+```
+
+### Calculating totals
+
+```python
+purchase_price = 22.5
+shipping_cost = 4.0
+total_cost = purchase_price + shipping_cost
+```
+
+### Comparing values
+
+```python
+estimated_value = 35.0
+purchase_price = 22.5
+estimated_value > purchase_price
+```
+
+### Building labels
+
+```python
+artist = "Fleetwood Mac"
+title = "Rumours"
+label = artist + " - " + title
+```
+
+## In the vinyl tracker
+
+Operators already let you write useful project logic:
+
+```python
+record_title = "Blue Train"
+purchase_price = 18.0
+sold_price = 31.5
+profit = sold_price - purchase_price
+is_profitable = sold_price > purchase_price
+```
+
+```python
+print(record_title)
+print(profit)
+print(is_profitable)
+```
+
+That is a small version of logic the final capstone project really uses: math for values, comparisons for decisions, and string operations for display.
+
+## Best practices
+
+- use parentheses when they make an expression easier to read
+- use augmented assignment like `+=` when updating a variable
+- be careful when combining different types
+- use `==` for comparison and `=` for assignment
 
 ## Summary
 
-Operators are essential tools in Python:
+Operators are the tools Python uses to do work inside expressions.
 
-- **Arithmetic operators**: `+`, `-`, `*`, `/`, `//`, `%`, `**` - for math operations
-- **Comparison operators**: `==`, `!=`, `>`, `<`, `>=`, `<=` - for comparing values
-- **Assignment operators**: `=`, `+=`, `-=`, `*=`, etc. - for assigning and modifying values
-- **Logical operators**: `and`, `or`, `not` - for combining conditions
-- **Operator precedence**: Python evaluates operators in a specific order; use parentheses to control it
-- **Type compatibility**: Some operations work between different types (like string concatenation), while others require type conversion
-
-You'll use these operators constantly as you write Python code. Practice with them, and they'll become second nature!
+They let you calculate values, compare data, update variables, and combine conditions. In the record-library project, operators are what turn stored values into useful behavior.

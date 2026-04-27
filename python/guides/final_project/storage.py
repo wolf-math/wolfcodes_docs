@@ -14,18 +14,21 @@ def load_collection(file_path: str, collection_name: str) -> RecordCollection:
     with path.open("r", encoding="utf-8") as file:
         data = json.load(file)
 
-    if not isinstance(data, list):
-        raise ValueError("Collection data must be a list of records.")
+    if isinstance(data, list):
+        records = [Record.from_dict(item) for item in data]
+        return seed_collection(collection_name, records)
 
-    records = [Record(**item) for item in data]
-    return RecordCollection(name=collection_name, records=records)
+    if not isinstance(data, dict):
+        raise ValueError("Collection data must be a dict or list.")
+
+    return RecordCollection.from_dict(data)
 
 
 def save_collection(collection: RecordCollection, file_path: str) -> None:
     path = Path(file_path)
 
     with path.open("w", encoding="utf-8") as file:
-        json.dump(collection.to_dict_list(), file, indent=2)
+        json.dump(collection.to_dict(), file, indent=2)
         file.write("\n")
 
 
@@ -33,4 +36,6 @@ def seed_collection(
     collection_name: str,
     records: Iterable[Record],
 ) -> RecordCollection:
-    return RecordCollection(name=collection_name, records=list(records))
+    collection = RecordCollection(name=collection_name)
+    collection.add_records(*records)
+    return collection

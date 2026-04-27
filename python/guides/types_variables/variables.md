@@ -12,104 +12,192 @@ source:
 ---
 ## What are variables?
 
-**Variables** are names that refer to values. They let you store data and give it meaningful labels, making your code readable and maintainable. Python doesn't use type declarations; a name is bound to an object at runtime and can later be rebound to another.
+**Variables** are names that refer to values. They let you store data, reuse it later, and give it a meaningful label.
 
 ```python
-message = "hello"   # name -> string object
-count = 3           # name -> int object
-pi = 3.14159        # name -> float object
+record_title = "Blue Train"
+artist = "John Coltrane"
+purchase_price = 18.0
 ```
+
+In these examples, `record_title`, `artist`, and `purchase_price` are variables. Each one points to a value.
 
 ## Why this matters
 
-Variables are essential for writing useful programs. Without variables, you'd have to repeat values throughout your code, making it hard to maintain and update. Variables let you store user input, intermediate calculations, and results that you'll use later. They also make your code self-documenting. A well-named variable like `user_age` is much clearer than just using the number `25` scattered throughout your code. Understanding how variables work, especially how they reference objects and how mutability affects them, is crucial for avoiding bugs and writing clean Python code.
+Without variables, you would have to repeat values all over your code. That makes programs harder to read and harder to change.
+
+Variables make code clearer:
+
+- `record_title` is easier to understand than just seeing `"Blue Train"` everywhere
+- changing one variable is easier than editing the same value in many places
+- real programs depend on stored values for user input, calculations, and output
+
+The vinyl record library tracker depends on variables constantly. Before you can build records, collections, prices, and menus, you need a way to store basic pieces of information.
+
+## Creating variables
+
+Use `=` to assign a value to a variable:
+
+```python
+record_title = "Blue Train"
+artist = "John Coltrane"
+year = 1957
+```
+
+**What happens:**
+
+- `record_title` refers to the string `"Blue Train"`
+- `artist` refers to the string `"John Coltrane"`
+- `year` refers to the integer `1957`
+
+Python does not require you to declare the type ahead of time. It figures out the type from the value you assign.
 
 ## Naming rules and style
 
-- Letters, digits, and underscores. Cannot start with a digit.
-- Case-sensitive: `name` and `Name` are different.
-- Avoid [keywords](../../language_reference/keywords) like `for`, `if`, `class`.
-- Follow PEP 8: use `lower_snake_case` for variables.
+Variable names in Python:
+
+- can contain letters, digits, and underscores
+- cannot start with a digit
+- are case-sensitive
+- should use `lower_snake_case`
+
+Good examples:
 
 ```python
-user_name = "ada"
-max_items = 10
+record_title = "Rumours"
+estimated_value = 32.0
+is_first_pressing = False
 ```
+
+Less helpful examples:
+
+```python
+x = "Rumours"
+y = 32.0
+z = False
+```
+
+Use names that describe what the value means.
 
 ## Assignment and rebinding
 
-`=` binds a name to a value. Reassigning changes the binding, not the original object.
+Assignment gives a variable a value. Reassignment changes which value that variable refers to.
 
 ```python
-x = 1
-x = x + 2   # x now refers to 3
+record_title = "Blue Train"
+record_title = "Giant Steps"
 ```
 
-Multiple assignment is supported:
+After the second line runs, `record_title` refers to `"Giant Steps"`.
+
+This is called **rebinding**. The variable name stays the same, but the value it refers to changes.
+
+## Multiple assignment
+
+Python lets you assign multiple variables in one line:
 
 ```python
-a, b = 1, 2
-a, b = b, a      # swap
+artist, album = "Miles Davis", "Kind of Blue"
 ```
 
-Underscore is often used as a throwaway name:
+You can also swap values:
 
 ```python
-first, _, third = [10, 20, 30]
+side_a, side_b = "So What", "Freddie Freeloader"
+side_a, side_b = side_b, side_a
 ```
 
-## Immutability vs mutability
-
-Rebinding works the same for all objects, but mutating an object changes it in place.
+Underscore is often used as a throwaway variable when you do not care about one of the values:
 
 ```python
-nums = [1, 2, 3]
-alias = nums
-alias.append(4)
-print(nums)   # [1, 2, 3, 4] (same list, two names)
+first_track, _, third_track = ["So What", "Freddie Freeloader", "Blue in Green"]
 ```
 
-For immutable objects, you can only rebind:
+## Mutability and rebinding
+
+Some values can be changed in place, while others cannot.
+
+For example, lists are mutable:
 
 ```python
-name = "hi"
-name = name + " there"   # creates a new string; old one unchanged
+favorite_albums = ["Blue Train", "Rumours"]
+same_list = favorite_albums
+same_list.append("Are You Experienced")
+
+print(favorite_albums)
 ```
+
+**Output:**
+
+```text
+['Blue Train', 'Rumours', 'Are You Experienced']
+```
+
+Both names refer to the same list, so changing the list through one name affects the other.
+
+Strings are different. They are immutable:
+
+```python
+artist = "Miles"
+artist = artist + " Davis"
+```
+
+That second line creates a new string and rebinds `artist` to it.
 
 ## Identity vs equality
 
-- `==` checks if values are equal.
-- `is` checks if two names refer to the same object.
+Two values can look the same without being the exact same object.
+
+- `==` checks whether values are equal
+- `is` checks whether two names refer to the same object
 
 ```python
-a = [1, 2, 3]
-b = [1, 2, 3]
-c = a
-a == b    # True  (same contents)
-a is b    # False (different lists)
-a is c    # True  (same list)
+record_a = ["Blue Train", "Jazz"]
+record_b = ["Blue Train", "Jazz"]
+record_c = record_a
 ```
 
-<!-- ## Shadowing and scope (brief)
+```python
+record_a == record_b  # True
+record_a is record_b  # False
+record_a is record_c  # True
+```
 
-- Names created inside a function are **local** to that function.
-- Names defined at the top level of a module are **global** to that module.
-- Avoid reusing names from outer scopes unintentionally (shadowing).
+Use `==` most of the time. Use `is` mainly when checking for `None`.
+
+## In the vinyl tracker
+
+Variables are the first real building blocks of the project.
 
 ```python
-value = "global"
+record_title = "Are You Experienced"
+artist = "The Jimi Hendrix Experience"
+genre = "Psychedelic Rock"
+purchase_price = 22.5
+estimated_value = 35.0
+```
 
-def demo():
-    value = "local"   # shadows the outer name
-    return value
+Even before you learn lists, dictionaries, or classes, this already gives you a useful mini-model of one record.
 
-demo()      # 'local'
-value       # 'global'
-``` -->
+You can print that information right away:
+
+```python
+print(artist + " - " + record_title)
+print("Genre:", genre)
+print("Paid:", purchase_price)
+```
+
+That is exactly the direction the capstone project grows in. First you store one piece of record data. Later you group many records together and build real features around them.
 
 ## Tips for beginners
 
-- Choose descriptive names: `total`, `user_age`, `items`.
-- Keep a name’s meaning consistent; avoid reusing the same name for unrelated data.
-- Print and inspect with `print(x)` or `type(x)` to see what a name currently refers to.
+- Choose descriptive names like `record_title`, `artist`, and `estimated_value`
+- Keep one variable focused on one idea
+- Avoid reusing the same variable name for unrelated values
+- Use `print()` and `type()` when you want to inspect what a variable currently refers to
 
+## Summary
+
+Variables are names that refer to values. They help you store data, reuse it, and make your code easier to read.
+
+In Python, you create variables with `=`, you can reassign them later, and you should choose clear names that match their purpose. In the vinyl tracker project, variables are the first step toward modeling real record data.
