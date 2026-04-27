@@ -1,5 +1,5 @@
 ---
-title: `typing`
+title: Typing
 sidebar_position: 21
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `typing` for clearer APIs
 
 `typing` makes Python APIs easier to understand and navigate. Even a few good type hints can make a codebase more readable and easier to maintain.
 

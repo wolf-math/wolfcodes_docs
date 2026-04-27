@@ -1,5 +1,5 @@
 ---
-title: `fractions`
+title: Fractions
 sidebar_position: 8
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `fractions` for exact rational arithmetic
 
 `fractions.Fraction` gives you exact rational arithmetic. It is a useful alternative when you want values like one-third to stay exact instead of becoming floating-point approximations.
 

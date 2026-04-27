@@ -1,5 +1,5 @@
 ---
-title: for/else and while/else
+title: Loop else blocks
 sidebar_position: 4
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `for/else` and `while/else`
 
 Python loops can have an `else` block. This is unusual, but it can be useful when you want one block to run only if the loop did not exit with `break`.
 

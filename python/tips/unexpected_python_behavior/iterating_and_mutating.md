@@ -1,5 +1,5 @@
 ---
-title: Iterating while mutating
+title: Mutating while iterating
 sidebar_position: 9
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# Iterating while mutating
 
 Changing a list or dictionary while iterating over it can produce skipped items, repeated work, or runtime errors. It is one of those bugs that often looks fine in a small example and fails later in real data.
 

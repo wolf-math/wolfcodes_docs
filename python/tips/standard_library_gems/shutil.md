@@ -1,5 +1,5 @@
 ---
-title: `shutil`
+title: Shutil
 sidebar_position: 14
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `shutil` for high-level file operations
 
 `shutil` provides high-level file and directory operations. It is a practical tool when you need to copy, move, archive, or remove filesystem content without writing low-level loops yourself.
 

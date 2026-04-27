@@ -1,5 +1,5 @@
 ---
-title: `tempfile`
+title: Tempfile
 sidebar_position: 18
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `tempfile` for safe temporary files and directories
 
 `tempfile` is the safe way to create temporary files and directories. It avoids naming collisions and handles cleanup more reliably than hand-picked temp paths.
 

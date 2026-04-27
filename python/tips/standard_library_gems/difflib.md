@@ -1,5 +1,5 @@
 ---
-title: `difflib`
+title: Difflib
 sidebar_position: 7
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `difflib` for quick text comparisons
 
 `difflib` gives you quick comparison tools for text and sequences. It is useful for debugging, building review tools, and explaining how two values differ.
 

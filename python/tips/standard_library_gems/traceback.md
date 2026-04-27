@@ -1,5 +1,5 @@
 ---
-title: `traceback`
+title: Traceback
 sidebar_position: 20
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `traceback` for better error reporting
 
 `traceback` helps you format and report exceptions more usefully. It is especially handy in CLI tools, logging, and debugging helpers where you want better error output than a bare message.
 

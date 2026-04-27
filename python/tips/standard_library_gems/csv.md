@@ -1,5 +1,5 @@
 ---
-title: `csv`
+title: CSV
 sidebar_position: 4
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `csv` for reliable tabular text
 
 The `csv` module is the reliable way to read and write CSV data in Python. It handles quoting, delimiters, and edge cases that are easy to get wrong with manual string splitting.
 

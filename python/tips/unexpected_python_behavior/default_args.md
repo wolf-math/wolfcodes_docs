@@ -1,5 +1,5 @@
 ---
-title: Mutable default arguments
+title: Mutable defaults
 sidebar_position: 3
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# Mutable default arguments
 
 Mutable default arguments keep state between function calls. This surprises many Python developers because the default value is created once when the function is defined, not each time the function runs.
 

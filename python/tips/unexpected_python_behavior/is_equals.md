@@ -1,5 +1,5 @@
 ---
-title: is vs. `==`
+title: Identity vs equality
 sidebar_position: 8
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `is` vs `==`
 
 `is` and `==` answer different questions. `==` compares values, while `is` compares object identity. Using the wrong one can lead to confusing behavior.
 

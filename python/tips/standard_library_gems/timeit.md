@@ -1,5 +1,5 @@
 ---
-title: `timeit`
+title: Timeit
 sidebar_position: 19
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `timeit` for honest micro-benchmarks
 
 `timeit` helps you measure small pieces of Python code more honestly than casual timing with `time.time()`. It is useful for quick performance checks and micro-benchmarks.
 

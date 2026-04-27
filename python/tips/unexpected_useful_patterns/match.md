@@ -1,5 +1,5 @@
 ---
-title: Structural pattern matching
+title: Match/case
 sidebar_position: 7
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# Structural pattern matching
 
 Structural pattern matching with `match` can make some branching code much clearer. It is most useful when you are dispatching based on shapes of data, not just comparing one simple value.
 

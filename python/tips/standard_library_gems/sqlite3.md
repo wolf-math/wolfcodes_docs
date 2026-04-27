@@ -1,5 +1,5 @@
 ---
-title: `sqlite3`
+title: SQLite
 sidebar_position: 15
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `sqlite3` for lightweight local persistence
 
 `sqlite3` gives you a lightweight SQL database without installing a separate server. It is a strong choice for local tools, prototypes, tests, and small applications.
 

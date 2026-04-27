@@ -1,5 +1,5 @@
 ---
-title: `pathlib`
+title: Pathlib
 sidebar_position: 11
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `pathlib` for filesystem work
 
 `pathlib` is the standard-library tool for filesystem paths. It usually leads to clearer, safer code than building path strings by hand.
 

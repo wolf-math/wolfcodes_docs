@@ -1,5 +1,5 @@
 ---
-title: List multiplication and shared nested values
+title: Repeated nested lists
 sidebar_position: 10
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# List multiplication and shared nested values
 
 List multiplication repeats references, not independent nested objects. This becomes surprising when the repeated value is mutable.
 

@@ -1,5 +1,5 @@
 ---
-title: Side effects
+title: Run code only in main
 sidebar_position: 4
 author:
   name: Aaron Wolf
@@ -11,7 +11,7 @@ source:
   canonical_url: https://wolfcodes.dev
 ---
 
-# Use `if __name__ == "__main__":` for side effects
+# Use `if __name__ == "__main__":` to avoid import side effects
 
 Put top-level script behavior behind `if __name__ == "__main__":`. This keeps a file importable without running code immediately, which makes reuse and testing much easier.
 

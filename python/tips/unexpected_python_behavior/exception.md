@@ -1,5 +1,5 @@
 ---
-title: Exception order and broad handlers
+title: Exception handler order
 sidebar_position: 5
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# Exception order and broad handlers
 
 The order of `except` blocks matters, and broad handlers such as `except Exception:` can hide real bugs. A handler that is too general can catch errors you did not mean to recover from.
 

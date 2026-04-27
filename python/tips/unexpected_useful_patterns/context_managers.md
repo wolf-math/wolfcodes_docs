@@ -1,5 +1,5 @@
 ---
-title: Context managers for cleanup
+title: Context managers
 sidebar_position: 3
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# Context managers for cleanup
 
 Context managers let Python set something up, run a block of code, and then clean up reliably afterward. They are useful far beyond files, especially anywhere a resource or temporary state must be restored.
 

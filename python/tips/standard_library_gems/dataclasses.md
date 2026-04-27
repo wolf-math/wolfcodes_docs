@@ -1,5 +1,5 @@
 ---
-title: `dataclasses`
+title: Dataclasses
 sidebar_position: 5
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `dataclasses` for structured data
 
 `dataclasses` are a great standard-library tool for plain data objects. They reduce boilerplate and make object fields easy to scan.
 

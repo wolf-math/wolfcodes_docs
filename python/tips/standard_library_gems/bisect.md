@@ -1,5 +1,5 @@
 ---
-title: `bisect` and `heapq`
+title: Bisect and heapq
 sidebar_position: 1
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `bisect` and `heapq` for ordered data
 
 `bisect` and `heapq` solve two common performance problems without extra dependencies. `bisect` helps you work with sorted lists efficiently, and `heapq` helps you keep track of smallest or largest items.
 

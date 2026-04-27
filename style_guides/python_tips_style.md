@@ -1,16 +1,3 @@
----
-title: Python Tips Style
-sidebar_position: X
-author:
-  name: Aaron Wolf
-  url: https://wolfcodes.dev
-license:
-  type: CC BY-NC 4.0
-  attribution_required: true
-source:
-  canonical_url: https://wolfcodes.dev
----
-
 # Python tips style
 
 Use this guide when writing or revising pages in `docs/python/tips`.
@@ -52,6 +39,65 @@ source:
 - Do not add extra metadata unless the surrounding section already uses it.
 
 For a tips hub page such as `index.mdx`, use `sidebar_label` only if the section needs it for navigation consistency.
+
+## Titles
+
+Keep tip titles tight and clear.
+
+The frontmatter `title` is usually what readers will see in the sidebar, so it should be:
+
+- short enough not to crowd the sidebar
+- specific enough that readers can guess the topic immediately
+- written in plain language rather than clever phrasing
+
+Good frontmatter titles:
+
+- `Mutable defaults`
+- `Identity vs equality`
+- `Pathlib for file paths`
+- `Subprocess`
+- `Loop else blocks`
+
+Less effective frontmatter titles:
+
+- `Python things that sometimes surprise people`
+- `Everything you need to know about \`subprocess.run()\``
+- `` `pathlib` for filesystem work `` because the title cannot start with a backtick
+
+When the clearest sidebar title is shorter than the clearest page title, use:
+
+- a short frontmatter `title`
+- a fuller manual `#` heading right after the frontmatter
+
+For example:
+
+```md
+---
+title: Subprocess
+sidebar_position: X
+author:
+  name: Aaron Wolf
+  url: https://wolfcodes.dev
+license:
+  type: CC BY-NC 4.0
+  attribution_required: true
+source:
+  canonical_url: https://wolfcodes.dev
+---
+
+# `subprocess.run()` for safer command execution
+```
+
+This pattern is especially useful when:
+
+- the best on-page title starts with a module name or syntax wrapped in backticks
+- the short sidebar label would otherwise be too vague
+- the full explanatory title would be too long for navigation
+
+As a rule of thumb:
+
+- optimize the frontmatter `title` for sidebar scanning
+- optimize the manual `#` heading for page clarity
 
 ## Core voice
 
@@ -448,4 +494,3 @@ A strong Python tips page should:
 If a page is accurate but forgettable, it needs stronger examples or clearer takeaways.
 
 If a page is clever but not actionable, it is not ready yet.
-

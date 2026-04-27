@@ -1,5 +1,5 @@
 ---
-title: `contextlib`
+title: Contextlib
 sidebar_position: 3
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `contextlib` for context managers and cleanup helpers
 
 `contextlib` gives you tools for writing and combining cleanup logic. It is especially useful when you want context-manager behavior without writing a full class.
 

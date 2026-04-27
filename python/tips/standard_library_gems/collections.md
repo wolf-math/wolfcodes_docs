@@ -1,5 +1,5 @@
 ---
-title: `collections`
+title: Collections
 sidebar_position: 2
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `collections` for better data structures
 
 `collections` contains data structures that often fit real problems better than plain lists or dictionaries. A few tools in this module can make code both shorter and clearer.
 

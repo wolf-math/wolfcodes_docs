@@ -1,5 +1,5 @@
 ---
-title: `statistics`
+title: Statistics
 sidebar_position: 16
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `statistics` for quick numeric summaries
 
 `statistics` is a handy module for basic numeric summaries. It saves you from rewriting common calculations like means and medians.
 

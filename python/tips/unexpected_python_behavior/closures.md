@@ -1,5 +1,5 @@
 ---
-title: Late binding in closures
+title: Closures in loops
 sidebar_position: 1
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# Late binding in closures
 
 Closures in Python capture variables, not their values at the moment the inner function is created. This surprises many people in loops, where several functions end up using the same final value.
 

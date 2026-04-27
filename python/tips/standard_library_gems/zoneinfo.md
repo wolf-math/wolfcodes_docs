@@ -1,5 +1,5 @@
 ---
-title: `zoneinfo`
+title: Zoneinfo
 sidebar_position: 23
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `zoneinfo` for real time zones
 
 `zoneinfo` gives Python first-class time zone support from the standard library. It is the right tool when your code needs real named time zones instead of fixed UTC offsets.
 

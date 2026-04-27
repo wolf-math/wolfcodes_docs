@@ -1,5 +1,5 @@
 ---
-title: `pprint`
+title: Pprint
 sidebar_position: 12
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `pprint` for readable debugging output
 
 `pprint` makes nested Python data easier to inspect during debugging. It is a simple tool, but it saves time whenever plain `print()` becomes hard to read.
 

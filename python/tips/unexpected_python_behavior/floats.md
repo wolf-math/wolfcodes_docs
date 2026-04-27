@@ -1,5 +1,5 @@
 ---
-title: Floating-point comparisons
+title: Float comparisons
 sidebar_position: 6
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# Floating-point comparisons
 
 Floating-point values are not stored with perfect decimal precision. That means direct equality checks can fail even when two results look like they should match.
 

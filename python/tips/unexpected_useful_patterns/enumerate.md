@@ -1,5 +1,5 @@
 ---
-title: enumerate() instead of manual counters
+title: enumerate() for indexes
 sidebar_position: 5
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `enumerate()` instead of manual counters
 
 `enumerate()` is a simple built-in that makes indexed loops easier to read. It is usually better than managing a counter variable by hand.
 

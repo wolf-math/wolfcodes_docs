@@ -1,5 +1,5 @@
 ---
-title: Use `pathlib` for file paths
+title: Pathlib for file paths
 sidebar_position: 8
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# Use `pathlib` for file paths
 
 `pathlib` is the standard library tool for working with file system paths. It usually produces clearer code than building path strings by hand, and it handles path operations in a way that works across operating systems.
 

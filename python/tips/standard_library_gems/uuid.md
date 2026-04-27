@@ -1,5 +1,5 @@
 ---
-title: `uuid`
+title: UUID
 sidebar_position: 22
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `uuid` for unique identifiers
 
 `uuid` is a simple way to generate identifiers that are very unlikely to collide. It is useful for filenames, record IDs, and request correlation values.
 

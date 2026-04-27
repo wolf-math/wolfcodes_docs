@@ -1,5 +1,5 @@
 ---
-title: Make interfaces obvious with type hints
+title: Type hints for interfaces
 sidebar_position: 5
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# Make interfaces obvious with type hints
 
 Type hints make function inputs and outputs easier to understand. They are especially helpful in larger codebases, where readers need to know what a function expects without tracing every call site.
 

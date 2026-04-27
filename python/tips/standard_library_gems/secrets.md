@@ -1,5 +1,5 @@
 ---
-title: `secrets`
+title: Secrets
 sidebar_position: 13
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `secrets` for tokens and passwords
 
 Use `secrets` when generating tokens, passwords, or anything security-sensitive. It is designed for cryptographically strong randomness, unlike `random`.
 

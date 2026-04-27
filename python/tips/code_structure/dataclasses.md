@@ -1,5 +1,5 @@
 ---
-title: dataclasses for simple data objects
+title: Dataclasses for data
 sidebar_position: 6
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `dataclasses` for simple data objects
 
 `dataclasses` are a good default when a class mostly stores data. They remove repetitive boilerplate and make it easier to see what fields an object has.
 

@@ -1,5 +1,5 @@
 ---
-title: Keep configuration separate from code
+title: Separate configuration
 sidebar_position: 2
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# Keep configuration separate from code
 
 Configuration answers questions like "which database should this use?" or "which port should this run on?" Keeping those choices separate from business logic makes code easier to reuse, test, and deploy.
 

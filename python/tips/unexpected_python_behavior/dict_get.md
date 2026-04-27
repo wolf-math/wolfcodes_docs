@@ -1,5 +1,5 @@
 ---
-title: dict.get() and missing vs `None`
+title: dict.get(): missing vs `None`
 sidebar_position: 4
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `dict.get()` and missing vs `None`
 
 `dict.get(key, default)` is convenient, but it does not tell you whether a key is missing or whether the key exists with a value of `None`. Those are often different situations.
 

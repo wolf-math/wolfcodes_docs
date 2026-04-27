@@ -1,5 +1,5 @@
 ---
-title: Truthiness can hide meaning
+title: Truthiness and missing values
 sidebar_position: 12
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# Truthiness can hide meaning
 
 Python lets many values act like `True` or `False` in conditionals. That is convenient, but it can hide important distinctions when different falsy values mean different things.
 

@@ -1,5 +1,5 @@
 ---
-title: `decimal`
+title: Decimal
 sidebar_position: 6
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `decimal` when exact decimal precision matters
 
 `decimal` gives you exact decimal arithmetic, which is often a better fit than `float` when precision and rounding rules matter.
 

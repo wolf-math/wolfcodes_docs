@@ -1,5 +1,5 @@
 ---
-title: Separate pure logic from I/O
+title: Separate logic from I/O
 sidebar_position: 3
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# Separate pure logic from I/O
 
 Code is easier to test when the core logic is separate from reading files, making network requests, printing output, or touching a database. A small separation between pure logic and I/O often pays off immediately.
 

@@ -1,5 +1,5 @@
 ---
-title: any() and all()
+title: Boolean checks with any() and all()
 sidebar_position: 1
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `any()` and `all()`
 
 `any()` and `all()` are small built-ins that make boolean intent much clearer. They are especially useful when you want to say "at least one item matches" or "every item matches" without managing flags by hand.
 

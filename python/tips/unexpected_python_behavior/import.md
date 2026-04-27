@@ -1,5 +1,5 @@
 ---
-title: from module import *
+title: Avoid import *
 sidebar_position: 7
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# Avoid `from module import *`
 
 `from module import *` makes code harder to read because it hides where names come from. It also increases the chance of accidental name collisions.
 

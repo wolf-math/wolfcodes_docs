@@ -1,5 +1,5 @@
 ---
-title: `subprocess.run()`
+title: Subprocess
 sidebar_position: 17
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `subprocess.run()` for safer command execution
 
 `subprocess.run()` is the safest default for running external commands from Python. It is clearer and less error-prone than older process APIs or shell-string hacks.
 

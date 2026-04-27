@@ -1,5 +1,5 @@
 ---
-title: Composition over inheritance
+title: Composition vs inheritance
 sidebar_position: 7
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# Prefer composition over deep inheritance
 
 Composition usually leads to simpler Python code than deep inheritance chains. When one object uses another object to do part of its work, the behavior stays easier to test, swap, and reason about.
 

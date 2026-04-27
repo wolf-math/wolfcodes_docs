@@ -1,5 +1,5 @@
 ---
-title: sort() vs. `sorted()`
+title: sort() vs sorted()
 sidebar_position: 11
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `sort()` vs `sorted()`
 
 `list.sort()` and `sorted()` look similar, but they behave differently in an important way. One mutates the original list and returns `None`. The other returns a new sorted result.
 

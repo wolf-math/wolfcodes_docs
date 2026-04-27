@@ -1,5 +1,5 @@
 ---
-title: `itertools`
+title: Itertools
 sidebar_position: 10
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `itertools` for lazy iteration patterns
 
 `itertools` gives you building blocks for lazy iteration. It is especially useful when you want to transform, combine, or slice streams of values without building extra lists.
 

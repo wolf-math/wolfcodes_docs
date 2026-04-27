@@ -1,5 +1,5 @@
 ---
-title: `functools`
+title: Functools
 sidebar_position: 9
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# `functools` for caching, partial application, and more
 
 `functools` contains several small tools with big practical payoff. The most useful ones in everyday code are `lru_cache`, `partial`, and `cached_property`.
 

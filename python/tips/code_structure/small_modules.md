@@ -1,5 +1,5 @@
 ---
-title: Prefer small modules with clear jobs
+title: Small, focused modules
 sidebar_position: 1
 author:
   name: Aaron Wolf
@@ -10,6 +10,8 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
+# Prefer small modules with clear responsibilities
 
 Small modules are easier to understand, test, and change. A module should usually have one clear responsibility instead of becoming a general dumping ground for unrelated helpers.
 
