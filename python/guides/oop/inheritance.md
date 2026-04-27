@@ -1,6 +1,6 @@
 ---
 title: Inheritance
-sidebar_position: 4
+sidebar_position: 5
 author:
   name: Aaron Wolf
   url: https://wolfcodes.dev
@@ -319,5 +319,4 @@ isinstance(Dog("Fido"), Animal)  # True
 - Inheritance is best for clear “is‑a” relationships; composition is often a better choice otherwise.
 
 The [**polymorphism**](./polymorphism) guide builds on this by showing how to write code that works with many different subclasses through a shared interface.
-
 

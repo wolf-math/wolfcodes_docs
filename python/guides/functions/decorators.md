@@ -1,6 +1,6 @@
 ---
 title: Decorators
-sidebar_position: 4
+sidebar_position: 5
 author:
   name: Aaron Wolf
   url: https://wolfcodes.dev
@@ -307,4 +307,3 @@ They can be overkill when:
 - It makes the control flow harder to follow for your future self.
 
 When in doubt, start with a normal helper function. If you notice a pattern repeating, refactor it into a decorator.
-

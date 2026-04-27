@@ -1,6 +1,6 @@
 ---
 title: Lambda Functions
-sidebar_position: 3
+sidebar_position: 4
 author:
   name: Aaron Wolf
   url: https://wolfcodes.dev
@@ -464,4 +464,3 @@ for i in range(3):
 for cb in callbacks:
     cb()  # Prints: 0, 1, 2 (correct)
 ```
-

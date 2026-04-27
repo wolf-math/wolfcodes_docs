@@ -1,6 +1,6 @@
 ---
 title: Higher-order Functions
-sidebar_position: 4
+sidebar_position: 6
 author:
   name: Aaron Wolf
   url: https://wolfcodes.dev
@@ -245,5 +245,4 @@ Higher-order functions are a good fit when:
 - You need to **wrap or extend behavior** (decorators, logging, timing, access control).
 
 They might be overkill when the logic is simple and a plain `for` loop is clearer to a beginner. As you write more Python, you'll develop a feel for when a higher-order function makes the code more readable versus when it hides too much.
-
 

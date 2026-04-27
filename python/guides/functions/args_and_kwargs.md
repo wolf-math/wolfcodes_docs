@@ -1,6 +1,6 @@
 ---
 title: Parameters
-sidebar_position: 2
+sidebar_position: 3
 author:
   name: Aaron Wolf
   url: https://wolfcodes.dev
