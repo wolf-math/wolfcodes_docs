@@ -1,0 +1,162 @@
+---
+title: Python Tips
+sidebar_label: Tips
+sidebar_position: 3.5
+author:
+  name: Aaron Wolf
+  url: https://wolfcodes.dev
+license:
+  type: CC BY-NC 4.0
+  attribution_required: true
+source:
+  canonical_url: https://wolfcodes.dev
+---
+
+import Link from '@docusaurus/Link';
+import styles from './hub.module.css';
+
+Welcome to Python Tips. This section collects short, practical lessons that help you write better Python, avoid common mistakes, and discover useful parts of the language and standard library.
+
+## Code structure
+
+Tips for organizing Python code so it stays easier to read, test, and maintain.
+
+<div className={styles.grid}>
+  <Link className={styles.card} to="./code_structure/small_modules">
+    Small modules with clear jobs
+  </Link>
+
+  <Link className={styles.card} to="./code_structure/separate_code">
+    Separate pure logic from I/O
+  </Link>
+
+  <Link className={styles.card} to="./code_structure/return_types">
+    Make interfaces obvious with type hints
+  </Link>
+
+  <Link className={styles.card} to="./code_structure/pathlib">
+    Use `pathlib` for file paths
+  </Link>
+
+  <Link className={styles.card} to="./code_structure/dataclasses">
+    `dataclasses` for simple data objects
+  </Link>
+
+  <Link className={styles.card} to="./code_structure/composistion">
+    Composition over inheritance
+  </Link>
+</div>
+
+## Unexpected Python behavior
+
+Python has a few behaviors that are correct but surprising. These are the ones that cause real bugs most often.
+
+<div className={styles.grid}>
+  <Link className={styles.card} to="./unexpected_python_behavior/default_args">
+    Mutable default arguments
+  </Link>
+
+  <Link className={styles.card} to="./unexpected_python_behavior/is_equals">
+    `is` vs `==`
+  </Link>
+
+  <Link className={styles.card} to="./unexpected_python_behavior/floats">
+    Floating-point comparisons
+  </Link>
+
+  <Link className={styles.card} to="./unexpected_python_behavior/deep_copy">
+    Shallow copies vs deep copies
+  </Link>
+
+  <Link className={styles.card} to="./unexpected_python_behavior/multiplication">
+    List multiplication and shared nested values
+  </Link>
+
+  <Link className={styles.card} to="./unexpected_python_behavior/closures">
+    Late binding in closures
+  </Link>
+</div>
+
+## Unexpected useful patterns
+
+Some Python features look obscure at first, but become very useful once you know when to use them.
+
+<div className={styles.grid}>
+  <Link className={styles.card} to="./unexpected_useful_patterns/enumerate">
+    `enumerate()` instead of manual counters
+  </Link>
+
+  <Link className={styles.card} to="./unexpected_useful_patterns/zip">
+    `zip()` for parallel iteration
+  </Link>
+
+  <Link className={styles.card} to="./unexpected_useful_patterns/any_all">
+    `any()` and `all()`
+  </Link>
+
+  <Link className={styles.card} to="./unexpected_useful_patterns/generator">
+    Generator expressions
+  </Link>
+
+  <Link className={styles.card} to="./unexpected_useful_patterns/context_managers">
+    Context managers for cleanup
+  </Link>
+
+  <Link className={styles.card} to="./unexpected_useful_patterns/unpacking">
+    Tuple unpacking
+  </Link>
+</div>
+
+## Standard library gems
+
+Python's standard library solves many everyday problems well, but a lot of its best tools stay underused.
+
+<div className={styles.grid}>
+  <Link className={styles.card} to="./standard_library_gems/collections">
+    `collections`
+  </Link>
+
+  <Link className={styles.card} to="./standard_library_gems/functools">
+    `functools`
+  </Link>
+
+  <Link className={styles.card} to="./standard_library_gems/itertools">
+    `itertools`
+  </Link>
+
+  <Link className={styles.card} to="./standard_library_gems/tempfile">
+    `tempfile`
+  </Link>
+
+  <Link className={styles.card} to="./standard_library_gems/subprocess">
+    `subprocess.run()`
+  </Link>
+
+  <Link className={styles.card} to="./standard_library_gems/zoneinfo">
+    `zoneinfo`
+  </Link>
+</div>
+
+## Browse all tips
+
+Use these pages when you want a quick practical lesson instead of a full tutorial, when you are debugging surprising behavior, or when you want a better default pattern for everyday Python tasks.
+
+<div className={styles.grid}>
+  <Link className={styles.card} to="./code_structure/">
+    All code structure tips
+  </Link>
+
+  <Link className={styles.card} to="./unexpected_python_behavior/">
+    All unexpected behavior tips
+  </Link>
+
+  <Link className={styles.card} to="./unexpected_useful_patterns/">
+    All useful pattern tips
+  </Link>
+
+  <Link className={styles.card} to="./standard_library_gems/">
+    All standard library gems
+  </Link>
+</div>
+
+If you are still learning the basics, start with the [Python Guides](/docs/python/guides/). If you need exact syntax or API details, use the [Python Language Reference](/docs/python/language_reference/).
