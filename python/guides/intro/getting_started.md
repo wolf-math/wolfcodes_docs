@@ -10,13 +10,17 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
-## Welcome to Python!
+## What is Python?
 
-Python is a powerful, beginner-friendly programming language used for everything from web development to data science, automation, and artificial intelligence. It's known for its clean, readable syntax that reads almost like English, making it an excellent choice for your first programming language.
+**Python** is a beginner-friendly programming language that is used for automation, web development, data work, artificial intelligence, and many other kinds of software. It is known for readable syntax, which makes it a strong first language and a practical everyday tool.
 
-## Why Python?
+In this guide section, you will gradually use Python to build a small **vinyl record library tracker**. We will start tiny, with simple print statements and a few music-themed values, then grow that into a full project over time.
 
-Python is designed to be easy to learn and use. Unlike some languages that require lots of setup and complex syntax, Python lets you focus on solving problems rather than fighting with the language itself. It's also incredibly versatile, so the same language you use to write a simple script can power major applications used by millions of people.
+## Why this matters
+
+Python is a great language for learning how programs work because it lets you focus on ideas instead of a lot of ceremony. You can write a tiny script in a few lines, but the same language can also power a complete application.
+
+That makes Python a good fit for the guide project too. The same basics you use to print one record title today will eventually help you save, search, and organize a whole record collection.
 
 ## What you'll need
 
@@ -46,7 +50,7 @@ If you're not familiar with how command line commands work, see the [programs, a
 
 ## Your first Python program
 
-Let's start with the classic "Hello, World!" program. This is a tradition in programming—your first program that prints a message to the screen.
+Let's start with the smallest kind of Python program: one that prints a message to the screen.
 
 ### Option 1: Using Python interactively
 
@@ -55,64 +59,81 @@ You can run Python code directly in an interactive session. Open your terminal a
 Use this for quick tests and experimentation. It's great for learning and trying out code snippets.
 
 ```python
->>> print("Hello, World!")
-Hello, World!
+>>> print("Now spinning: Are You Experienced")
+Now spinning: Are You Experienced
 ```
 
 That's it! You just ran your first Python program. The `print()` function displays whatever you put inside the parentheses.
 
 ### Option 2: Creating a Python file
 
-For real programs, you'll write code in a file. Create a new file called `hello.py` and add this line:
+For real programs, you'll usually write code in a file. Create a new file called `first_record.py` and add this line:
 
 Use this for programs you want to save and run multiple times. This is how you'll write most of your Python code.
 
 ```python
-print("Hello, World!")
+print("Now spinning: Are You Experienced")
 ```
 
 Save the file, then run it from your terminal:
 
 ```bash
-python hello.py
+python first_record.py
 ```
 
 or
 
 ```bash
-python3 hello.py
+python3 first_record.py
 ```
 
 You should see:
 
-```
-Hello, World!
+```text
+Now spinning: Are You Experienced
 ```
 
-Congratulations! You've written and run your first Python program!
+Congratulations! You've written and run your first Python script.
 
 ## What just happened?
 
 Let's break down what you did:
 
 - **`print()`** is a built-in Python function that displays text (or other values) on the screen
-- **`"Hello, World!"`** is a [string](../types_variables/types), which is a piece of text enclosed in quotes
+- **`"Now spinning: Are You Experienced"`** is a [string](../types_variables/types), which is a piece of text enclosed in quotes
 - When you ran the program, Python executed the `print()` function and displayed the message
+
+## In the vinyl tracker
+
+This first script is tiny, but it already lives in the same world as the final project.
+
+```python
+print("Vinyl Record Library Tracker")
+print("Now spinning: Blue Train")
+```
+
+This is not a full app yet. It is just the smallest possible version of a music-focused program:
+
+- it has output
+- it has text
+- it has a clear purpose
+
+Later guides will teach you how to store record details in variables, group records into collections, and build this into a real terminal app.
 
 ## Next steps
 
-Now that you've run your first program, you're ready to learn more! The next lessons will teach you:
+Now that you've run your first program, you're ready to learn more. The next lessons will teach you:
 
 - **Variables**: Storing and using data in your programs
 - **Types**: Understanding different kinds of data (numbers, text, etc.)
 - **Conditionals**: Making decisions in your code
 
-But for now, take a moment to celebrate—you're officially a Python programmer! Try modifying your program to print different messages:
+For now, try changing the message so it prints a different artist or album:
 
 ```python
-print("Hello, World!")
-print("Python is fun!")
-print("I'm learning to code!")
+print("Vinyl Record Library Tracker")
+print("Now spinning: Electric Ladyland")
+print("Next up: Rumours")
 ```
 
-Run it again and see all three messages appear. You're on your way!
+Run it again and see all three lines appear. That small change is the beginning of writing your own programs.

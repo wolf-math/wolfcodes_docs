@@ -1,0 +1,53 @@
+{
+  "name": "Vinyl Record Library",
+  "records": [
+    {
+      "title": "Are You Experienced",
+      "artist": "The Jimi Hendrix Experience",
+      "year": 1967,
+      "genre": "Psychedelic Rock",
+      "condition": "VG+",
+      "purchase_price": 22.5,
+      "estimated_value": 35.0,
+      "notes": "Mono reissue with light sleeve wear.",
+      "added_on": "2024-02-14"
+    },
+    {
+      "title": "Blue Train",
+      "artist": "John Coltrane",
+      "year": 1957,
+      "genre": "Jazz",
+      "condition": "VG+",
+      "purchase_price": 18.0,
+      "estimated_value": 28.0,
+      "notes": "Bought from a local record fair.",
+      "added_on": "2024-03-03"
+    },
+    {
+      "title": "Rumours",
+      "artist": "Fleetwood Mac",
+      "year": 1977,
+      "genre": "Rock",
+      "condition": "NM",
+      "purchase_price": 26.0,
+      "estimated_value": 32.0,
+      "notes": "Clean copy with original inner sleeve.",
+      "added_on": "2024-04-21"
+    }
+  ],
+  "sold_records": [
+    {
+      "title": "Kind of Blue",
+      "artist": "Miles Davis",
+      "year": 1959,
+      "genre": "Jazz",
+      "condition": "VG",
+      "purchase_price": 20.0,
+      "estimated_value": 30.0,
+      "notes": "Sold after upgrading to a cleaner copy.",
+      "added_on": "2024-01-10",
+      "sold_price": 34.0,
+      "sold_on": "2024-04-25"
+    }
+  ]
+}
