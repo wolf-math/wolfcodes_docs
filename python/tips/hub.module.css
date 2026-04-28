@@ -1,0 +1,151 @@
+.topicList {
+  margin: 2rem 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  background: var(--ifm-background-color);
+}
+
+.topicItem {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--ifm-color-emphasis-300);
+}
+
+.topicItem:first-child {
+  border-top: 0;
+}
+
+.topicButton {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.topicButton:hover {
+  background: var(--ifm-hover-overlay);
+}
+
+.topicButton:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: -2px;
+}
+
+.chevron {
+  color: var(--ifm-color-emphasis-700);
+  font-size: 2rem;
+  line-height: 1;
+  transition: transform 0.16s ease;
+}
+
+.chevronOpen {
+  transform: rotate(90deg);
+}
+
+.topicCircle {
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 1.5px solid var(--ifm-color-emphasis-500);
+  border-radius: 999px;
+  background: transparent;
+}
+
+.topicTitle {
+  color: var(--ifm-heading-color);
+  font-size: 1.02rem;
+  font-weight: 500;
+}
+
+.topicMeta {
+  color: var(--ifm-color-content-secondary);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.topicContent {
+  padding-bottom: 0.75rem;
+}
+
+.topicDescription {
+  margin: 0;
+  padding: 0 1.25rem 0.8rem 3.55rem;
+  color: var(--ifm-color-content-secondary);
+  font-size: 0.95rem;
+}
+
+.lessonList {
+  margin: 0;
+  padding: 0 1rem 0 3.55rem;
+  list-style: none;
+}
+
+.lessonList li {
+  margin: 0;
+  padding: 0;
+  border-left: 1px solid var(--ifm-color-emphasis-300);
+}
+
+.lessonLink {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.8rem;
+  min-height: 2.85rem;
+  padding: 0.55rem 0.9rem 0.55rem 1.1rem;
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+}
+
+
+
+.lessonLink:hover,
+.lessonLink:focus-visible {
+  color: inherit;
+  text-decoration: none;
+  background: var(--ifm-hover-overlay);
+}
+
+.lessonLink:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: -2px;
+}
+
+@media (max-width: 640px) {
+  .topicButton {
+    grid-template-columns: auto auto 1fr;
+    padding: 0.9rem 1rem;
+  }
+
+  .topicMeta {
+    grid-column: 2 / 4;
+    padding-left: 1.7rem;
+    font-size: 0.84rem;
+  }
+
+  .topicDescription {
+    padding: 0 1rem 0.75rem 2.95rem;
+    font-size: 0.92rem;
+  }
+
+  .lessonList {
+    padding: 0 0.75rem 0 2.95rem;
+  }
+
+  .lessonLink {
+    padding: 0.6rem 0.75rem 0.6rem 0.95rem;
+  }
+
+  .lessonLink::before {
+    transform: translateX(-1.35rem);
+  }
+}
