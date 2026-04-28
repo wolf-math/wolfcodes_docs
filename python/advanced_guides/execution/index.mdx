@@ -1,0 +1,45 @@
+---
+title: Python Execution
+sidebar_label: Python Execution
+sidebar_position: 1
+hide_table_of_contents: true
+author:
+  name: Aaron Wolf
+  url: https://wolfcodes.dev
+license:
+  type: CC BY-NC 4.0
+  attribution_required: true
+source:
+  canonical_url: https://wolfcodes.dev
+---
+
+import Link from '@docusaurus/Link';
+import styles from '../hub.module.css';
+
+Welcome to the Python execution guide. This section explains how Python processes code, binds names to objects, manages object lifetime, and tracks function calls during execution.
+
+## Python execution
+
+Work through these topics in order to build a solid mental model of how Python actually runs your code.
+
+<div className={styles.grid}>
+  <Link className={styles.card} to="./processing_code">
+    How Python Processes Your Code
+  </Link>
+
+  <Link className={styles.card} to="./object_lifetime">
+    Object Lifetime
+  </Link>
+
+  <Link className={styles.card} to="./names_binding_scope">
+    Names, Binding, and Scope
+  </Link>
+
+  <Link className={styles.card} to="./mutability">
+    Mutability, Identity, and Object Semantics
+  </Link>
+
+  <Link className={styles.card} to="./callstack">
+    Call Stack and Execution
+  </Link>
+</div>

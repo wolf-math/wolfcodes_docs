@@ -1,0 +1,40 @@
+---
+title: Async
+sidebar_label: Async
+sidebar_position: 6
+hide_table_of_contents: true
+author:
+  name: Aaron Wolf
+  url: https://wolfcodes.dev
+license:
+  type: CC BY-NC 4.0
+  attribution_required: true
+source:
+  canonical_url: https://wolfcodes.dev
+---
+import Link from '@docusaurus/Link';
+import styles from '../hub.module.css';
+
+Welcome to the async JavaScript guide. This section introduces how JavaScript handles work that finishes later, from historical callback patterns to modern promises and `async` / `await`.
+
+## Asynchronous programming
+
+Start with the core async model, then move through the main patterns in the same order they appear in the sidebar.
+
+<div className={styles.grid}>
+  <Link className={styles.card} to="./asynchronous">
+    Asynchronous JavaScript
+  </Link>
+
+  <Link className={styles.card} to="./callbacks">
+    Async Callbacks (Historical Context)
+  </Link>
+
+  <Link className={styles.card} to="./promises">
+    Promises
+  </Link>
+
+  <Link className={styles.card} to="./async_await">
+    Async/await
+  </Link>
+</div>

@@ -2,6 +2,7 @@
 title: Git & GitHub Guide
 sidebar_label: Git & GitHub
 sidebar_position: 5
+hide_table_of_contents: true
 author:
   name: Aaron Wolf
   url: https://wolfcodes.dev
@@ -12,7 +13,6 @@ source:
   canonical_url: https://wolfcodes.dev
 ---
 import Link from '@docusaurus/Link';
-import styles from './hub.module.css';
 
 Welcome to the Git & GitHub User Guide. This section is a beginner‑friendly crash course that takes you from zero Git knowledge to everyday, confident use of Git and GitHub.
 
@@ -20,8 +20,8 @@ Welcome to the Git & GitHub User Guide. This section is a beginner‑friendly cr
 
 Start here if you're new to Git. You'll learn what problem Git solves, how it thinks about your code, and how to get it installed and configured on your machine.
 
-<div className={styles.grid}>
-  <Link className={styles.card} to="./fundamentals">
+<div>
+  <Link to="./fundamentals">
     Git fundamentals
   </Link>
 </div>
@@ -30,8 +30,8 @@ Start here if you're new to Git. You'll learn what problem Git solves, how it th
 
 Learn how to use Git locally before involving any remotes. You'll create your first repository, make commits, and practice the everyday Git workflow that you'll use on real projects.
 
-<div className={styles.grid}>
-  <Link className={styles.card} to="./local_git">
+<div>
+  <Link to="./local_git">
     Git without GitHub
   </Link>
 </div>
@@ -40,8 +40,8 @@ Learn how to use Git locally before involving any remotes. You'll create your fi
 
 Understand what GitHub adds on top of Git, how remotes work, and when you actually need GitHub. This gives you the mental model for working with local and remote repositories.
 
-<div className={styles.grid}>
-  <Link className={styles.card} to="./github_basics">
+<div>
+  <Link to="./github_basics">
     GitHub & remotes
   </Link>
 </div>
@@ -50,8 +50,8 @@ Understand what GitHub adds on top of Git, how remotes work, and when you actual
 
 Follow a step‑by‑step guide to connect your local Git repository to GitHub using the terminal and the `gh` CLI. You'll create a GitHub repo, set up SSH authentication, and push your first commit.
 
-<div className={styles.grid}>
-  <Link className={styles.card} to="./setup">
+<div>
+  <Link to="./setup">
     Connecting Git to GitHub
   </Link>
 </div>
@@ -60,8 +60,8 @@ Follow a step‑by‑step guide to connect your local Git repository to GitHub u
 
 Learn how to use branches safely, keep `main` stable, and collaborate with others using pull requests and GitHub workflows.
 
-<div className={styles.grid}>
-  <Link className={styles.card} to="./branches_collaboration">
+<div>
+  <Link to="./branches_collaboration">
     Branches & collaboration
   </Link>
 </div>
@@ -70,8 +70,8 @@ Learn how to use branches safely, keep `main` stable, and collaborate with other
 
 See how to recover from common Git mistakes without panic, and where to go next once you're comfortable with the basics.
 
-<div className={styles.grid}>
-  <Link className={styles.card} to="./common_mistakes">
+<div>
+  <Link to="./common_mistakes">
     Common Git mistakes
   </Link>
 </div>
