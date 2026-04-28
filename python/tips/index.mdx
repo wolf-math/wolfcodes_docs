@@ -102,12 +102,12 @@ export const sections = [
 ];
 
 export default function TipsAccordion() {
-  const [openIndex, setOpenIndex] = useState(0);
+  const [openIndexes, setOpenIndexes] = useState([0]);
 
   return (
     <ul className={styles.topicList}>
       {sections.map((section, index) => {
-        const isOpen = openIndex === index;
+        const isOpen = openIndexes.includes(index);
 
         return (
           <li className={styles.topicItem} key={section.title}>
@@ -116,7 +116,13 @@ export default function TipsAccordion() {
               className={styles.topicButton}
               aria-expanded={isOpen}
               aria-controls={`topic-panel-${index}`}
-              onClick={() => setOpenIndex(isOpen ? -1 : index)}
+              onClick={() =>
+                setOpenIndexes((current) =>
+                  current.includes(index)
+                    ? current.filter((item) => item !== index)
+                    : [...current, index]
+                )
+              }
             >
               <span
                 className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ''}`}
