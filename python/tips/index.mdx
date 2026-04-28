@@ -2,6 +2,7 @@
 title: Python Tips
 sidebar_label: Tips
 sidebar_position: 3.5
+hide_table_of_contents: true
 author:
   name: Aaron Wolf
   url: https://wolfcodes.dev
@@ -13,7 +14,6 @@ source:
 ---
 
 import Link from '@docusaurus/Link';
-import styles from './hub.module.css';
 
 Welcome to Python Tips. This section collects short, practical lessons that help you write better Python, avoid common mistakes, and discover useful parts of the language and standard library.
 
@@ -21,36 +21,36 @@ Welcome to Python Tips. This section collects short, practical lessons that help
 
 Tips for organizing Python code so it stays easier to read, test, and maintain.
 
-<div className={styles.grid}>
-  <Link className={styles.card} to="./code_structure/small_modules">
+<div>
+  <Link to="./code_structure/small_modules">
     Small, focused modules
   </Link>
 
-  <Link className={styles.card} to="./code_structure/organizing_code">
+  <Link to="./code_structure/organizing_code">
     Separate configuration
   </Link>
 
-  <Link className={styles.card} to="./code_structure/separate_code">
+  <Link to="./code_structure/separate_code">
     Separate logic from I/O
   </Link>
 
-  <Link className={styles.card} to="./code_structure/side_effects">
+  <Link to="./code_structure/side_effects">
     Run code only in main
   </Link>
 
-  <Link className={styles.card} to="./code_structure/return_types">
+  <Link to="./code_structure/return_types">
     Type hints for interfaces
   </Link>
 
-  <Link className={styles.card} to="./code_structure/dataclasses">
+  <Link to="./code_structure/dataclasses">
     Dataclasses for data
   </Link>
 
-  <Link className={styles.card} to="./code_structure/composistion">
+  <Link to="./code_structure/composistion">
     Composition vs inheritance
   </Link>
 
-  <Link className={styles.card} to="./code_structure/pathlib">
+  <Link to="./code_structure/pathlib">
     Pathlib for file paths
   </Link>
 </div>
@@ -59,52 +59,52 @@ Tips for organizing Python code so it stays easier to read, test, and maintain.
 
 Python has a few behaviors that are correct but surprising. These are the ones that cause real bugs most often.
 
-<div className={styles.grid}>
-  <Link className={styles.card} to="./unexpected_python_behavior/closures">
+<div>
+  <Link to="./unexpected_python_behavior/closures">
     Closures in loops
   </Link>
 
-  <Link className={styles.card} to="./unexpected_python_behavior/deep_copy">
+  <Link to="./unexpected_python_behavior/deep_copy">
     Shallow vs deep copies
   </Link>
 
-  <Link className={styles.card} to="./unexpected_python_behavior/default_args">
+  <Link to="./unexpected_python_behavior/default_args">
     Mutable defaults
   </Link>
 
-  <Link className={styles.card} to="./unexpected_python_behavior/dict_get">
+  <Link to="./unexpected_python_behavior/dict_get">
     `dict.get()` - missing vs `None`
   </Link>
 
-  <Link className={styles.card} to="./unexpected_python_behavior/exception">
+  <Link to="./unexpected_python_behavior/exception">
     Exception handler order
   </Link>
 
-  <Link className={styles.card} to="./unexpected_python_behavior/floats">
+  <Link to="./unexpected_python_behavior/floats">
     Float comparisons
   </Link>
 
-  <Link className={styles.card} to="./unexpected_python_behavior/import">
+  <Link to="./unexpected_python_behavior/import">
     Avoid import *
   </Link>
 
-  <Link className={styles.card} to="./unexpected_python_behavior/is_equals">
+  <Link to="./unexpected_python_behavior/is_equals">
     Identity vs equality
   </Link>
 
-  <Link className={styles.card} to="./unexpected_python_behavior/iterating_and_mutating">
+  <Link to="./unexpected_python_behavior/iterating_and_mutating">
     Mutating while iterating
   </Link>
 
-  <Link className={styles.card} to="./unexpected_python_behavior/multiplication">
+  <Link to="./unexpected_python_behavior/multiplication">
     Repeated nested lists
   </Link>
 
-  <Link className={styles.card} to="./unexpected_python_behavior/sort">
+  <Link to="./unexpected_python_behavior/sort">
     `sort()` vs `sorted()`
   </Link>
 
-  <Link className={styles.card} to="./unexpected_python_behavior/truthiness">
+  <Link to="./unexpected_python_behavior/truthiness">
     Truthiness and missing values
   </Link>
 </div>
@@ -113,44 +113,44 @@ Python has a few behaviors that are correct but surprising. These are the ones t
 
 Some Python features look obscure at first, but become very useful once you know when to use them.
 
-<div className={styles.grid}>
-  <Link className={styles.card} to="./unexpected_useful_patterns/any_all">
+<div>
+  <Link to="./unexpected_useful_patterns/any_all">
     Boolean checks with any() and all()
   </Link>
 
-  <Link className={styles.card} to="./unexpected_useful_patterns/collections">
+  <Link to="./unexpected_useful_patterns/collections">
     Counter and defaultdict
   </Link>
 
-  <Link className={styles.card} to="./unexpected_useful_patterns/context_managers">
+  <Link to="./unexpected_useful_patterns/context_managers">
     Context managers
   </Link>
 
-  <Link className={styles.card} to="./unexpected_useful_patterns/else">
+  <Link to="./unexpected_useful_patterns/else">
     Loop else blocks
   </Link>
 
-  <Link className={styles.card} to="./unexpected_useful_patterns/enumerate">
+  <Link to="./unexpected_useful_patterns/enumerate">
     enumerate() for indexes
   </Link>
 
-  <Link className={styles.card} to="./unexpected_useful_patterns/generator">
+  <Link to="./unexpected_useful_patterns/generator">
     Generator expressions
   </Link>
 
-  <Link className={styles.card} to="./unexpected_useful_patterns/match">
+  <Link to="./unexpected_useful_patterns/match">
     Match/case
   </Link>
 
-  <Link className={styles.card} to="./unexpected_useful_patterns/sentinel_objects">
+  <Link to="./unexpected_useful_patterns/sentinel_objects">
     Sentinel objects
   </Link>
 
-  <Link className={styles.card} to="./unexpected_useful_patterns/unpacking">
+  <Link to="./unexpected_useful_patterns/unpacking">
     Tuple unpacking
   </Link>
 
-  <Link className={styles.card} to="./unexpected_useful_patterns/zip">
+  <Link to="./unexpected_useful_patterns/zip">
     zip() for parallel iteration
   </Link>
 </div>
@@ -159,96 +159,96 @@ Some Python features look obscure at first, but become very useful once you know
 
 Python's standard library solves many everyday problems well, but a lot of its best tools stay underused.
 
-<div className={styles.grid}>
-  <Link className={styles.card} to="./standard_library_gems/bisect">
+<div>
+  <Link to="./standard_library_gems/bisect">
     Bisect and heapq
   </Link>
 
-  <Link className={styles.card} to="./standard_library_gems/collections">
+  <Link to="./standard_library_gems/collections">
     Collections
   </Link>
 
-  <Link className={styles.card} to="./standard_library_gems/contextlib">
+  <Link to="./standard_library_gems/contextlib">
     Contextlib
   </Link>
 
-  <Link className={styles.card} to="./standard_library_gems/csv">
+  <Link to="./standard_library_gems/csv">
     CSV
   </Link>
 
-  <Link className={styles.card} to="./standard_library_gems/dataclasses">
+  <Link to="./standard_library_gems/dataclasses">
     Dataclasses
   </Link>
 
-  <Link className={styles.card} to="./standard_library_gems/decimal">
+  <Link to="./standard_library_gems/decimal">
     Decimal
   </Link>
 
-  <Link className={styles.card} to="./standard_library_gems/difflib">
+  <Link to="./standard_library_gems/difflib">
     Difflib
   </Link>
 
-  <Link className={styles.card} to="./standard_library_gems/fractions">
+  <Link to="./standard_library_gems/fractions">
     Fractions
   </Link>
 
-  <Link className={styles.card} to="./standard_library_gems/functools">
+  <Link to="./standard_library_gems/functools">
     Functools
   </Link>
 
-  <Link className={styles.card} to="./standard_library_gems/itertools">
+  <Link to="./standard_library_gems/itertools">
     Itertools
   </Link>
 
-  <Link className={styles.card} to="./standard_library_gems/pathlib">
+  <Link to="./standard_library_gems/pathlib">
     Pathlib
   </Link>
 
-  <Link className={styles.card} to="./standard_library_gems/pprint">
+  <Link to="./standard_library_gems/pprint">
     Pprint
   </Link>
 
-  <Link className={styles.card} to="./standard_library_gems/secrets">
+  <Link to="./standard_library_gems/secrets">
     Secrets
   </Link>
 
-  <Link className={styles.card} to="./standard_library_gems/shutil">
+  <Link to="./standard_library_gems/shutil">
     Shutil
   </Link>
 
-  <Link className={styles.card} to="./standard_library_gems/sqlite3">
+  <Link to="./standard_library_gems/sqlite3">
     SQLite
   </Link>
 
-  <Link className={styles.card} to="./standard_library_gems/statistics">
+  <Link to="./standard_library_gems/statistics">
     Statistics
   </Link>
 
-  <Link className={styles.card} to="./standard_library_gems/subprocess">
+  <Link to="./standard_library_gems/subprocess">
     Subprocess
   </Link>
 
-  <Link className={styles.card} to="./standard_library_gems/tempfile">
+  <Link to="./standard_library_gems/tempfile">
     Tempfile
   </Link>
 
-  <Link className={styles.card} to="./standard_library_gems/timeit">
+  <Link to="./standard_library_gems/timeit">
     Timeit
   </Link>
 
-  <Link className={styles.card} to="./standard_library_gems/traceback">
+  <Link to="./standard_library_gems/traceback">
     Traceback
   </Link>
 
-  <Link className={styles.card} to="./standard_library_gems/typing">
+  <Link to="./standard_library_gems/typing">
     Typing
   </Link>
 
-  <Link className={styles.card} to="./standard_library_gems/uuid">
+  <Link to="./standard_library_gems/uuid">
     UUID
   </Link>
 
-  <Link className={styles.card} to="./standard_library_gems/zoneinfo">
+  <Link to="./standard_library_gems/zoneinfo">
     Zoneinfo
   </Link>
 </div>
