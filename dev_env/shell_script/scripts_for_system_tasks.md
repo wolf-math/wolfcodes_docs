@@ -170,7 +170,7 @@ Shell is usually not the best tool when you need:
 - structured data processing
 - long-term maintainability for a large program
 
-If the script starts turning into a mini-application, it is often time to consider [Python](/docs/python/) or another general-purpose language.
+If the script starts turning into a mini-application, it is often time to consider [Python](/python/) or another general-purpose language.
 
 Good rule of thumb:
 

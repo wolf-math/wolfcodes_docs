@@ -15,7 +15,7 @@ source:
 
 Debugging frontend JavaScript is the process of finding out what your code is actually doing, comparing that to what you expected, and narrowing down where the mismatch starts.
 
-This page focuses on practical debugging habits for browser-based JavaScript, especially when problems involve the [DOM](../dom/dom_intro), [events](../events/dom_events), [state](../state/application_state), or [Web APIs](../browser_api/intro).
+This page focuses on practical debugging habits for browser-based JavaScript, especially when problems involve the [DOM](../dom/dom_intro), [events](../events/dom_events), [state](../state/application_state), or [Web APIs](../web_api/intro).
 
 ## Why debugging can feel confusing
 
@@ -177,7 +177,7 @@ This is often better than logging everywhere at random.
 
 Async bugs feel confusing because the failure often happens later than the code that started the work.
 
-If the timing model itself still feels fuzzy, review [How JavaScript Processes Code](../browser_api/how_js_processes_code).
+If the timing model itself still feels fuzzy, review [How JavaScript Processes Code](../web_api/how_js_processes_code).
 
 ### `fetch()` and async functions
 
@@ -200,7 +200,7 @@ If `name` is not what you expected, the bug might be:
 - `user.name` is missing
 - later code assumed too much
 
-For the network side of this workflow, see [Fetch API](../browser_api/networking).
+For the network side of this workflow, see [Fetch API](../web_api/networking).
 
 ### Set breakpoints inside async code
 

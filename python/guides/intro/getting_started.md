@@ -24,7 +24,7 @@ To get started with Python, you need:
 
 1. **Python installed** on your computer (version 3.8 or newer)
 2. **A text editor** or code editor (like VS Code, PyCharm, or even a simple text editor)
-3. **A [terminal or command prompt](/docs/command_line/what_it_is)** to run your programs
+3. **A [terminal or command prompt](/dev_env/command_line/what_it_is)** to run your programs
 
 ### Checking if Python is installed
 
@@ -42,7 +42,7 @@ python3 --version
 
 If Python is installed, you'll see something like `Python 3.11.5`. If you get an error, you'll need to [download and install Python](https://www.python.org/downloads/) first.
 
-If you're not familiar with how command line commands work, see the [programs, arguments, and flags guide](/docs/command_line/programs_arguments_flags).
+If you're not familiar with how command line commands work, see the [programs, arguments, and flags guide](/dev_env/command_line/programs_arguments_flags).
 
 ## Your first Python program
 

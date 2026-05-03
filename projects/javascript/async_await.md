@@ -18,7 +18,7 @@ The primary advantages of `async` / `await` are clearer intent, simpler error ha
 
 ## Example
 
-Recall our earlier `fetch` example written using [Promises](/docs/tutorials/javascript/promises-fetch).
+Recall our earlier `fetch` example written using [Promises](/projects/javascript/promises-fetch).
 
 ```javascript
 fetch('https://jsonplaceholder.typicode.com/todos/1')

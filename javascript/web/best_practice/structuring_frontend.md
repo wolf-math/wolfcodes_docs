@@ -15,7 +15,7 @@ source:
 
 As frontend code grows, structure becomes just as important as correctness. A project with clear files, clear responsibilities, and predictable flow is easier to debug, extend, and keep fast over time.
 
-This page focuses on practical structure patterns for vanilla JavaScript in the browser, especially around [DOM work](../dom/dom_intro), [events](../events/dom_events), [state](../state/application_state), and [Web APIs](../browser_api/intro).
+This page focuses on practical structure patterns for vanilla JavaScript in the browser, especially around [DOM work](../dom/dom_intro), [events](../events/dom_events), [state](../state/application_state), and [Web APIs](../web_api/intro).
 
 ## Why structure matters
 
@@ -403,7 +403,7 @@ export class ApiService {
 
 Use this pattern when you want network logic in one clear place instead of spreading `fetch()` calls across the app.
 
-It pairs especially well with the [Fetch API](../browser_api/networking) guide.
+It pairs especially well with the [Fetch API](../web_api/networking) guide.
 
 ## Practical best practices
 

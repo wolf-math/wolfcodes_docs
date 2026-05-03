@@ -153,7 +153,7 @@ They become harder to manage when you need:
 - cross-platform consistency across very different environments
 - long programs with lots of internal state
 
-For larger or more complex programs, a language like [Python](/docs/python/) is often a better fit.
+For larger or more complex programs, a language like [Python](/python/) is often a better fit.
 
 Good rule of thumb:
 

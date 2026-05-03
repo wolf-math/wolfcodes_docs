@@ -24,9 +24,9 @@ SQL is **declarative**. This meansyou describe *what* you want, not *how* to get
 
 ## SQL vs Python data structures
 
-If you're coming from a regular programming language like [Python](/docs/python/guides/intro/getting_started) or [JavaScript](/docs/javascript/guides/basics/intro), you might think of databases as giant dictionaries or lists. That mental model will trip you up.
+If you're coming from a regular programming language like [Python](/python/guides/intro/getting_started) or [JavaScript](/javascript/guides/basics/intro), you might think of databases as giant dictionaries or lists. That mental model will trip you up.
 
-**[Python lists](/docs/python/guides/data_structures/lists)** are ordered sequences. You access items by position (`my_list[0]`), iterate in order, and can have duplicates.
+**[Python lists](/python/guides/data_structures/lists)** are ordered sequences. You access items by position (`my_list[0]`), iterate in order, and can have duplicates.
 
 **SQL tables** are **sets of rows**. They have no inherent order (unless you explicitly `ORDER BY`), and each row is unique (or should be, if you've designed your schema well). You access rows by describing their properties (`WHERE email = 'user@wolfcodes.dev'`), not by position.
 
@@ -44,7 +44,7 @@ SELECT * FROM users WHERE email = 'alice@wolfcodes.dev';
 
 ## SQL vs ORMs
 
-ORMs (Object-Relational Mappers) like Django ORM or SQLAlchemy are **abstractions** over SQL. They let you write [Python](/docs/python/guides/intro/getting_started) code that generates SQL. Learn more about [Python modules](/docs/python/guides/standard_library/modules) to understand how these tools work:
+ORMs (Object-Relational Mappers) like Django ORM or SQLAlchemy are **abstractions** over SQL. They let you write [Python](/python/guides/intro/getting_started) code that generates SQL. Learn more about [Python modules](/python/guides/standard_library/modules) to understand how these tools work:
 
 ```python
 # Django ORM
@@ -82,7 +82,7 @@ SELECT * FROM users ORDER BY created_at DESC;
 
 ## Declarative vs imperative thinking
 
-**Imperative** ([Python](/docs/python/guides/intro/getting_started), [JavaScript](/docs/javascript/guides/basics/intro)): "Do this, then do that, then check this condition..."
+**Imperative** ([Python](/python/guides/intro/getting_started), [JavaScript](/javascript/guides/basics/intro)): "Do this, then do that, then check this condition..."
 
 ```python
 results = []
@@ -91,7 +91,7 @@ for user in users:
         results.append(user['name'])
 ```
 
-Learn more about [Python for loops](/docs/python/guides/control_flow/for_loops) to understand this pattern.
+Learn more about [Python for loops](/python/guides/control_flow/for_loops) to understand this pattern.
 
 **Declarative** (SQL): "Give me all names where age is greater than 18"
 

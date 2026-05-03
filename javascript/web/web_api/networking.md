@@ -301,7 +301,7 @@ const [user, posts] = await Promise.all([
 ]);
 ```
 
-Learn more about [`Promise.all()`](/docs/javascript/guides/async/promises#promiseall--wait-for-all-promises).
+Learn more about [`Promise.all()`](/javascript/guides/async/promises#promiseall--wait-for-all-promises).
 
 ### Polling for updates
 

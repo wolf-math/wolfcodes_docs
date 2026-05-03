@@ -42,7 +42,7 @@ Git and GitHub provide essential tools for modern software development:
 
 The GitHub CLI (`gh`) makes it easy to authenticate and work with GitHub from the command line. This requires using the terminal to install and run commands.
 
-If you're new to the command line, start with the [command line basics guide](/docs/command_line/what_it_is).
+If you're new to the command line, start with the [command line basics guide](/dev_env/command_line/what_it_is).
 
 ### Open your terminal
 
@@ -64,7 +64,7 @@ Before installing, open your terminal application:
 - Or search for "PowerShell" or "Command Prompt" in the Start menu
 - Windows Terminal (recommended) can be installed from the Microsoft Store
 
-Once you have your terminal open, you'll use commands like `cd` and `mkdir`. Learn more about [navigating files and directories](/docs/command_line/files_directories).
+Once you have your terminal open, you'll use commands like `cd` and `mkdir`. Learn more about [navigating files and directories](/dev_env/command_line/files_directories).
 
 ### macOS
 

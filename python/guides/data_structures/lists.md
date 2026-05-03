@@ -54,7 +54,7 @@ scores = [95, 87, 92, 78]
 
 ### Using the `list()` constructor
 
-You can also create lists using the [`list()`](/docs/python/language_reference/list) constructor:
+You can also create lists using the [`list()`](/python/language_reference/list) constructor:
 
 ```python
 numbers = list([1, 2, 3])
@@ -293,7 +293,7 @@ print(repeated)  # [1, 2, 3, 1, 2, 3, 1, 2, 3]
 
 ### Iteration
 
-Loop through items with [`for`](/docs/python/guides/control_flow/for_loops) loops:
+Loop through items with [`for`](/python/guides/control_flow/for_loops) loops:
 
 ```python
 fruits = ['apple', 'banana', 'orange']

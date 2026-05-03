@@ -16,8 +16,8 @@ source:
 This is a **beginner‑friendly crash course** in Git and GitHub.  
 It assumes:
 
-- You can do very basic [terminal navigation](/docs/command_line/files_directories) (`cd`, `ls`, `mkdir`)
-- You understand [how command line commands work](/docs/command_line/programs_arguments_flags)
+- You can do very basic [terminal navigation](/dev_env/command_line/files_directories) (`cd`, `ls`, `mkdir`)
+- You understand [how command line commands work](/dev_env/command_line/programs_arguments_flags)
 - You have a code editor (VS Code is a great default)
 - You are comfortable copying and pasting commands
 

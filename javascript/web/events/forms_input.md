@@ -161,7 +161,7 @@ Rule of thumb: use `.value` for text-like fields, `.checked` for checkboxes, and
 
 By default, forms submit to the server and reload the page. In many JavaScript-driven interfaces, you want to handle submission yourself.
 
-This is one of the most common examples of combining [event handling](./dom_events), [state](../state/application_state), and [network requests](../browser_api/networking).
+This is one of the most common examples of combining [event handling](./dom_events), [state](../state/application_state), and [network requests](../web_api/networking).
 
 ### Prevent form submission
 
@@ -395,7 +395,7 @@ if (form) {
 }
 ```
 
-Learn more about [making HTTP requests with `fetch()`](../browser_api/networking).
+Learn more about [making HTTP requests with `fetch()`](../web_api/networking).
 
 ### `FormData` with file uploads
 
@@ -546,4 +546,4 @@ For more help organizing larger form code, see [Structuring Frontend JavaScript]
 
 - [Events](./dom_events)
 - [Selecting elements](../dom/selecting_elements)
-- [Fetch API](../browser_api/networking)
+- [Fetch API](../web_api/networking)
