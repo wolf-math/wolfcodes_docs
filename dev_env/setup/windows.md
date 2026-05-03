@@ -17,7 +17,7 @@ Please **read carefully and execute all commands in order**.
 👉 We will use **WSL (Windows Subsystem for Linux)** so your environment behaves like macOS/Linux.
 
 
-## 🧑‍💻 GitHub Account
+## GitHub Account
 
 1. Create an account: [https://github.com/join](https://github.com/join)
 2. Add your name + profile picture: [https://github.com/settings/profile](https://github.com/settings/profile)
@@ -25,7 +25,7 @@ Please **read carefully and execute all commands in order**.
 
 
 
-## 🐧 Install WSL (Linux on Windows)
+## Install WSL (Linux on Windows)
 
 :::note 🧠 important note on WSL
 Windows and WSL are two different environments.
@@ -66,7 +66,7 @@ From now on:
 NOT in PowerShell or Command Prompt.
 :::
 
-## 📦 Update system packages
+## Update system packages
 
 Inside WSL:
 
@@ -75,13 +75,13 @@ sudo apt update && sudo apt upgrade -y
 ```
 
 
-## 🧰 Install essential tools
+## Install essential tools
 
 ```bash
 sudo apt install -y build-essential curl file git
 ```
 
-## 🐚 Oh My Zsh
+## Oh My Zsh
 
 Copy and paste the commands to WSL:
 
@@ -98,7 +98,7 @@ sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.
 Press `Y` if prompted.
 
 
-## 🧑‍💻 Visual Studio Code
+## Visual Studio Code
 
 Install for Windows:
 
@@ -123,7 +123,7 @@ code .
 👉 This connects VS Code to Linux automatically
 
 
-## 🔌 VS Code Extensions
+## VS Code Extensions
 
 Run inside WSL terminal:
 
@@ -137,7 +137,7 @@ code --install-extension alexcvzz.vscode-sqlite
 ```
 
 
-## 🤖 Disable AI Features (for now)
+## Disable AI Features (for now)
 
 Open VS Code:
 
@@ -147,7 +147,7 @@ Open VS Code:
 
 
 
-## 🔐 GitHub CLI (`gh`) Setup (SSH)
+## GitHub CLI (`gh`) Setup (SSH)
 
 Copy and paste these command into WSL:
 
@@ -165,11 +165,11 @@ gh auth login -s 'user:email' --git-protocol ssh -w
 
 ### 2. You’ll be asked a few questions:
 
-#### 👉 “What account do you want to log into?”
+#### “What account do you want to log into?”
 
 - Choose: `GitHub.com`
 
-#### 👉 “What is your preferred protocol?”
+#### “What is your preferred protocol?”
 
 - Use the arrow keys to choose: `SSH`
 
@@ -178,7 +178,7 @@ Why?
 - No passwords when pushing
 - More stable long-term workflow
 
-#### 👉 “Generate a new SSH key?”
+#### “Generate a new SSH key?”
 
 - Press `Enter` (Yes)
 
@@ -186,13 +186,13 @@ Why?
 
 - Select your existing key instead
 
-#### 👉 “Enter a passphrase”
+#### “Enter a passphrase”
 
 - Optional, but recommended if you're security conscious 
 - This protects your key if your machine is compromised
 - Press `enter` with the field blank to proceed without a passphrase
 
-#### 👉 “Title for your SSH key”
+#### “Title for your SSH key”
 
 - Default is fine (e.g. `GitHub CLI`), press `enter`
 
@@ -222,7 +222,7 @@ You should see:
 ```
 
 
-## 🐍 Python (pyenv)
+## Python (pyenv)
 
 Install dependencies:
 
@@ -261,7 +261,7 @@ python --version
 ```
 
 
-## 📦 Python Tools
+## Python Tools
 
 ```bash
 pip install --upgrade pip
@@ -270,7 +270,7 @@ pipx ensurepath
 ```
 
 
-## 🟢 Node.js (nvm)
+## Node.js (nvm)
 
 Install nvm:
 
@@ -294,7 +294,7 @@ npm -v
 ```
 
 
-## 🗄 SQLite
+## SQLite
 
 ```bash
 sudo apt install sqlite3 -y
@@ -302,7 +302,7 @@ sqlite3 --version
 ```
 
 
-## 🐘 PostgreSQL
+## PostgreSQL
 
 ```bash
 sudo apt install postgresql postgresql-contrib -y
@@ -327,7 +327,7 @@ Exit:
 ```
 
 
-## 🧪 Final Check
+## Final Check
 
 ```bash
 python --version
@@ -338,7 +338,7 @@ sqlite3 --version
 git --version
 ```
 
-## 🎉 You’re Done!
+## You’re Done!
 
 Your machine is now ready for:
 

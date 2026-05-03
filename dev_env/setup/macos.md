@@ -14,7 +14,7 @@ tags:
 Please **read carefully and execute all commands in order**.
 
 
-## 🧑‍💻 GitHub Account
+## GitHub Account
 
 1. Create an account: [https://github.com/join](https://github.com/join)
     
@@ -38,7 +38,7 @@ Use:
 :::    
 
 
-## 🛠 Command Line Tools
+## Command Line Tools
 
 ```bash
 xcode-select --install
@@ -47,7 +47,7 @@ xcode-select --install
 If already installed → continue.
 
 
-## 🍺 Homebrew
+## Homebrew
 
 Open the terminal. To install type:
 
@@ -83,7 +83,7 @@ brew upgrade openssl || brew install openssl
 ```
 
 
-## 🧑‍💻 Visual Studio Code
+## Visual Studio Code
 
 Install VS Code from the terminal:
 
@@ -98,7 +98,7 @@ code
 ```
 
 
-## 🔌 VS Code Extensions
+## VS Code Extensions
 
 Install the VS Code extensions by typing the following in your terminal:
 
@@ -116,7 +116,7 @@ code --install-extension alexcvzz.vscode-sqlite
 ```
 
 
-## 🤖 Disable AI Features (for now)
+## Disable AI Features (for now)
 
 From the VS Code window:
 
@@ -128,7 +128,7 @@ From the VS Code window:
     
 
 
-## 💻 Terminal Setup → iTerm2 (Recommended)
+## Terminal Setup → iTerm2 (Recommended)
 
 The default macOS Terminal is fine… but once you’ve used **iTerm2**, it’s hard to go back.
 
@@ -180,7 +180,7 @@ brew install font-meslo-lg-nerd-font
 
 
 
-## 🐚 Oh My Zsh
+## Oh My Zsh
 
 ```bash
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -189,7 +189,7 @@ sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.
 Press `Y` if prompted.
 
 
-## 🔐 GitHub CLI (`gh`) Setup (SSH)
+## GitHub CLI (`gh`) Setup (SSH)
 
 We’ll use **GitHub CLI** to connect your machine to GitHub using **SSH**.
 
@@ -208,11 +208,11 @@ gh auth login -s 'user:email' --git-protocol ssh -w
 ```
 ### 2. You’ll be asked a few questions:
 
-#### 👉 “What account do you want to log into?”
+#### “What account do you want to log into?”
 
 - Choose: `GitHub.com`
 
-#### 👉 “What is your preferred protocol?”
+#### “What is your preferred protocol?”
 
 - Use the arrow keys to choose: `SSH`
 
@@ -221,7 +221,7 @@ Why?
 - No passwords when pushing
 - More stable long-term workflow
 
-#### 👉 “Generate a new SSH key?”
+#### “Generate a new SSH key?”
 
 - Press `Enter` (Yes)
 
@@ -229,13 +229,13 @@ Why?
 
 - Select your existing key instead
 
-#### 👉 “Enter a passphrase”
+#### “Enter a passphrase”
 
 - Optional, but recommended if you're security conscious 
 - This protects your key if your machine is compromised
 - Press `enter` with the field blank to proceed without a passphrase
 
-#### 👉 “Title for your SSH key”
+#### “Title for your SSH key”
 
 - Default is fine (e.g. `GitHub CLI`), press `enter`
 
@@ -265,7 +265,7 @@ You should see:
 ```
 
 
-## 🐍 Python (pyenv)
+## Python (pyenv)
 
 We use **pyenv** instead of system Python.
 
@@ -299,7 +299,7 @@ python --version
 ```
 
 
-## 📦 Python Tools
+## Python Tools
 
 From the terminal type:
 ```bash
@@ -315,7 +315,7 @@ pip install black flake8 pytest ipython
 ```
 
 
-## 🟢 Node.js (nvm)
+## Node.js (nvm)
 
 Install nvm from the terminal:
 
@@ -345,7 +345,7 @@ npm -v
 ```
 
 
-## 🗄 SQLite
+## SQLite
 
 From the terminal type:
 ```bash
@@ -354,7 +354,7 @@ sqlite3 --version
 ```
 
 
-## 🐘 PostgreSQL
+## PostgreSQL
 
 From the terminal type:
 
@@ -377,7 +377,7 @@ Exit with:
 ```
 
 
-## 🧪 Final Check
+## Final Check
 
 Check everything manually from the terminal:
 
@@ -393,7 +393,7 @@ git --version
     
 
 
-## 🎉 You’re Done!
+## You’re Done!
 
 Your machine is now ready for:
 
