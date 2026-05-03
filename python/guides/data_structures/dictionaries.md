@@ -11,7 +11,7 @@ source:
   canonical_url: https://wolfcodes.dev
 ---
 
-Dictionaries (dicts) are key-value stores that let you organize data by meaningful labels rather than numeric positions. Unlike [lists](/docs/python/guides/data_structures/lists) and [tuples](/docs/python/guides/data_structures/tuples) that use indexes, dictionaries use keys to access values, making them perfect for representing structured data like user information, configuration settings, or any data where names matter more than position.
+Dictionaries (dicts) are key-value stores that let you organize data by meaningful labels rather than numeric positions. Unlike [lists](/python/guides/data_structures/lists) and [tuples](/python/guides/data_structures/tuples) that use indexes, dictionaries use keys to access values, making them perfect for representing structured data like user information, configuration settings, or any data where names matter more than position.
 
 ## What are dictionaries?
 
@@ -56,7 +56,7 @@ Each pair has a key (before the colon) and a value (after the colon).
 
 ### Using the `dict()` constructor
 
-Create dictionaries using the [`dict()`](/docs/python/language_reference/dict) constructor:
+Create dictionaries using the [`dict()`](/python/language_reference/dict) constructor:
 
 ```python
 # From key-value pairs
@@ -405,7 +405,7 @@ print(f"Average score: {average}")
 
 ### Length
 
-Get the number of key-value pairs with [`len()`](/docs/python/language_reference/built-in#len):
+Get the number of key-value pairs with [`len()`](/python/language_reference/built-in#len):
 
 ```python
 person = {'name': 'Alice', 'age': 30, 'city': 'Boston'}
@@ -595,7 +595,7 @@ print(grades.get(grade, 'Unknown'))  # 'Good'
 
 ### Dictionary comprehensions
 
-Create dictionaries using comprehensions (see [comprehensions](/docs/python/guides/data_structures/comprehensions)):
+Create dictionaries using comprehensions (see [comprehensions](/python/guides/data_structures/comprehensions)):
 
 ```python
 # Square each number

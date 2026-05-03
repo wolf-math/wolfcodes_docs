@@ -24,7 +24,7 @@ In this tutorial you will:
 
 Pick a place where you keep code projects, for example `~/code`.
 
-If you're not familiar with these commands, see the [files and directories guide](/docs/command_line/files_directories).
+If you're not familiar with these commands, see the [files and directories guide](/dev_env/command_line/files_directories).
 
 ```bash
 # create your project folder
@@ -72,7 +72,7 @@ Create a simple file:
 echo "Hello Git!" > notes.txt
 ```
 
-Learn more about [viewing and editing files](/docs/command_line/viewing_editing_files) in the command line.
+Learn more about [viewing and editing files](/dev_env/command_line/viewing_editing_files) in the command line.
 
 Check status again:
 

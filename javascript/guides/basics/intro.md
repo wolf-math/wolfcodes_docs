@@ -27,7 +27,7 @@ Despite its name, JavaScript is not related to Java. The name was a marketing de
 
 ### In the browser
 
-When JavaScript runs in a web browser, it has access to browser-specific features like the Document Object Model (DOM), which lets you manipulate web pages. However, this guide focuses on **core JavaScript** not browser APIs. The [browser API](/docs/javascript/web/) will be covered in the next section.
+When JavaScript runs in a web browser, it has access to browser-specific features like the Document Object Model (DOM), which lets you manipulate web pages. However, this guide focuses on **core JavaScript** not browser APIs. The [browser API](/javascript/web/) will be covered in the next section.
 
 ### In Node.js
 

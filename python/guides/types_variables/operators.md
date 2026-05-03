@@ -102,7 +102,7 @@ The `**` operator raises a number to a power:
 
 ## Comparison operators
 
-Comparison operators compare two values and return `True` or `False`. You've already seen these in [conditionals](/docs/python/guides/control_flow/conditionals):
+Comparison operators compare two values and return `True` or `False`. You've already seen these in [conditionals](/python/guides/control_flow/conditionals):
 
 | Operator | Name | Example | Result |
 |----------|------|---------|--------|
@@ -191,7 +191,7 @@ These operators are especially useful when you need to modify a variable's value
 
 ## Logical operators
 
-Logical operators work with boolean values (`True` and `False`) and truthiness. You will see more on these in [conditionals](/docs/python/guides/control_flow/conditionals) and [truthiness](./truthiness).
+Logical operators work with boolean values (`True` and `False`) and truthiness. You will see more on these in [conditionals](/python/guides/control_flow/conditionals) and [truthiness](./truthiness).
 
 | Operator | Name | Example | Result |
 |----------|------|---------|--------|

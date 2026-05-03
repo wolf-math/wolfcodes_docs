@@ -164,7 +164,7 @@ Many server environments don't even have a GUI—the command line is your only o
 
 Here are some everyday tasks developers do with the command line:
 
-- **[Version control](/docs/git_github/fundamentals)**: `git add .`, `git commit`, `git push`
+- **[Version control](/git_github/fundamentals)**: `git add .`, `git commit`, `git push`
 - **Package management**: `npm install`, `pip install`, `apt install`
 - **Running programs**: `python script.py`, `node server.js`
 - **File operations**: Moving, copying, searching through codebases

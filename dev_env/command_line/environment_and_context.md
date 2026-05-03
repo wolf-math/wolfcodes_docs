@@ -112,7 +112,7 @@ command not found: python
 Common reasons `python` (or any tool) suddenly stops working:
 
 - You installed a new version that lives in a different directory
-- You created a [**virtual environment**](/docs/python/guides/standard_library/virtual_env) and activated/deactivated it
+- You created a [**virtual environment**](/python/guides/standard_library/virtual_env) and activated/deactivated it
 - Your `PATH` changed (e.g., new shell config, new tool)
 
 The fix is almost always about:
@@ -200,7 +200,7 @@ Get-Command python
 
 Real-world tools rely heavily on environment and context:
 
-- **[Virtual environments](/docs/python/guides/standard_library/virtual_env)** (Python) adjust `PATH` so `python` and `pip` point to project-specific versions
+- **[Virtual environments](/python/guides/standard_library/virtual_env)** (Python) adjust `PATH` so `python` and `pip` point to project-specific versions
 - **Language toolchains** (Node, Rust, etc.) install executables into directories added to `PATH`
 - **Cloud CLIs** (AWS, Azure, etc.) read credentials from environment variables
 - **Build systems** and scripts rely on consistent working directories

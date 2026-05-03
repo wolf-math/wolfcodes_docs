@@ -16,7 +16,7 @@ A **virtual environment** is an isolated Python environment that allows you to i
 
 Think of it like a separate workspace for each project. You can have different versions of the same package in different virtual environments without conflicts.
 
-If you're not familiar with command line navigation, see the [files and directories guide](/docs/command_line/files_directories). To understand how commands work, see [programs, arguments, and flags](/docs/command_line/programs_arguments_flags).
+If you're not familiar with command line navigation, see the [files and directories guide](/dev_env/command_line/files_directories). To understand how commands work, see [programs, arguments, and flags](/dev_env/command_line/programs_arguments_flags).
 
 ```bash
 # Create a virtual environment
@@ -88,7 +88,7 @@ python -m venv .venv
 
 ## Activating a virtual environment
 
-Once created, you need to **activate** the virtual environment before using it. Activation modifies your shell's PATH so that commands like `python` and `pip` point to the virtual environment's versions. Learn more about [environment variables and PATH](/docs/command_line/environment_and_context) in the command line guide.
+Once created, you need to **activate** the virtual environment before using it. Activation modifies your shell's PATH so that commands like `python` and `pip` point to the virtual environment's versions. Learn more about [environment variables and PATH](/dev_env/command_line/environment_and_context) in the command line guide.
 
 ### On Windows (Command Prompt)
 

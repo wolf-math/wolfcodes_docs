@@ -285,7 +285,7 @@ Membership testing with `in` is very efficient for sets (O(1) average case), muc
 
 ### Iteration
 
-Loop through items with [`for`](/docs/python/guides/control_flow/for_loops) loops:
+Loop through items with [`for`](/python/guides/control_flow/for_loops) loops:
 
 ```python
 fruits = {'apple', 'banana', 'orange'}

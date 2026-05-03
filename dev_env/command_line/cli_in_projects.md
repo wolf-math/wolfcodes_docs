@@ -37,7 +37,7 @@ The command line and editor are **partners**, not competitors.
 
 ## Git: version control from the CLI
 
-[Git](/docs/git_github/fundamentals) is primarily a command line tool, even if your editor adds buttons on top.
+[Git](/git_github/fundamentals) is primarily a command line tool, even if your editor adds buttons on top.
 
 Common commands:
 
@@ -59,7 +59,7 @@ git commit -m "Describe what changed and why"
 git push
 ```
 
-Learn more about these commands in the [Git basics guide](/docs/git_github/local_git).
+Learn more about these commands in the [Git basics guide](/git_github/local_git).
 
 Why the CLI is a good fit for Git:
 
@@ -80,7 +80,7 @@ gets you very far.
 
 ## Python projects and virtual environments
 
-Python is a good example of how the CLI and environment concepts come together. Learn more about [virtual environments](/docs/python/guides/standard_library/virtual_env) in the Python documentation.
+Python is a good example of how the CLI and environment concepts come together. Learn more about [virtual environments](/python/guides/standard_library/virtual_env) in the Python documentation.
 
 ### Creating a virtual environment
 
@@ -90,7 +90,7 @@ From your project directory:
 python -m venv .venv
 ```
 
-This uses Python's [`-m` flag](/docs/python/guides/standard_library/modules) to run the `venv` module.
+This uses Python's [`-m` flag](/python/guides/standard_library/modules) to run the `venv` module.
 
 This:
 
@@ -154,7 +154,7 @@ The command line gives you:
 
 ## Node / JavaScript projects
 
-[Node](/docs/javascript/guides/basics/running_javascript) and npm also lean heavily on the CLI. If you're new to JavaScript, start with the [JavaScript basics guide](/docs/javascript/guides/basics/intro).
+[Node](/javascript/guides/basics/running_javascript) and npm also lean heavily on the CLI. If you're new to JavaScript, start with the [JavaScript basics guide](/javascript/guides/basics/intro).
 
 Common patterns:
 
