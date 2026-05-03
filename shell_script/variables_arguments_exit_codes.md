@@ -254,6 +254,20 @@ This is the safe way to loop over the arguments passed to a script.
 
 Sometimes your script should fail early if the user forgot an argument.
 
+This example uses an `if` conditional before we have fully taught conditionals.
+
+Do not worry about the overall conditional syntax yet. For now, the important idea is:
+
+- check whether the first argument is missing
+- print a helpful message if it is
+- stop the script with an error
+
+The next guide, [Conditionals and Loops](./conditionals_and_loops), explains that syntax properly.
+
+One piece is worth naming right away:
+
+- `-z` means "is this string empty?"
+
 Example:
 
 ```bash
@@ -387,6 +401,13 @@ head -n 5 "$target_file"
 - checks whether the file exists
 - exits with an error if something is wrong
 - runs the real command only when the input looks valid
+
+This example uses two small test operators:
+
+- `-z "$target_file"` means "is this string empty?"
+- `-f "$target_file"` means "does this path point to a regular file?"
+
+If the surrounding `if [ ... ]; then` syntax still looks unfamiliar, that is expected. The next guide, [Conditionals and Loops](./conditionals_and_loops), breaks it down in detail.
 
 That is already much safer than blindly running `head "$1"` with no checks.
 

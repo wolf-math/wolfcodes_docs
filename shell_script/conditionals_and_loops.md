@@ -68,9 +68,34 @@ Important pieces:
 
 `fi` is `if` backwards. That may look strange at first, but you get used to it quickly.
 
-## Common file tests
+## Common tests inside conditionals
 
 These come up constantly in shell scripts.
+
+Inside:
+
+```bash
+[ ... ]
+```
+
+the small operators are **tests**. They are short pieces of conditional syntax that ask questions like:
+
+- does this file exist?
+- is this a directory?
+- is this string empty?
+
+They are not commands by themselves. They are part of the test expression the `if` statement is evaluating.
+
+You do not need to memorize a huge catalog right away. A small set of common tests covers a lot of beginner shell scripts.
+
+| Test | Meaning | Common use |
+| --- | --- | --- |
+| `-f "$path"` | Is this a regular file? | Check whether a file exists before reading or copying it |
+| `-d "$path"` | Is this a directory? | Check whether a folder exists before entering or creating files in it |
+| `-e "$path"` | Does this path exist at all? | Check for either a file or directory when you do not care which |
+| `-z "$value"` | Is this string empty? | Check whether an argument or variable is missing |
+| `-n "$value"` | Is this string non-empty? | Check whether an argument or variable has content |
+| `grep -q "pattern" file` | Did `grep` find a match, without printing it? | Use a command's success or failure inside `if` when you want to test whether text exists |
 
 ### Check whether a file exists
 
@@ -80,6 +105,10 @@ if [ -f "$file" ]; then
 fi
 ```
 
+Here, `-f "$file"` means:
+
+> "Check whether `$file` exists and is a regular file."
+
 ### Check whether a directory exists
 
 ```bash
@@ -88,6 +117,10 @@ if [ -d "$dir" ]; then
 fi
 ```
 
+Here, `-d "$dir"` means:
+
+> "Check whether `$dir` exists and is a directory."
+
 ### Check whether a string is empty
 
 ```bash
@@ -95,6 +128,10 @@ if [ -z "$1" ]; then
   echo "Missing argument"
 fi
 ```
+
+Here, `-z "$1"` means:
+
+> "Check whether the first argument is empty."
 
 For beginners, these tests are much more useful than memorizing lots of symbolic operators early.
 
@@ -152,6 +189,21 @@ fi
 ```
 
 Here the script is not checking a variable. It is checking whether the `grep` command succeeded.
+
+One detail that is easy to miss:
+
+- `-q` here is **not** one of the `[ ... ]` test operators above
+- it is a **`grep` flag** meaning "quiet"
+
+So:
+
+```bash
+grep -q "ERROR" server.log
+```
+
+means:
+
+> "Search for `ERROR`, but do not print matching lines. Just succeed if a match is found."
 
 That is a very shell-like pattern:
 
