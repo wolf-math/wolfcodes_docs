@@ -1,3 +1,5 @@
 .DS_Store
 final_project
 __pycache__
+*.scss
+*.css

@@ -1,0 +1,76 @@
+---
+title: Ways to Run SQL
+sidebar_position: 2
+author:
+  name: Aaron Wolf
+  url: https://wolfcodes.dev
+license:
+  type: CC BY-NC 4.0
+  attribution_required: true
+source:
+  canonical_url: https://wolfcodes.dev
+---
+
+You can write SQL in a few different environments. The most important thing is not picking the "perfect" tool. It is getting comfortable writing queries, running them, and reading the results.
+
+## Terminal tools: `psql`
+
+One of the most common ways to run SQL against PostgreSQL is `psql`, the PostgreSQL command-line client on your computer. This requires running a SQL server as a background service which may require changing permissions in your system settings. 
+
+```bash
+psql postgres://username:password@localhost:5432/my_database
+```
+
+Once connected, you can run queries directly:
+
+```sql
+SELECT * FROM users;
+```
+
+Why people like `psql`:
+
+- It is fast and lightweight
+- It works well over SSH and on servers
+- It makes it easier to copy, tweak, and rerun queries
+- It helps you build comfort with the database directly
+
+For learning SQL, terminal tools can feel a little plain at first, but they are excellent for building real confidence.
+
+## Desktop applications: pgAdmin and similar tools
+
+Many people prefer a desktop application with a visual interface. For PostgreSQL, a common choice is **pgAdmin**. Even though this is a GUI program, it also requires running SQL as a background service.
+
+Desktop tools usually give you:
+
+- A query editor
+- Table and schema browsing
+- Buttons for running queries
+- Saved connections to multiple databases
+- Visual help for inspecting rows, columns, and indexes
+
+These tools are often easier when you are new to SQL because you can explore the database structure without memorizing commands.
+
+If you are just getting started, a desktop app can make the database feel less intimidating.
+
+## Online applications: browser-based SQL editors
+
+Some platforms include SQL editors directly in the browser. [**Supabase**](https://supabase.com/) is a good example: it gives you a hosted PostgreSQL database and an online SQL editor where you can write and run queries without setting up a local desktop client first.
+
+Online tools are useful because:
+
+- They are easy to access from anywhere
+- They reduce local setup friction
+- They often bundle auth, storage, and database tools together
+- They are convenient for small projects, demos, and learning
+
+The tradeoff is that browser tools can hide some of the lower-level details you eventually want to understand, especially if you will later work with self-hosted or production databases.
+
+## Which one should you use?
+
+All three are valid:
+
+- Use `psql` if you want the most direct, portable way to work with PostgreSQL
+- Use pgAdmin or another desktop app if you want a more visual workflow
+- Use Supabase or another browser-based editor if you want the fastest path to a working environment
+
+Over time, it is worth being comfortable with at least one visual tool and one terminal tool. In real projects, you will often see both.
