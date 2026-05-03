@@ -1,0 +1,62 @@
+.buttonContainer {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.ctaButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2rem 0 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+  min-height: 3.5rem;
+  text-align: center;
+}
+
+.ctaButton:hover {
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.ctaButtonPrimary {
+  background-color: var(--ifm-color-primary);
+  color: var(--ifm-color-white);
+  border-color: var(--ifm-color-primary);
+}
+
+.ctaButtonPrimary:hover {
+  background-color: var(--ifm-color-primary-dark);
+  border-color: var(--ifm-color-primary-dark);
+  color: var(--ifm-color-white);
+}
+
+.ctaButtonSecondary {
+  background-color: var(--ifm-color-secondary);
+  color: var(--ifm-color-white);
+  border-color: var(--ifm-color-secondary);
+}
+
+.ctaButtonSecondary:hover {
+  background-color: var(--ifm-color-secondary-dark);
+  border-color: var(--ifm-color-secondary-dark);
+  color: var(--ifm-color-white);
+}
+
+.ctaButtonOutline {
+  background-color: transparent;
+  color: var(--ifm-color-primary);
+  border-color: var(--ifm-color-primary);
+}
+
+.ctaButtonOutline:hover {
+  background-color: var(--ifm-color-primary);
+  color: var(--ifm-color-white);
+  border-color: var(--ifm-color-primary);
+}
