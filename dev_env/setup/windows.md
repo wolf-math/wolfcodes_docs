@@ -27,7 +27,7 @@ Please **read carefully and execute all commands in order**.
 
 ## Install WSL (Linux on Windows)
 
-:::note 🧠 important note on WSL
+:::note important note on WSL
 Windows and WSL are two different environments.
 
 - Windows = your operating system
@@ -57,7 +57,7 @@ You’ll be asked to:
 👉 This is your Linux environment.
 
 
-:::note 🧠 note
+:::note note
 
 From now on:
 
