@@ -25,7 +25,7 @@ Please **read carefully and execute all commands in order**.
     
 
 
-:::note 🧠 important note on macOS
+:::note important note on macOS
 
 Closing a window ≠ quitting the app.
 
