@@ -22,7 +22,7 @@ Please **read carefully and execute all commands in order**.
 3. Enable **2FA**
 
 
-:::note 🧠 Important Note
+:::note Important Note
 
 👉 All commands in this guide are run in your **terminal**
 

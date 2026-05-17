@@ -23,7 +23,7 @@ Print working directory - shows your current location.
 
 ```bash
 pwd
-# Output: /Users/username/Documents
+# Output example: /Users/username/Documents
 ```
 
 ### `cd`
@@ -31,9 +31,9 @@ pwd
 Change directory - navigate to a different directory.
 
 ```bash
-cd Documents              # Go to Documents directory
+cd Documents             # Go to Documents directory
 cd ~                     # Go to home directory
-cd                       # Go to home directory (shortcut)
+cd                       # Go to home directory ~ (shortcut)
 cd ..                    # Go up one level
 cd ../..                 # Go up two levels
 cd /                     # Go to root directory
@@ -102,9 +102,9 @@ tail -f file.txt         # Follow file (watch for new lines, great for logs)
 Create empty file or update file timestamp.
 
 ```bash
-touch file.txt           # Create empty file
-touch file1.txt file2.txt # Create multiple files
-touch file.txt           # Update modification time if file exists
+touch file.txt             # Create empty file
+touch file1.txt file2.txt  # Create multiple files
+touch file.txt             # Update modification time if file exists
 ```
 
 ### `cp`
@@ -112,9 +112,9 @@ touch file.txt           # Update modification time if file exists
 Copy files and directories.
 
 ```bash
-cp file.txt backup.txt   # Copy file
+cp file.txt backup.txt   # Copy file with new name
 cp file.txt dir/         # Copy file to directory
-cp -r dir1/ dir2/        # Copy directory recursively
+cp -r dir1/ dir2/        # Copy directory recursively (with all of its contents)
 cp -v file.txt dir/      # Verbose (show what's being copied)
 cp -i file.txt dir/      # Interactive (prompt before overwrite)
 ```
