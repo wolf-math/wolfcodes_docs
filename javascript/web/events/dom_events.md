@@ -512,6 +512,4 @@ if (container) {
 
 ## Next up
 
-- [Selecting elements](../dom/selecting_elements)
-- [Manipulating the DOM](../dom/manipulating_dom)
 - [Forms and input](./forms_input)
