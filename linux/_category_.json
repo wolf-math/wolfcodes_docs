@@ -1,0 +1,8 @@
+{
+  "label": "Linux",
+  "position": 5,
+  "link": {
+    "type": "generated-index",
+    "description": "CLI-first Linux guides for understanding, configuring, and maintaining a Linux system."
+  }
+}
