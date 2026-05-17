@@ -24,7 +24,7 @@ Events are what make web pages interactive. Without events, pages would mostly b
 ```
 
 ```javascript
-const button = document.querySelector("#helloButton");
+const button = document.getElementById("helloButton");
 
 if (button) {
   button.addEventListener("click", () => {
@@ -46,7 +46,7 @@ Events are how browser JavaScript reacts to what is happening on the page:
 The standard way to handle events in modern JavaScript is `addEventListener()`:
 
 ```javascript
-const button = document.querySelector("button");
+const button = document.getElementById("button");
 
 if (button) {
   button.addEventListener("click", () => {
@@ -70,7 +70,7 @@ element.addEventListener(eventType, handler, options);
 You can attach more than one listener to the same element:
 
 ```javascript
-const button = document.querySelector("button");
+const button = document.getElementById("button");
 
 if (button) {
   button.addEventListener("click", () => {
@@ -92,7 +92,7 @@ function handleClick() {
   console.log("Clicked");
 }
 
-const button = document.querySelector("button");
+const button = document.getElementById("button");
 
 if (button) {
   button.addEventListener("click", handleClick);
@@ -109,7 +109,7 @@ You cannot remove an anonymous function later unless you stored it somewhere fir
 When an event happens, the browser passes an **event object** into your handler:
 
 ```javascript
-const button = document.querySelector("button");
+const button = document.getElementById("button");
 
 if (button) {
   button.addEventListener("click", event => {
@@ -149,7 +149,7 @@ element.addEventListener("click", e => {
 ```
 
 ```javascript
-const parent = document.querySelector("#parent");
+const parent = document.getElementById("#parent");
 
 if (parent) {
   parent.addEventListener("click", e => {
@@ -171,7 +171,7 @@ Rule of thumb: `target` is "what was clicked"; `currentTarget` is "where the lis
 ### Click events
 
 ```javascript
-const button = document.querySelector("button");
+const button = document.getElementById("button");
 
 if (button) {
   button.addEventListener("click", () => {
@@ -185,7 +185,7 @@ if (button) {
 For `<input>` and `<textarea>` elements:
 
 ```javascript
-const input = document.querySelector("input");
+const input = document.getElementById("input");
 
 if (input) {
   input.addEventListener("input", e => {
@@ -205,7 +205,7 @@ if (input) {
 ### Submit events
 
 ```javascript
-const form = document.querySelector("form");
+const form = document.getElementById("form");
 
 if (form) {
   form.addEventListener("submit", e => {
@@ -256,7 +256,7 @@ window.addEventListener("resize", () => {
   console.log("Window resized");
 });
 
-const input = document.querySelector("input");
+const input = document.getElementById("input");
 
 if (input) {
   input.addEventListener("focus", () => {
@@ -282,8 +282,8 @@ Events do not stay only on one element. In most cases, they **bubble up** throug
 ```
 
 ```javascript
-const parent = document.querySelector("#parent");
-const button = document.querySelector("#child");
+const parent = document.getElementById("parent");
+const button = document.getElementById("child");
 
 if (button) {
   button.addEventListener("click", () => {
@@ -308,7 +308,7 @@ if (parent) {
 Events can also be handled on the way down. This is called the **capturing phase**:
 
 ```javascript
-const parent = document.querySelector("#parent");
+const parent = document.getElementById("parent");
 
 if (parent) {
   parent.addEventListener("click", () => {
@@ -324,8 +324,8 @@ Most of the time, you will use the default bubbling behavior.
 If you need to stop an event from bubbling:
 
 ```javascript
-const parent = document.querySelector("#parent");
-const button = document.querySelector("#child");
+const parent = document.getElementById("parent");
+const button = document.getElementById("child");
 
 if (button) {
   button.addEventListener("click", e => {
@@ -439,7 +439,7 @@ Some elements have built-in browser behavior:
 You can prevent that behavior with `preventDefault()`:
 
 ```javascript
-const link = document.querySelector("a");
+const link = document.getElementById("a");
 
 if (link) {
   link.addEventListener("click", e => {
@@ -448,7 +448,7 @@ if (link) {
   });
 }
 
-const form = document.querySelector("form");
+const form = document.getElementById("form");
 
 if (form) {
   form.addEventListener("submit", e => {
@@ -465,7 +465,7 @@ if (form) {
 ```javascript
 function handleClick() {}
 
-const button = document.querySelector("button");
+const button = document.getElementById("button");
 
 if (button) {
   button.addEventListener("click", handleClick);
@@ -478,7 +478,7 @@ if (button) {
 ```javascript
 function handleClick() {}
 
-const button = document.querySelector("button");
+const button = document.getElementById("button");
 
 if (button) {
   button.addEventListener("click", handleClick);
