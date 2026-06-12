@@ -166,7 +166,7 @@ Splits string by pattern:
 "hello world".split(/\s/) // ["hello", "world"]
 ```
 
-## Common use cases
+## Usage examples
 
 ### Email Validation
 

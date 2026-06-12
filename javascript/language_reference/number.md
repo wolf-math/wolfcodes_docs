@@ -10,13 +10,6 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
-<!-- ## Properties
-
-```javascript
-> Object.getOwnPropertyNames(Number.prototype)
-['constructor', 'toExponential', 'toFixed', 'toPrecision', 'toString', 'valueOf', 'toLocaleString']
-``` -->
-
 ## Definition
 
 A `Number` is a numeric data type in JavaScript. JavaScript uses the IEEE 754 double-precision floating-point format for all numbers, meaning **numbers can be integers or floating-point values**.

@@ -10,13 +10,6 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
-<!-- ## Properties
-
-```javascript
-> Object.getOwnPropertyNames(BigInt.prototype)
-['constructor', 'toLocaleString', 'toString', 'valueOf', 'asIntN', 'asUintN']
-``` -->
-
 ## Definition
 
 `BigInt` is a built-in object that provides a way to represent whole numbers larger than `Number.MAX_SAFE_INTEGER` (2^53 - 1). BigInt values are created by appending `n` to the end of an integer literal or by calling the `BigInt()` constructor.
@@ -129,9 +122,11 @@ BigInt.asUintN(8, 255n)   // 255n (unsigned 8-bit)
 BigInt.asUintN(16, 65535n) // 65535n (unsigned 16-bit)
 ```
 
-## Converting bigint
+## Behavioral notes
 
-### To Number
+### Converting bigint
+
+#### To Number
 
 ```javascript
 Number(42n)      // 42
@@ -139,7 +134,7 @@ parseInt(42n)    // 42
 +42n             // TypeError (unary plus doesn't work)
 ```
 
-### To String
+#### To String
 
 ```javascript
 String(42n)      // "42"
@@ -147,14 +142,14 @@ String(42n)      // "42"
 42n.toString(2)  // "101010" (binary)
 ```
 
-### From String
+#### From String
 
 ```javascript
 BigInt("42")     // 42n
 BigInt("0xFF", 16) // 255n (with radix, but BigInt doesn't support radix in constructor)
 ```
 
-## JSON serialization
+### JSON serialization
 
 BigInt values cannot be serialized to JSON by default:
 
@@ -175,9 +170,9 @@ function replacer(key, value) {
 JSON.stringify({ value: 42n }, replacer)  // '{"value":"42"}'
 ```
 
-## Common use cases
+### Typical usage
 
-### Large Integer Calculations
+#### Large integer calculations
 
 ```javascript
 // Calculate factorial of large numbers
@@ -192,14 +187,14 @@ function factorial(n) {
 factorial(100n)  // 93326215443944152681699238856266700490715968264381621468592963895217599993229915608941463976156518286253697920827223758251185210916864000000000000000000000000n
 ```
 
-### Cryptography
+#### Cryptography
 
 ```javascript
 // Large prime numbers
 const largePrime = 982451653n
 ```
 
-### Timestamps
+#### Timestamps
 
 ```javascript
 // Nanosecond precision timestamps
@@ -229,4 +224,3 @@ Math.sqrt(16n)    // TypeError
 3. **Use literal syntax**: Prefer `42n` over `BigInt(42)` for readability.
 
 4. **Handle JSON carefully**: Provide custom serialization for BigInt values in JSON.
-

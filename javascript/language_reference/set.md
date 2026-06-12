@@ -10,13 +10,6 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
-<!-- ## Properties
-
-```javascript
-> Object.getOwnPropertyNames(Set.prototype)
-['constructor', 'size', 'add', 'clear', 'delete', 'entries', 'forEach', 'has', 'keys', 'values', Symbol.toStringTag, Symbol.iterator]
-``` -->
-
 ## Definition
 
 A `Set` is a collection of unique values. Each value can occur only once in a Set. Sets maintain insertion order and provide efficient membership testing.
@@ -155,9 +148,9 @@ const difference = new Set(
 // Set { 1 }
 ```
 
-## Use cases
+## Behavioral notes
 
-### Removing Duplicates
+### Removing duplicates
 
 ```javascript
 const array = [1, 2, 2, 3, 3, 3]
@@ -165,7 +158,7 @@ const unique = [...new Set(array)]
 // [1, 2, 3]
 ```
 
-### Membership Testing
+### Membership testing
 
 ```javascript
 const allowedUsers = new Set(['alice', 'bob', 'charlie'])
@@ -175,7 +168,7 @@ function isAllowed(username) {
 }
 ```
 
-### Tracking Visited Items
+### Tracking visited items
 
 ```javascript
 const visited = new Set()
@@ -189,7 +182,7 @@ function visit(item) {
 }
 ```
 
-## Set vs array
+### Set vs array
 
 | Feature        | Set                    | Array                 |
 | -------------- | ---------------------- | --------------------- |
@@ -209,4 +202,3 @@ function visit(item) {
 4. **Use Set for deduplication**: Simple way to remove duplicates from arrays.
 
 5. **Consider WeakSet**: For object-only collections that allow garbage collection.
-

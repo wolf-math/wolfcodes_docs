@@ -61,7 +61,7 @@ weakSet.has(obj)    // false
 | **Garbage collection** | Values can be GC'd | Values prevent GC      |
 | **Methods**       | `add`, `has`, `delete` | Full API              |
 
-## Use cases
+## Behavioral notes
 
 ### Tracking object membership
 
@@ -112,7 +112,7 @@ tag(obj)
 isTagged(obj)  // true
 ```
 
-## Why weakset?
+### Garbage collection behavior
 
 WeakSets allow garbage collection of their elements:
 
@@ -157,4 +157,3 @@ obj = null  // Object cannot be garbage collected
 4. **Don't use for iteration**: If you need to iterate, use Set instead.
 
 5. **Understand garbage collection**: WeakSets are designed to work with GC—use them when this behavior is desired.
-

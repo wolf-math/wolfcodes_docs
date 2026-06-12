@@ -118,7 +118,7 @@ function isUndefined(value) {
 }
 ```
 
-## Common Patterns
+## Usage examples
 
 <!-- ### Default Parameters
 
@@ -243,7 +243,7 @@ JSON.stringify({ name: undefined })  // '{}'
 JSON.stringify({ name: null })      // '{"name":null}'
 ```
 
-## Best Practices
+## Best practices
 
 1. **Don't assign `undefined`**: Let it be the default for uninitialized variables.
 

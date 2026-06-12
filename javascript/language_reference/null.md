@@ -51,7 +51,7 @@ example(x)              // undefined
 example(y)              // null
 ``` -->
 
-## Common Use Cases
+## Usage examples
 
 ### Resetting Values
 
@@ -111,7 +111,7 @@ JSON.stringify({ name: null })         // '{"name":null}'
 JSON.parse('{"name":null}')            // { name: null }
 ```
 
-## Best Practices
+## Best practices
 
 1. **Use `null` for intentional absence**: When you want to explicitly indicate "no value".
 

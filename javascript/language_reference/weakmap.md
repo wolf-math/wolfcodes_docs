@@ -75,7 +75,7 @@ weakMap.has(obj)     // false
 | **Garbage collection** | Keys can be GC'd    | Keys prevent GC        |
 | **Methods**       | `get`, `set`, `has`, `delete` | Full API |
 
-## Use cases
+## Behavioral notes
 
 ### Private data storage
 
@@ -131,7 +131,7 @@ function getCachedValue(obj) {
 // When obj is garbage collected, cache entry is automatically removed
 ```
 
-## Why weakmap?
+### Garbage collection behavior
 
 WeakMaps allow garbage collection of keys when they're no longer referenced:
 
@@ -174,4 +174,3 @@ obj = null  // Object cannot be garbage collected
 4. **Don't use for iteration**: If you need to iterate, use Map instead.
 
 5. **Understand garbage collection**: WeakMaps are designed to work with GC—use them when this behavior is desired.
-

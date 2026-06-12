@@ -10,13 +10,6 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
-<!-- ## Properties
-
-```javascript
-> Object.getOwnPropertyNames(Map.prototype)
-['constructor', 'size', 'clear', 'delete', 'entries', 'forEach', 'get', 'has', 'keys', 'set', 'values', Symbol.toStringTag, Symbol.iterator]
-``` -->
-
 ## Definition
 
 A `Map` is a collection of key-value pairs where keys can be any type (unlike objects where keys must be strings or symbols). Maps maintain insertion order and provide efficient lookups.
@@ -132,7 +125,9 @@ Array.from(map.keys())      // ['name', 'age']
 Array.from(map.values())    // ['Alice', 30]
 ```
 
-## Map vs object
+## Behavioral notes
+
+### Map vs object
 
 | Feature           | Map                    | Object                 |
 | ----------------- | ---------------------- | ---------------------- |
@@ -142,9 +137,7 @@ Array.from(map.values())    // ['Alice', 30]
 | **Prototype**     | No default keys        | Has default keys        |
 | **Performance**    | Better for frequent additions/deletions | Better for small, static data |
 
-## Use cases
-
-### Using Non-String Keys
+### Using non-string keys
 
 ```javascript
 const map = new Map()
@@ -158,7 +151,7 @@ map.set(funcKey, 'value2')
 map.get(objKey)  // 'value1'
 ```
 
-### Counting Occurrences
+### Counting occurrences
 
 ```javascript
 const words = ['hello', 'world', 'hello']
@@ -197,4 +190,3 @@ function expensiveOperation(input) {
 4. **Use Map.size**: More convenient than `Object.keys(obj).length`.
 
 5. **Consider performance**: Maps are optimized for frequent additions/deletions.
-

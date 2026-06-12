@@ -10,12 +10,6 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
-## Properties
-
-<!-- ```javascript
-> Object.getOwnPropertyNames(Boolean.prototype)
-['constructor', 'toString', 'valueOf']
-``` -->
 
 ## Definition
 

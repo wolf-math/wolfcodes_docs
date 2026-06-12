@@ -10,20 +10,6 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
-<!-- ## Properties
-
-```javascript
-// JavaScript keywords (ES2023)
-const keywords = [
-  'break', 'case', 'catch', 'class', 'const', 'continue', 'debugger',
-  'default', 'delete', 'do', 'else', 'export', 'extends', 'finally',
-  'for', 'function', 'if', 'import', 'in', 'instanceof', 'new', 'return',
-  'super', 'switch', 'this', 'throw', 'try', 'typeof', 'var', 'void',
-  'while', 'with', 'yield', 'await', 'let', 'static', 'enum', 'implements',
-  'interface', 'package', 'private', 'protected', 'public'
-]
-``` -->
-
 ## Definition
 
 A keyword is a special word that is part of JavaScript's syntax. They are not functions, methods, or objects. They define how the language is structured and executed.
