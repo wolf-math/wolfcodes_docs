@@ -10,11 +10,12 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
-Python can run code in two different ways: **interactively** (REPL) or as a **script**. Understanding the difference prevents confusion.
+
+Python can run code in two different ways: **interactively** (REPL) or as a **script**.
 
 ### REPL (Interactive Mode)
 
-**REPL** stands for "Read-Eval-Print Loop." It's what happens when you type `python` (or `python3`) in your terminal and see the `>>>` prompt.
+**REPL** stands for "Read Evaluate Print Loop." This is what comes up when you type `python` (or `python3`) in your terminal and see the `>>>` prompt.
 
 **Characteristics:**
 - Runs **one line at a time**
@@ -52,8 +53,6 @@ print("Third line")
 ```
 
 When you run `python example.py`, Python executes all lines in order, from top to bottom.
-
-**When to use:** Writing programs, saving your work, creating reusable code
 
 ### Key differences
 
@@ -111,4 +110,3 @@ Python can run code in two different ways:
 
 **Common pitfall:** Code that works in the REPL might not work in a script if you forgot to include setup code. Always make sure your script has everything it needs, in the right order (top to bottom).
 
-Understanding when to use each mode will make you a more effective Python programmer!

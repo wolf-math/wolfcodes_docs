@@ -10,11 +10,12 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
-Understanding how Python executes your code is crucial for learning Python effectively. Let's build a mental model of what happens when Python runs your program.
+
+Understanding how Python executes your code is crucial for learning Python effectively. 
 
 ### Top to bottom execution
 
-Python executes your code **line by line, from top to bottom**, just like reading a book:
+Python executes your code **from top to bottom**:
 
 ```python
 print("First")
@@ -22,10 +23,10 @@ print("Second")
 print("Third")
 ```
 
-**What happens:**
-1. Line 1 runs → Python prints "First"
-2. Line 2 runs → Python prints "Second"
-3. Line 3 runs → Python prints "Third"
+**Output:**
+1. Line 1 runs → print "First"
+2. Line 2 runs → print "Second"
+3. Line 3 runs → print "Third"
 
 **Output:**
 ```
@@ -38,46 +39,60 @@ Python doesn't look ahead or jump around. It processes each line in order, one a
 
 ### Runtime execution
 
-Python executes code **when you run the program** (this is called "runtime"), not when you write it or save the file. This means:
+Python executes code **when you run the program** (this is called "runtime"), not when you write it or save the file. 
 
-- Python doesn't check for errors until it tries to run a line
-- You can write code that has errors, and Python won't complain until it reaches that line
+This means:
+
+- Python doesn't check for errors until it runs
+- You can write code that has errors, and Python won't complain until you run it and it reaches that line
 - The file can be opened and viewed without any problems. The errors only appear when Python tries to execute the code
 
 ```python
 print("Hello")
 print("World")
-print(unknown_thing)  # This line has an error, but Python doesn't know until it tries to run it
+print(oh_no)  # Python doesn't know this has an error until it's run
 ```
 
 When you run this, Python will:
 1. Successfully run line 1 and print "Hello"
 2. Successfully run line 2 and print "World"
-3. Try to run line 3 and **then** discover the error (because `unknown_thing` doesn't exist)
+3. Try to run line 3 and **then** discover the error (because `oh_no` doesn't exist)
 
 Python runs the code up to the error, then stops.
 
 ### Variables are created when lines run
 
-Variables don't exist until Python executes the line that creates them. You'll learn more about variables in the next section, but here's the key idea:
+Variables don't exist until Python reaches the line that creates them. You'll learn more about variables in the next section, but here's the key idea:
 
+This code creates an error:
 ```python
 print(name)  # Error! name doesn't exist yet
-name = "Alice"
-print(name)  # Works! name exists now, prints "Alice"
+name = "Jimi"
 ```
 
 **Timeline:**
 - Before line 1 runs: `name` doesn't exist
 - Line 1 runs: Python tries to print `name`, but it doesn't exist → **Error**
-- Line 2 runs: `name` is created and set to "Alice"
-- Line 3 runs: `name` exists, so it prints "Alice"
 
-This is why order matters! You can't use a variable before it's created. Python reads your code from top to bottom, so everything must be created before you try to use it.
+
+This code works:
+```python
+name = "Jimi"
+print(name)  # Works! name exists now, prints "Jimi"
+```
+
+
+**Timeline:**
+- Line 1 runs: `name` is created and set to "Jimi"
+- Line 2 runs: `name` exists, so it prints "Jimi"
+
+
+**The bottom line:**
+Order matters! You can't use a variable before it's created. Python reads your code from top to bottom, so everything must be created before you try to use it.
 
 ### Errors happen when execution reaches the line
 
-Errors don't happen when you write code or open a file. They happen when Python tries to execute a problematic line:
+Errors don't happen as you write code or open a file. They happen when Python tries to execute a problematic line:
 
 ```python
 print("This runs")
@@ -101,22 +116,15 @@ Traceback (most recent call last):
 ZeroDivisionError: division by zero
 ```
 
-This is important to understand: Python will run all the code up to the error, but nothing after it.
+This is important to understand: Python will run all the code up to the error. Once there is an error the code will stop. 
 
-### Building the mental timeline
-
-Think of Python execution as a timeline:
-
-```
-Time →  Line 1 runs → Line 2 runs → Line 3 runs → Line 4 runs → ...
-         x created   y created     print happens   ...
-```
+### Python execution timeline:
 
 Each line:
-- Only runs **after** the previous line finishes
-- Can use variables created **before** it
-- Can cause errors that **stop** execution
-- Doesn't know about lines that come **after** it
+- Only runs **after** the previous line finishes.
+- Can use variables created **before** it.
+- Can cause errors that **stop** execution.
+- Doesn't know about lines that come **after** it.
 
 This mental model will help you understand:
 - Why variables must be created before use

@@ -10,6 +10,7 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
 ## What are variables?
 
 **Variables** are names that refer to values. They let you store data and give it meaningful labels, making your code readable and maintainable. Python doesn't use type declarations; a name is bound to an object at runtime and can later be rebound to another.
