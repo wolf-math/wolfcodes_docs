@@ -22,7 +22,7 @@ Python code can be divided into two categories: **expressions** and **statements
 ```
 
 :::note
-You'll learn more about expressions when you study [operators](../types_variables/operators). For now, just know that expressions produce values.
+You'll learn more about expressions when you study [operators](../basic_concepts/operators). For now, just know that expressions produce values.
 :::
 
 ### Statements
@@ -39,7 +39,7 @@ Statements:
 - Are the "commands" that make your program do things
 
 :::note
-You'll see more examples of statements when you learn about [variables](../types_variables/variables) and [conditionals](../control_flow/conditionals). For now, just know that statements perform actions.
+You'll see more examples of statements when you learn about [variables](../basic_concepts/variables) and [conditionals](../control_flow/conditionals). For now, just know that statements perform actions.
 :::
 
 ### Why this matters
@@ -54,7 +54,7 @@ Understanding expressions vs statements helps you understand:
   - Expressions give you something you can use
   - Statements just do work
 
-This distinction will become clearer as you learn more about [operators](../types_variables/operators) and other Python features. For now, just remember: expressions produce values, statements perform actions.
+This distinction will become clearer as you learn more about [operators](../basic_concepts/operators) and other Python features. For now, just remember: expressions produce values, statements perform actions.
 
 ## Summary
 
