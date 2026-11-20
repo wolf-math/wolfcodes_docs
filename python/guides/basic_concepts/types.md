@@ -89,7 +89,7 @@ True
 ```
 
 :::note
-You'll learn more about how Python treats different values as "truthy" or "falsy" in the [truthiness](../types_variables/truthiness) guide. For now, just know that `True` and `False` are the boolean values.
+You'll learn more about how Python treats different values as "truthy" or "falsy" in the [truthiness](../basic_concepts/truthiness) guide. For now, just know that `True` and `False` are the boolean values.
 :::
 
 ### None

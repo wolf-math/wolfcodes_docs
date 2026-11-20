@@ -1,0 +1,213 @@
+---
+title: Machine Learning & AI
+sidebar_label: Machine Learning Home
+sidebar_position: 0
+hide_table_of_contents: true
+author:
+  name: Aaron Wolf
+  url: https://wolfcodes.dev
+license:
+  type: CC BY-NC 4.0
+  attribution_required: true
+source:
+  canonical_url: https://wolfcodes.dev
+---
+
+import Link from '@docusaurus/Link';
+import styles from './hub.module.css';
+
+Welcome to the Machine Learning & AI guides. Machine learning is a way of building software that learns patterns from data instead of following rules you write by hand. People use it to predict prices, flag fraud, recommend products, recognize images, understand text, and much more.
+
+This section starts with the core ideas every model shares, works through the classic algorithms you'll use on tabular data, and then moves into deep learning and neural networks.
+
+:::note
+These guides are adapted from notes contributed by [Yonibrese](https://github.com/yonibrese).
+:::
+
+:::tip
+The examples use Python with `numpy`, `pandas`, `scikit-learn`, and (for deep learning) TensorFlow/Keras or PyTorch. If you're new to Python, start with the [Python guides](/python/guides/) first.
+:::
+
+## Fundamentals
+
+Start here. Learn what machine learning is, the main families of problems, and how to prepare data and judge whether a model is any good.
+
+<div className={styles.grid}>
+  <Link className={styles.card} to="/machine_learning/fundamentals/ml_process">
+    The Machine Learning Process
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/fundamentals/types_of_ml">
+    Types of Machine Learning
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/fundamentals/lazy_vs_eager_learning">
+    Lazy vs Eager Learning
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/fundamentals/evaluation">
+    Evaluating Models
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/fundamentals/feature_engineering">
+    Feature Engineering
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/fundamentals/hyperparameter_tuning">
+    Hyperparameter Tuning
+  </Link>
+</div>
+
+## Statistics for machine learning
+
+The statistical tools you need to decide whether a result is real or just noise.
+
+<div className={styles.grid}>
+  <Link className={styles.card} to="/machine_learning/statistics/inferential_statistics">
+    Inferential Statistics
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/statistics/bootstrapping">
+    Bootstrapping
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/statistics/ab_testing">
+    A/B Testing
+  </Link>
+</div>
+
+## Algorithms
+
+Hands-on guides to the classic supervised and unsupervised algorithms, each with a complete scikit-learn example.
+
+<div className={styles.grid}>
+  <Link className={styles.card} to="/machine_learning/algorithms/linear_regression">
+    Linear Regression
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/algorithms/logistic_regression">
+    Logistic Regression
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/algorithms/knn">
+    K-Nearest Neighbors
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/algorithms/naive_bayes">
+    Naive Bayes
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/algorithms/decision_trees">
+    Decision Trees
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/algorithms/random_forests">
+    Random Forests
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/algorithms/gradient_boosting">
+    Gradient Boosting
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/algorithms/xgboost">
+    XGBoost
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/algorithms/support_vector_machines">
+    Support Vector Machines
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/algorithms/k_means">
+    K-Means Clustering
+  </Link>
+</div>
+
+## Deep learning
+
+How neural networks work, from a single perceptron to the training loop that powers modern AI.
+
+<div className={styles.grid}>
+  <Link className={styles.card} to="/machine_learning/deep_learning/intro">
+    Intro to Deep Learning
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/deep_learning/perceptron">
+    The Perceptron
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/deep_learning/layers">
+    Neural Network Layers
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/deep_learning/activation_functions">
+    Activation Functions
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/deep_learning/forward_propagation">
+    Forward Propagation
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/deep_learning/loss_functions">
+    Loss Functions
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/deep_learning/backpropagation">
+    Backpropagation
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/deep_learning/gradient_descent">
+    Gradient Descent
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/deep_learning/optimizers">
+    Optimizers
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/deep_learning/regularization">
+    Overfitting & Regularization
+  </Link>
+</div>
+
+## Convolutional neural networks
+
+Networks built for images and other grid-shaped data.
+
+<div className={styles.grid}>
+  <Link className={styles.card} to="/machine_learning/deep_learning/cnn/overview">
+    Convolutional Neural Networks
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/deep_learning/cnn/convolutional_layer">
+    The Convolutional Layer
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/deep_learning/cnn/pooling_layer">
+    The Pooling Layer
+  </Link>
+</div>
+
+## Recurrent neural networks
+
+Networks built for sequences: text, audio, and time series.
+
+<div className={styles.grid}>
+  <Link className={styles.card} to="/machine_learning/deep_learning/rnn/overview">
+    Recurrent Neural Networks
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/deep_learning/rnn/vanishing_gradient">
+    The Vanishing Gradient Problem
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/deep_learning/rnn/exploding_gradient">
+    The Exploding Gradient Problem
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/deep_learning/rnn/lstm">
+    LSTMs
+  </Link>
+
+  <Link className={styles.card} to="/machine_learning/deep_learning/rnn/gru">
+    GRUs
+  </Link>
+</div>
