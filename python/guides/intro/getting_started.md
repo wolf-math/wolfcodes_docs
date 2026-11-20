@@ -40,17 +40,22 @@ or
 python3 --version
 ```
 
-If Python is installed, you'll see something like `Python 3.11.5`. If you get an error, you'll need to [download and install Python](https://www.python.org/downloads/) first.
+If you don't have Python installed you can set up your entire developer environment by following the steps [in the setup guide](/dev_env/setup/).
 
 If you're not familiar with how command line commands work, see the [programs, arguments, and flags guide](/dev_env/command_line/programs_arguments_flags).
 
 ## Your first Python program
 
-Let's start with the classic "Hello, World!" program. This is a tradition in programming—your first program that prints a message to the screen.
+Let's start with the classic "Hello, World!" program. Writing your first program that prints "Hello World!" to the terminal, in any language, is one of the oldest developer traditions. 
 
 ### Option 1: Using Python interactively
 
-You can run Python code directly in an interactive session. Open your terminal and type `python` (or `python3`):
+You can run Python code directly in an interactive session. Open your terminal and type `python` (or `python3`). A new environment for writing Python code will open. 
+
+:::note
+Some operating systems still use old Python 2 code, so writing `python3` is sometimes necessary. We will not be learning any Python 2 code here.
+:::
+
 
 Use this for quick tests and experimentation. It's great for learning and trying out code snippets.
 
@@ -63,9 +68,10 @@ That's it! You just ran your first Python program. The `print()` function displa
 
 ### Option 2: Creating a Python file
 
-For real programs, you'll write code in a file. Create a new file called `hello.py` and add this line:
-
 Use this for programs you want to save and run multiple times. This is how you'll write most of your Python code.
+
+For real programs, you'll write code in a Python file. Create a new file called `hello.py` and add this line:
+
 
 ```python
 print("Hello, World!")
@@ -92,8 +98,6 @@ Hello, World!
 Congratulations! You've written and run your first Python program!
 
 ## What just happened?
-
-Let's break down what you did:
 
 - **`print()`** is a built-in Python function that displays text (or other values) on the screen
 - **`"Hello, World!"`** is a [string](../types_variables/types), which is a piece of text enclosed in quotes

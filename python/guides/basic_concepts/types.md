@@ -10,11 +10,12 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
+
 ## What is a type?
 
 A **type** describes what a value is and which operations make sense for it. For example, you can add two numbers together, but you can't add a number to a word.
 
-Python is **dynamically typed**, which means you don't need to tell Python what type a value is when you create it. Python figures this out automatically. This makes Python easier to learn than languages where you must declare types ahead of time.
+Python is **dynamically typed**, which means you don't need to tell Python what type a value is when you create it. This is in contrast to some older programming languages, like C, that are **statically typed**. Python figures out the type automatically. This makes Python easier to learn than languages where you must declare types ahead of time.
 
 ```python
 x = 3          # int

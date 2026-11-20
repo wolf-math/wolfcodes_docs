@@ -10,20 +10,16 @@ license:
 source:
   canonical_url: https://wolfcodes.dev
 ---
-Python code can be divided into two categories: **expressions** and **statements**. Understanding the difference helps you understand how Python works.
+Python code can be divided into two categories: **expressions** and **statements**. In short: **expressions** product a value, **statements** perform an action.
 
 ### Expressions
 
-**Expressions** are code that **produces a value**. They evaluate to something you can use:
+**Expressions** are code that **produces a value**.
 
 ```python
 5 + 3              # Expression → produces 8
 "hello" + "world"  # Expression → produces "helloworld"
 ```
-
-Think of expressions as "questions" that Python answers with a value. When Python sees `5 + 3`, it calculates the answer (`8`) and gives you that value.
-
-**Key idea:** Expressions have a value. You can use them anywhere you need a value.
 
 :::note
 You'll learn more about expressions when you study [operators](../types_variables/operators). For now, just know that expressions produce values.
@@ -42,8 +38,6 @@ Statements:
 - Don't produce values you can use
 - Are the "commands" that make your program do things
 
-**Key idea:** Statements are "commands" that Python executes. They do work but don't give you a value back.
-
 :::note
 You'll see more examples of statements when you learn about [variables](../types_variables/variables) and [conditionals](../control_flow/conditionals). For now, just know that statements perform actions.
 :::
@@ -52,7 +46,7 @@ You'll see more examples of statements when you learn about [variables](../types
 
 Understanding expressions vs statements helps you understand:
 
-- **Why some code produces values and some doesn't:**
+- **Why some code produces values and some don't:**
   - `5 + 3` is an expression—it produces the value `8`
   - `print("Hello")` is a statement—it does something (prints) but doesn't give you a value
 
@@ -68,6 +62,3 @@ Understanding expressions vs statements helps you understand how Python works:
 
 - **Expressions** produce values—they're like "questions" that Python answers with a value (e.g., `5 + 3` produces `8`)
 - **Statements** perform actions—they're "commands" that do work but don't give you a value back (e.g., `print("Hello")` prints but doesn't return a value)
-- **Why it matters:** This distinction explains why some code produces values you can use, while other code just performs actions
-
-As you learn more about Python, you'll see expressions and statements everywhere. Understanding this difference will help you write better code and avoid common mistakes!
