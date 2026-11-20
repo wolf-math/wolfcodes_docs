@@ -89,7 +89,7 @@ L_\delta(y, \hat{y}) =
 \end{cases}
 $$
 
-- $\delta$ (delta): A threshold hyperparameter. Errors smaller than $\delta$ are treated like MSE; larger ones like MAE.
+- $\delta$ (delta): A threshold [hyperparameter](../fundamentals/hyperparameter_tuning.md). Errors smaller than $\delta$ are treated like MSE; larger ones like MAE.
 
 **Use it for:** Regression where outliers exist but you still want smooth training.
 
@@ -144,7 +144,7 @@ $$
 - $C$: The number of classes.
 - $c$: The index of the current class.
 - $y_{ic}$: 1 if class $c$ is the correct class for sample $i$, otherwise 0.
-- $\hat{y}_{ic}$: The predicted probability that sample $i$ belongs to class $c$ (usually from a softmax output).
+- $\hat{y}_{ic}$: The predicted probability that sample $i$ belongs to class $c$ (usually from a [softmax](./activation_functions.md#softmax) output).
 
 Because $y_{ic}$ is 0 for every wrong class, the loss for each sample is just $-\log$ of the probability the model gave the *correct* class.
 

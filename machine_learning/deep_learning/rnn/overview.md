@@ -30,7 +30,7 @@ At each time step $t$, the RNN takes two inputs:
 1. The current element of the sequence, $x_t$.
 2. The hidden state from the previous step, $h_{t-1}$.
 
-It combines them and passes the result through an activation function (typically $\tanh$) to produce the new hidden state:
+It combines them and passes the result through an [activation function](../activation_functions.md) (typically $\tanh$) to produce the new hidden state:
 
 $$
 h_t = \tanh(W_{hh} h_{t-1} + W_{xh} x_t + b_h)

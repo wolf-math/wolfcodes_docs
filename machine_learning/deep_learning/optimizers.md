@@ -27,7 +27,7 @@ The optimizer decides how quickly and how reliably your network learns. The same
 2. **Compute the gradients**: Backpropagation calculates how much each weight contributed to the loss.
 3. **Update the parameters**: The optimizer applies its update rule to adjust each weight and bias.
 
-These steps repeat for every batch, across many epochs, until the model **converges** (the loss stops improving).
+These steps repeat for every batch, across many [epochs](./intro.md#epochs-batches-and-iterations), until the model **converges** (the loss stops improving).
 
 All the optimizers below are variations on [gradient descent](./gradient_descent.md). They differ in how they use the gradients to choose each step.
 

@@ -19,7 +19,7 @@ A useful picture: imagine standing on a foggy hillside, trying to reach the vall
 
 ## Why this matters
 
-Almost every model you train, from logistic regression to large neural networks, is optimized with some form of gradient descent. Understanding the learning rate and the batch size, its two most important settings, helps you fix training that's too slow or doesn't converge at all.
+Almost every model you train, from [logistic regression](../algorithms/logistic_regression.md) to large neural networks, is optimized with some form of gradient descent. Understanding the learning rate and the batch size, its two most important settings, helps you fix training that's too slow or doesn't converge at all.
 
 ## How it works
 
@@ -36,7 +36,7 @@ Almost every model you train, from logistic regression to large neural networks,
 
 ## The learning rate
 
-The **learning rate** ($\alpha$) is a hyperparameter that sets how big each step is:
+The **learning rate** ($\alpha$) is a [hyperparameter](../fundamentals/hyperparameter_tuning.md) that sets how big each step is:
 
 - **Too high**: You overshoot the bottom, bouncing back and forth across the valley or even climbing out of it (the loss **diverges**).
 - **Too low**: Your steps are tiny, so training takes forever or gets stuck before reaching the bottom.
@@ -103,7 +103,7 @@ When one feature ranges from 0 to 1 and another from 0 to 100,000, the loss surf
 
 ### Stopping too early
 
-A loss that's still clearly decreasing means the model hasn't finished learning. Plot the loss over epochs before deciding training is done.
+A loss that's still clearly decreasing means the model hasn't finished learning. Plot the loss over [epochs](./intro.md#epochs-batches-and-iterations) before deciding training is done.
 
 ## Summary
 

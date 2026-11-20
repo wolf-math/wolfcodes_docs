@@ -46,7 +46,7 @@ row 3:  (2 × 1) + (1 × 0) + (0 × -1) =  2
 
 That's the top-left output value. The filter then slides one pixel right and repeats, and so on across the image. The key idea: **each output value is a weighted sum of a small neighborhood of input values**, computed with the same filter everywhere. This particular filter responds to vertical edges, where brightness changes from left to right.
 
-In traditional computer vision, filters like this were designed by hand (the Sobel edge detector is a famous example). In a CNN, **the filter weights are learnable parameters**. Backpropagation adjusts them during training, so the network discovers for itself which patterns matter for the task.
+In traditional computer vision, filters like this were designed by hand (the Sobel edge detector is a famous example). In a CNN, **the filter weights are learnable parameters**. [Backpropagation](../backpropagation.md) adjusts them during training, so the network discovers for itself which patterns matter for the task.
 
 ### Channels and depth
 

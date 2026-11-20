@@ -29,7 +29,7 @@ High risk      Low risk
 
 ## Why this matters
 
-Decision trees are one of the few models you can explain to anyone: you can print the rules and read them aloud. They handle non-linear patterns without feature scaling, and they're the building block of the most successful tabular-data algorithms, random forests and gradient boosting.
+Decision trees are one of the few models you can explain to anyone: you can print the rules and read them aloud. They handle non-linear patterns without [feature scaling](../fundamentals/feature_engineering.md#scaling), and they're the building block of the most successful tabular-data algorithms, random forests and gradient boosting.
 
 ## How decision trees work
 
@@ -89,7 +89,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 ### Train the model
 
-We set `max_depth=3` to keep the tree small. That prevents overfitting and keeps the tree easy to read.
+We set `max_depth=3` to keep the tree small. That prevents [overfitting](../deep_learning/regularization.md) and keeps the tree easy to read.
 
 ```python
 clf = DecisionTreeClassifier(criterion='gini', max_depth=3, random_state=42)

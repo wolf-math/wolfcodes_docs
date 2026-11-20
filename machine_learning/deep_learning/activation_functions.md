@@ -51,7 +51,7 @@ $$
 
 - **Range**: $\{0, 1\}$
 - **Use case**: Early binary classifiers and logic-gate perceptrons.
-- **Drawback**: Its derivative is zero everywhere (and undefined at 0). That means gradient descent gets no signal about how to adjust the weights, so it can't be trained with backpropagation. It also can't output probabilities or handle multiple classes.
+- **Drawback**: Its derivative is zero everywhere (and undefined at 0). That means [gradient descent](./gradient_descent.md) gets no signal about how to adjust the weights, so it can't be trained with [backpropagation](./backpropagation.md). It also can't output probabilities or handle multiple classes.
 
 ### Sigmoid
 
@@ -187,7 +187,7 @@ Stacking sigmoid layers makes gradients shrink as they travel backward, so early
 
 ### Applying softmax twice
 
-Many loss functions apply softmax for you. If your model already outputs softmax probabilities, pass them to a loss that expects probabilities, not one that expects raw logits.
+Many [loss functions](./loss_functions.md) apply softmax for you. If your model already outputs softmax probabilities, pass them to a loss that expects probabilities, not one that expects raw logits.
 
 ```python
 # Wrong (PyTorch): CrossEntropyLoss applies softmax itself

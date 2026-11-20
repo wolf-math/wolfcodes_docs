@@ -13,7 +13,7 @@ source:
 
 ## What is the vanishing gradient problem?
 
-The **vanishing gradient problem** happens when the gradients used to train a network shrink exponentially toward zero as they're passed backward. In [recurrent neural networks](./overview.md), this happens during backpropagation through time (BPTT). When the gradient vanishes, the weights stop learning from early time steps, and the model can't learn **long-term dependencies** in a sequence.
+The **vanishing gradient problem** happens when the gradients used to train a network shrink exponentially toward zero as they're passed backward. In [recurrent neural networks](./overview.md), this happens during [backpropagation](../backpropagation.md) through time (BPTT). When the gradient vanishes, the weights stop learning from early time steps, and the model can't learn **long-term dependencies** in a sequence.
 
 The same problem affects very deep feedforward networks, where the gradient fades as it passes back through many layers.
 
@@ -31,7 +31,7 @@ $$
 
 - $W_{hh}$ is the recurrent weight matrix.
 - $W_{xh}$ is the input weight matrix.
-- $\tanh$ is the activation function.
+- $\tanh$ is the [activation function](../activation_functions.md).
 
 During BPTT, we need the gradient of the loss at the final step $T$ with respect to an earlier hidden state $h_k$. The chain rule turns that into a long product, with one factor for every step in between:
 

@@ -19,13 +19,13 @@ Gathering brand-new datasets from the real world is often expensive or impossibl
 
 ## Why this matters
 
-Many statistics, like the median or a model's F1-score, have no simple formula for their uncertainty. Bootstrapping gives you one anyway, using nothing but your data and a loop. It's also the core idea behind bagging and random forests, so understanding it makes those algorithms much less mysterious.
+Many statistics, like the median or a model's [F1-score](../fundamentals/evaluation.md#f1-score-balancing-the-two), have no simple formula for their uncertainty. Bootstrapping gives you one anyway, using nothing but your data and a loop. It's also the core idea behind bagging and random forests, so understanding it makes those algorithms much less mysterious.
 
 ## Key characteristics
 
 - **Sampling with replacement**: Each time a value is drawn from the original dataset of size $N$, it goes back into the pool. So a single data point can appear several times in one bootstrap sample, while other points don't appear at all.
 - **Out-of-bag (OOB) observations**: On average, a bootstrap sample contains about 63.2% of the original unique data points. The remaining ~36.8% are called **out-of-bag** samples, and they're often used for validation.
-- **Foundation of ensemble methods**: Bootstrapping is the "B" in **bagging** (bootstrap aggregating). It's the backbone of [random forests](../algorithms/random_forests.md), where many trees are each trained on a different bootstrap sample to reduce variance and overfitting.
+- **Foundation of ensemble methods**: Bootstrapping is the "B" in **bagging** (bootstrap aggregating). It's the backbone of [random forests](../algorithms/random_forests.md), where many trees are each trained on a different bootstrap sample to reduce variance and [overfitting](../deep_learning/regularization.md).
 
 Here's what sampling with replacement looks like on a tiny dataset:
 
@@ -47,7 +47,7 @@ The value `40` appears three times, while `20` and `30` aren't drawn at all. Tho
 
 ## Example: a confidence interval from scratch
 
-This example uses bootstrapping to build a 95% confidence interval for the mean of a small dataset, using only NumPy.
+This example uses bootstrapping to build a 95% [confidence interval](./inferential_statistics.md#confidence-intervals) for the mean of a small dataset, using only NumPy.
 
 ```python
 import numpy as np

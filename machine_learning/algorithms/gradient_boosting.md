@@ -13,11 +13,11 @@ source:
 
 ## What is gradient boosting?
 
-**Gradient boosting** is one of the most powerful and widely used techniques for structured (tabular) data. Like [random forests](./random_forests.md), it's an **ensemble method**: it combines many **weak learners** (usually shallow decision trees) into a single, highly accurate **strong learner**.
+**Gradient boosting** is one of the most powerful and widely used techniques for structured (tabular) data. Like [random forests](./random_forests.md), it's an **ensemble method**: it combines many **weak learners** (usually shallow [decision trees](./decision_trees.md)) into a single, highly accurate **strong learner**.
 
 The difference is *how* the trees are built:
 
-- **Random forests** build trees **in parallel**, each on its own bootstrap sample, and average them.
+- **Random forests** build trees **in parallel**, each on its own [bootstrap](../statistics/bootstrapping.md) sample, and average them.
 - **Gradient boosting** builds trees **one after another**. Each new tree is trained specifically to correct the mistakes (the **residuals**) of all the trees before it.
 
 ## Why this matters
@@ -27,12 +27,12 @@ Gradient boosting and its descendants (XGBoost, LightGBM, CatBoost) win more tab
 ## How gradient boosting works
 
 1. **Start with a baseline prediction**: Usually the average of the target for regression (or the log-odds for classification).
-2. **Compute the residuals**: For every data point, calculate how far off the current prediction is. Technically these are **pseudo-residuals**: the negative gradient of the loss function. With mean squared error, they're simply the actual value minus the predicted value ($y - \hat{y}$).
+2. **Compute the residuals**: For every data point, calculate how far off the current prediction is. Technically these are **pseudo-residuals**: the negative gradient of the [loss function](../deep_learning/loss_functions.md). With mean squared error, they're simply the actual value minus the predicted value ($y - \hat{y}$).
 3. **Fit a weak learner to the residuals**: Train a shallow decision tree to predict those residuals, not the original target.
 4. **Update the predictions**: Scale the new tree's predictions by a **learning rate** (also called **shrinkage**) and add them to the running total.
 5. **Repeat**: Go back to step 2 for a set number of trees, or until the predictions stop improving.
 
-Each tree nudges the predictions a little closer to the truth. The small learning rate keeps any single tree from overcorrecting.
+Each tree nudges the predictions a little closer to the truth. The small [learning rate](../deep_learning/gradient_descent.md#the-learning-rate) keeps any single tree from overcorrecting.
 
 ## Example: building gradient boosting by hand
 
@@ -183,7 +183,7 @@ GradientBoostingRegressor(learning_rate=0.05, n_estimators=500, max_depth=3)
 
 ### Not checking for overfitting as trees are added
 
-Monitor validation error as you add trees, and stop when it stops improving. scikit-learn's `n_iter_no_change` and XGBoost's early stopping do this for you.
+Monitor validation error as you add trees, and stop when it stops improving. scikit-learn's `n_iter_no_change` and XGBoost's [early stopping](../deep_learning/regularization.md#training-process-controls) do this for you.
 
 ## Summary
 

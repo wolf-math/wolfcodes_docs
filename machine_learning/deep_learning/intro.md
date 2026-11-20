@@ -58,7 +58,7 @@ Weights and biases are the network's **parameters**: the values it learns during
 
 ### Activation functions
 
-An **activation function** is applied to each neuron's output to introduce **non-linearity**. Without it, a neural network of any depth would collapse into a single linear model, no more powerful than linear regression.
+An **activation function** is applied to each neuron's output to introduce **non-linearity**. Without it, a neural network of any depth would collapse into a single linear model, no more powerful than [linear regression](../algorithms/linear_regression.md).
 
 - **ReLU (rectified linear unit)**: The most popular choice. It outputs the input if it's positive, and 0 otherwise: $f(x) = \max(0, x)$.
 - **Sigmoid and tanh**: "Squashing" functions that map inputs into a limited range (0 to 1 for sigmoid). Sigmoid is often used in the output layer for binary classification.

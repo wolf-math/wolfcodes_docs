@@ -102,13 +102,13 @@ See [loss functions](./loss_functions.md) for more on this formula.
 
 ### Step 3: backpropagation and optimization
 
-The network computes the gradient of the loss with respect to every weight and bias using the chain rule. An optimizer then updates each weight a small step in the direction that reduces the loss:
+The network computes the gradient of the loss with respect to every weight and bias using the chain rule. An [optimizer](./optimizers.md) then updates each weight a small step in the direction that reduces the loss:
 
 $$
 W_{\text{new}} = W_{\text{old}} - \alpha \frac{\partial \text{Loss}}{\partial W}
 $$
 
-Here $\alpha$ is the learning rate. Repeat this across thousands of commits, and the weights gradually settle on values that predict builds well. See [backpropagation](./backpropagation.md) for a worked example.
+Here $\alpha$ is the [learning rate](./gradient_descent.md#the-learning-rate). Repeat this across thousands of commits, and the weights gradually settle on values that predict builds well. See [backpropagation](./backpropagation.md) for a worked example.
 
 ## Building layers in code
 

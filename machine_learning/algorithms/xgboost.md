@@ -23,7 +23,7 @@ On macOS, XGBoost also needs the OpenMP runtime. If importing it fails with a `l
 
 ## Why this matters
 
-XGBoost is what many teams reach for when a random forest isn't quite accurate enough. It's fast, handles missing values on its own, and has built-in protection against overfitting. Knowing how it differs from plain gradient boosting helps you understand its long list of hyperparameters.
+XGBoost is what many teams reach for when a [random forest](./random_forests.md) isn't quite accurate enough. It's fast, handles missing values on its own, and has built-in protection against overfitting. Knowing how it differs from plain gradient boosting helps you understand its long list of hyperparameters.
 
 ## What XGBoost adds to gradient boosting
 

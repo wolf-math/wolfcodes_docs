@@ -162,7 +162,7 @@ $$
 
 ### Categorical cross-entropy
 
-Categorical cross-entropy is used when each example belongs to exactly one of three or more classes (for example, handwritten digits 0 to 9). The model outputs a probability for every class using a softmax activation.
+Categorical cross-entropy is used when each example belongs to exactly one of three or more classes (for example, handwritten digits 0 to 9). The model outputs a probability for every class using a [softmax](../deep_learning/activation_functions.md#softmax) activation.
 
 True labels are usually **one-hot encoded**: class 2 out of 4 becomes `[0, 1, 0, 0]`. The formula sums across all $N$ samples and all $C$ classes:
 
@@ -209,7 +209,7 @@ When you pass `cv=5` to scikit-learn with a classifier, it uses stratified k-fol
 
 ## Diagnosing problems with learning curves
 
-How do you know whether your model is **underfitting** (too simple) or **overfitting** (too complex)? A **learning curve** plots the model's error on both the training set and a validation set as training goes on (either as the training set grows, or across training epochs).
+How do you know whether your model is **underfitting** (too simple) or **overfitting** (too complex)? A **learning curve** plots the model's error on both the training set and a validation set as training goes on (either as the training set grows, or across training [epochs](../deep_learning/intro.md#epochs-batches-and-iterations)).
 
 - **Underfitting (high bias):** Training error and validation error are *both* high and level off at a poor value. The model is too simple to capture the underlying pattern.
 - **Overfitting (high variance):** Training error is very low, but validation error stays high, leaving a wide gap between the two curves. The model has memorized the training data, including its noise, instead of learning general rules.

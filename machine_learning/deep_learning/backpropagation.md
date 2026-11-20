@@ -17,7 +17,7 @@ source:
 
 ## Why this matters
 
-Backpropagation is what makes training deep networks practical. It computes the gradient for millions of weights in a single backward pass, instead of testing each weight separately. Understanding it also explains common training problems like vanishing and exploding gradients.
+Backpropagation is what makes training deep networks practical. It computes the gradient for millions of weights in a single backward pass, instead of testing each weight separately. Understanding it also explains common training problems like vanishing and [exploding gradients](./rnn/exploding_gradient.md).
 
 ## How backpropagation works
 

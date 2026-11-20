@@ -13,7 +13,7 @@ source:
 
 ## What are hyperparameters?
 
-**Hyperparameters** are configuration settings you choose *before* training begins. They control how the model trains and how complex it can become, and they can't be learned from the data directly. Examples include the learning rate in gradient descent, the maximum depth of a decision tree, and the number of hidden layers in a neural network.
+**Hyperparameters** are configuration settings you choose *before* training begins. They control how the model trains and how complex it can become, and they can't be learned from the data directly. Examples include the [learning rate](../deep_learning/gradient_descent.md#the-learning-rate) in gradient descent, the maximum depth of a [decision tree](../algorithms/decision_trees.md), and the number of hidden layers in a neural network.
 
 They're different from **model parameters** (like weights and biases), which the algorithm learns automatically during training.
 
@@ -39,7 +39,7 @@ Every algorithm has its own hyperparameters. Here are two common examples.
 
 ### Support vector machines
 
-- **`C` (regularization strength)**: A lower `C` allows a wider margin with some misclassified points, which usually generalizes better. A higher `C` tries to classify every training point correctly, which risks overfitting.
+- **`C` (regularization strength)**: A lower `C` allows a wider margin with some misclassified points, which usually generalizes better. A higher `C` tries to classify every training point correctly, which risks [overfitting](../deep_learning/regularization.md).
 - **`gamma`**: Controls how far the influence of a single training example reaches. A high `gamma` creates tight, complex boundaries around individual points (overfitting risk).
 - **`kernel`**: Think of the kernel as the glasses you wear to look at your data. A `"linear"` kernel is like clear glasses: you see straight-line relationships. A `"poly"` kernel is like a tinted lens that highlights curved, polynomial patterns. See [support vector machines](../algorithms/support_vector_machines.md) for details.
 
@@ -55,7 +55,7 @@ Notice the theme: almost every hyperparameter trades off between **underfitting*
 
 ## Tuning techniques
 
-All three techniques below use the same setup: a random forest on scikit-learn's breast cancer dataset.
+All three techniques below use the same setup: a [random forest](../algorithms/random_forests.md) on scikit-learn's breast cancer dataset.
 
 ```python
 from sklearn.datasets import load_breast_cancer
@@ -79,7 +79,7 @@ param_grid = {
 
 ### Grid search
 
-**Grid search** (`GridSearchCV`) tries *every* combination of the values you list. It's thorough, but the cost grows fast: the grid above has 3 × 4 × 3 × 3 = 108 combinations, and with 5-fold cross-validation that's 540 model fits.
+**Grid search** (`GridSearchCV`) tries *every* combination of the values you list. It's thorough, but the cost grows fast: the grid above has 3 × 4 × 3 × 3 = 108 combinations, and with 5-fold [cross-validation](./evaluation.md#robust-validation-strategies) that's 540 model fits.
 
 ```python
 from sklearn.model_selection import GridSearchCV
@@ -157,7 +157,7 @@ print(f"Best cross-validation accuracy: {study.best_value:.4f}")
 ## Best practices
 
 - **Always use cross-validation**: Score each combination with k-fold cross-validation (`cv=5`) so you don't overfit to a single validation split.
-- **Prevent data leakage**: Put preprocessing steps (scaling, imputation) inside a scikit-learn `Pipeline` that you pass to the search, instead of applying them to the whole dataset beforehand.
+- **Prevent data leakage**: Put preprocessing steps (scaling, [imputation](./feature_engineering.md#handling-missing-data)) inside a scikit-learn `Pipeline` that you pass to the search, instead of applying them to the whole dataset beforehand.
 - **Start broad, then refine**: Use random search to scan a wide range, then run a focused grid search or Bayesian optimization around the best region.
 - **Keep the test set for the end**: Tune on training data with cross-validation, and evaluate on the test set only once you've picked your final model.
 

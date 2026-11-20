@@ -18,11 +18,11 @@ A **random forest** is an **ensemble** method: it combines many models to make o
 - For **classification**, the forest predicts the class most trees vote for (the mode).
 - For **regression**, it predicts the average of all the trees' predictions.
 
-A single decision tree overfits easily. Averaging many slightly different trees cancels out much of that overfitting, which makes random forests one of the most reliable algorithms for tabular data.
+A single decision tree overfits easily. Averaging many slightly different trees cancels out much of that [overfitting](../deep_learning/regularization.md), which makes random forests one of the most reliable algorithms for tabular data.
 
 ## Why this matters
 
-Random forests are one of the most reliable "first serious model" choices for tabular data. They're accurate out of the box, hard to overfit badly, need no feature scaling, and tell you which features matter. When you need a strong result quickly, a random forest is often the answer.
+Random forests are one of the most reliable "first serious model" choices for tabular data. They're accurate out of the box, hard to overfit badly, need no [feature scaling](../fundamentals/feature_engineering.md#scaling), and tell you which features matter. When you need a strong result quickly, a random forest is often the answer.
 
 ## How random forests work
 

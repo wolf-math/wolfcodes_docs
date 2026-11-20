@@ -14,7 +14,7 @@ source:
 
 ## What is an LSTM?
 
-A **long short-term memory (LSTM)** network is a specialized type of [recurrent neural network](./overview.md) built to handle long sequences. It was designed to overcome the vanishing and exploding gradient problems that keep standard RNNs from remembering things over long distances.
+A **long short-term memory (LSTM)** network is a specialized type of [recurrent neural network](./overview.md) built to handle long sequences. It was designed to overcome the vanishing and [exploding gradient](./exploding_gradient.md) problems that keep standard RNNs from remembering things over long distances.
 
 ## Why this matters
 
@@ -22,7 +22,7 @@ LSTMs were the standard model for text, speech, and time series for years, and t
 
 ## The problem with standard RNNs
 
-A standard RNN passes a hidden state $h_t$ from one step to the next. During backpropagation through time, the gradient is multiplied over and over across the steps. In long sequences it either shrinks to zero (the network forgets early context) or blows up. Either way, standard RNNs struggle to learn **long-term dependencies**, like connecting the subject at the start of a paragraph to a verb at the end.
+A standard RNN passes a hidden state $h_t$ from one step to the next. During [backpropagation](../backpropagation.md) through time, the gradient is multiplied over and over across the steps. In long sequences it either shrinks to zero (the network forgets early context) or blows up. Either way, standard RNNs struggle to learn **long-term dependencies**, like connecting the subject at the start of a paragraph to a verb at the end.
 
 See [the vanishing gradient problem](./vanishing_gradient.md) for the details.
 

@@ -62,10 +62,10 @@ model.predict(X_new)           # Fast part: a quick calculation with learned wei
 
 ### Examples of eager learners
 
-- Logistic regression
-- Support vector machines (SVMs)
+- [Logistic regression](../algorithms/logistic_regression.md)
+- [Support vector machines](../algorithms/support_vector_machines.md) (SVMs)
 - Neural networks
-- Random forests
+- [Random forests](../algorithms/random_forests.md)
 
 ## Lazy learning
 
@@ -97,7 +97,7 @@ model.predict(X_new)           # Slow part: measures distance to every stored po
 
 ### Examples of lazy learners
 
-- K-nearest neighbors (KNN)
+- [K-nearest neighbors](../algorithms/knn.md) (KNN)
 - Case-based reasoning
 - Locally weighted regression
 

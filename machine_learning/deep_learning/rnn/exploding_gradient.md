@@ -29,7 +29,7 @@ $$
 h_t = \tanh(W_{hh} h_{t-1} + W_{xh} x_t + b_h)
 $$
 
-When training with backpropagation through time (BPTT), the gradient flowing back from the last step to an earlier hidden state $h_k$ is a product of many factors, one per time step, each containing $W_{hh}$. Roughly, it behaves like raising $W_{hh}$ to a power:
+When training with [backpropagation](../backpropagation.md) through time (BPTT), the gradient flowing back from the last step to an earlier hidden state $h_k$ is a product of many factors, one per time step, each containing $W_{hh}$. Roughly, it behaves like raising $W_{hh}$ to a power:
 
 $$
 \frac{\partial \mathcal{L}}{\partial h_k} \propto \prod_{j=k+1}^{T} \frac{\partial h_j}{\partial h_{j-1}} \approx \left(W_{hh}\right)^{T-k}
@@ -38,7 +38,7 @@ $$
 - If the largest eigenvalue of $W_{hh}$ (its strongest stretching factor) is **greater than 1**, repeated multiplication makes the gradient grow exponentially.
 - Over a long sequence, this gets extreme fast: $1.2^{50}$ is over 9,000, and $1.5^{50}$ is over **630 million**.
 
-When gradients that large reach the optimizer, they trigger massive, erratic jumps in the weights, wiping out any useful patterns.
+When gradients that large reach the [optimizer](../optimizers.md), they trigger massive, erratic jumps in the weights, wiping out any useful patterns.
 
 ## An analogy: an over-amplifying supply chain
 

@@ -55,10 +55,10 @@ The [feature engineering guide](./feature_engineering.md) covers these technique
 
 ### 3. Model selection
 
-Next you choose an algorithm that fits your problem. That might be a simple linear regression, a decision tree, or a complex neural network:
+Next you choose an algorithm that fits your problem. That might be a simple [linear regression](../algorithms/linear_regression.md), a [decision tree](../algorithms/decision_trees.md), or a complex neural network:
 
-- **Supervised learning**: The data is labeled (for example, predicting house prices or classifying emails). Examples: linear regression, random forests, support vector machines.
-- **Unsupervised learning**: The data is unlabeled, and the model looks for hidden structure (for example, customer segmentation). Examples: k-means clustering, principal component analysis.
+- **Supervised learning**: The data is labeled (for example, predicting house prices or classifying emails). Examples: linear regression, [random forests](../algorithms/random_forests.md), [support vector machines](../algorithms/support_vector_machines.md).
+- **Unsupervised learning**: The data is unlabeled, and the model looks for hidden structure (for example, customer segmentation). Examples: [k-means](../algorithms/k_means.md) clustering, principal component analysis.
 - **Deep learning**: Neural networks used for complex tasks like computer vision or natural language processing.
 
 These families are explained in [Types of Machine Learning](./types_of_ml.md).

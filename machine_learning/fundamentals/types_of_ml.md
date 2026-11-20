@@ -93,7 +93,7 @@ See [support vector machines](../algorithms/support_vector_machines.md).
 
 #### K-nearest neighbors (KNN)
 
-- **How it works:** A "lazy learner." It doesn't build an explicit model. Instead, it looks at the $K$ closest training points to a new input and assigns the majority class.
+- **How it works:** A "[lazy learner](./lazy_vs_eager_learning.md)." It doesn't build an explicit model. Instead, it looks at the $K$ closest training points to a new input and assigns the majority class.
 - **Real-world example:** Product recommendations ("customers similar to you also bought...").
 
 See [k-nearest neighbors](../algorithms/knn.md).
@@ -179,7 +179,7 @@ When deciding which kind of algorithm to use:
    - Do you have raw, unlabeled data that needs structure? Use **unsupervised learning**.
    - Do you have an environment where actions produce outcomes? Use **reinforcement learning**.
 2. **Start simple:** Establish a baseline, such as linear or logistic regression for tabular data, or basic Q-learning for a simple environment.
-3. **Scale up only when needed:** Move to non-linear ensembles (random forests, gradient boosting) or deep learning when the simple baseline isn't good enough.
+3. **Scale up only when needed:** Move to non-linear ensembles (random forests, [gradient boosting](../algorithms/gradient_boosting.md)) or [deep learning](../deep_learning/intro.md) when the simple baseline isn't good enough.
 
 **Rule of thumb:** A simple model you understand beats a complex model you can't explain, unless the complex model is clearly better on your test data.
 

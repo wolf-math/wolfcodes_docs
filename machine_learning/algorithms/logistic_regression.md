@@ -13,7 +13,7 @@ source:
 
 ## What is logistic regression?
 
-**Logistic regression** is one of the most widely used supervised learning algorithms for **binary classification**: predicting which of two categories something belongs to (yes/no, spam/not spam, pass/fail, upgrade/churn).
+**Logistic regression** is one of the most widely used [supervised learning](../fundamentals/types_of_ml.md#supervised-learning) algorithms for **binary classification**: predicting which of two categories something belongs to (yes/no, spam/not spam, pass/fail, upgrade/churn).
 
 Despite "regression" in its name, it's a classification algorithm. It predicts the *probability* that an example belongs to the positive class, then turns that probability into a category.
 

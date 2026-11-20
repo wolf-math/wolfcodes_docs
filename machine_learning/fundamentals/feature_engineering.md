@@ -129,7 +129,7 @@ print(df_mice_imputed)
 
 ### Handling outliers
 
-**Outliers** are extreme values that don't fit the rest of the data. They can heavily skew distance-based algorithms (like SVMs and KNN) and linear models. Use statistical bounds to find them, then decide whether to remove, clip, or transform them based on what makes sense for your domain.
+**Outliers** are extreme values that don't fit the rest of the data. They can heavily skew distance-based algorithms (like [SVMs](../algorithms/support_vector_machines.md) and KNN) and linear models. Use statistical bounds to find them, then decide whether to remove, clip, or transform them based on what makes sense for your domain.
 
 Here's a dataset with some deliberate outliers:
 
@@ -237,7 +237,7 @@ df = pd.DataFrame(
 
 ### Scaling
 
-Algorithms that are sensitive to the size of numbers (gradient descent, neural networks, KNN, SVMs) need features on comparable scales. Otherwise a feature measured in thousands (salary) drowns out one measured in tens (age).
+Algorithms that are sensitive to the size of numbers ([gradient descent](../deep_learning/gradient_descent.md), neural networks, KNN, SVMs) need features on comparable scales. Otherwise a feature measured in thousands (salary) drowns out one measured in tens (age).
 
 - **Standardization** (z-score scaling) centers a feature at a mean of 0 with a standard deviation of 1.
 - **Min-max scaling** squeezes a feature into the range 0 to 1.
@@ -309,7 +309,7 @@ print(df[['education_level', 'education_ordinal']].drop_duplicates())
 
 **Target encoding** replaces each category with the average value of the target for that category. It's very effective for **high-cardinality** features with many distinct values (zip codes, user IDs) where one-hot encoding would create thousands of columns.
 
-Because it uses the target, it can leak information and cause overfitting. Use **smoothing** (pulling rare categories toward the global average) and calculate it within cross-validation folds.
+Because it uses the target, it can leak information and cause [overfitting](../deep_learning/regularization.md). Use **smoothing** (pulling rare categories toward the global average) and calculate it within [cross-validation](./evaluation.md#robust-validation-strategies) folds.
 
 ```python
 def target_encode(data, categorical_col, target_col, smoothing=10):

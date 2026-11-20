@@ -48,7 +48,7 @@ The final feature maps (3D: height × width × channels) are unrolled into a sin
 ### Fully connected (dense) layers and output
 
 - Standard [dense layers](../layers.md), where every neuron connects to every value from the previous layer, combine the extracted features to make the final decision.
-- The **output layer** usually uses softmax to produce a probability for each class.
+- The **output layer** usually uses [softmax](../activation_functions.md#softmax) to produce a probability for each class.
 
 ```text
 Image → [Conv → ReLU → Pool] → [Conv → ReLU → Pool] → Flatten → Dense → Softmax → Class

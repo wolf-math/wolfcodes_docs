@@ -38,7 +38,7 @@ These techniques are used across classical machine learning and deep learning.
 
 ## Penalty-based regularization (weight decay)
 
-These techniques add a penalty to the loss function based on the size of the model's weights. That discourages the model from leaning too heavily on any single feature, which keeps its decision boundaries smoother.
+These techniques add a penalty to the [loss function](./loss_functions.md) based on the size of the model's weights. That discourages the model from leaning too heavily on any single feature, which keeps its decision boundaries smoother.
 
 ### L2 regularization (ridge)
 
@@ -81,7 +81,7 @@ During each training step, every neuron is randomly "dropped out" (its output te
 
 How and when you stop training plays a big role in overfitting.
 
-- **Early stopping:** Monitor the validation loss after every epoch. If it stops improving for a set number of epochs (the **patience**), stop training and restore the weights from the best epoch.
+- **Early stopping:** Monitor the validation loss after every [epoch](./intro.md#epochs-batches-and-iterations). If it stops improving for a set number of epochs (the **patience**), stop training and restore the weights from the best epoch.
 - **Data augmentation:** Expand the training set with label-preserving changes: rotating, cropping, or color-shifting images; replacing words with synonyms in text. The model learns to ignore small, irrelevant variations.
 - **K-fold cross-validation:** Doesn't prevent overfitting by itself, but gives a reliable estimate of performance on unseen data. That lets you tune regularization settings (like $\lambda$ or the dropout rate) with confidence.
 

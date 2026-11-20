@@ -24,7 +24,7 @@ Offline test scores only tell you how a model does on historical data. A/B testi
 When deploying a model to production (a recommendation system, fraud detector, or click-through predictor), teams often use a **champion-challenger** setup:
 
 - **Model A (champion)**: The model currently in production.
-- **Model B (challenger)**: The new, upgraded model, such as a newly trained neural network or XGBoost model.
+- **Model B (challenger)**: The new, upgraded model, such as a newly trained neural network or [XGBoost](../algorithms/xgboost.md) model.
 
 Incoming traffic is randomly split so each request is handled by either Model A or Model B. You then track **key performance indicators (KPIs)** like conversion rate, click-through rate, or revenue, and test whether the challenger *statistically* outperforms the champion.
 

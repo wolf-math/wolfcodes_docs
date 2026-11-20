@@ -15,12 +15,12 @@ source:
 
 **K-nearest neighbors (KNN)** predicts the label of a new data point by looking at the $K$ training points closest to it. It can be used for both classification and regression. KNN is:
 
-- **Non-parametric**: It makes no assumptions about the shape of the data (unlike linear regression, which assumes a straight-line relationship).
+- **Non-parametric**: It makes no assumptions about the shape of the data (unlike [linear regression](./linear_regression.md), which assumes a straight-line relationship).
 - **A lazy learner**: It doesn't learn anything during training. It simply memorizes the dataset and does all the work when you ask for a prediction. See [Lazy vs Eager Learning](../fundamentals/lazy_vs_eager_learning.md).
 
 ## Why this matters
 
-KNN is the most intuitive algorithm in machine learning: "you're probably like your neighbors." It needs no training, works for both classification and regression, and makes a handy baseline. It's also a great way to understand why feature scaling and the curse of dimensionality matter for every distance-based method.
+KNN is the most intuitive algorithm in machine learning: "you're probably like your neighbors." It needs no training, works for both classification and regression, and makes a handy baseline. It's also a great way to understand why [feature scaling](../fundamentals/feature_engineering.md#scaling) and the curse of dimensionality matter for every distance-based method.
 
 ## How KNN works
 
@@ -161,7 +161,7 @@ Use `fit_transform()` on the training data and only `transform()` on the test da
 
 ### Picking K without testing it
 
-`K=5` is a default, not a rule. Try several values with cross-validation and pick the one that scores best.
+`K=5` is a default, not a rule. Try several values with [cross-validation](../fundamentals/evaluation.md#robust-validation-strategies) and pick the one that scores best.
 
 ## Summary
 

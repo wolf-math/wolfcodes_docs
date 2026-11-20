@@ -13,13 +13,13 @@ source:
 
 ## What are support vector machines?
 
-A **support vector machine (SVM)** is a supervised learning algorithm used mainly for classification (though it can also do regression). It finds the decision boundary that separates the classes with the **widest possible margin**.
+A **support vector machine (SVM)** is a [supervised learning](../fundamentals/types_of_ml.md#supervised-learning) algorithm used mainly for classification (though it can also do regression). It finds the decision boundary that separates the classes with the **widest possible margin**.
 
 In scikit-learn, the classifier version is called `SVC` (support vector classifier), and the regression version is `SVR`.
 
 ## Why this matters
 
-SVMs were the state of the art for classification before deep learning, and they're still excellent on small to medium datasets and high-dimensional data like text. The ideas they introduced, maximum margins and kernels, show up throughout machine learning.
+SVMs were the state of the art for classification before [deep learning](../deep_learning/intro.md), and they're still excellent on small to medium datasets and high-dimensional data like text. The ideas they introduced, maximum margins and kernels, show up throughout machine learning.
 
 ## Key concepts
 
@@ -62,7 +62,7 @@ Now "lift" the data into 2D by adding a second coordinate, $x^2$. The outer blue
 - **How it works:** Measures similarity by distance, creating smooth, bell-shaped "islands" of influence around data points. It can model almost any boundary shape.
 - **Best for:** General-purpose non-linear data, especially when you don't know the underlying shape. It's scikit-learn's default.
 - **Key hyperparameter `gamma`:** Controls the radius of each island.
-  - High `gamma`: tight, isolated pockets around individual points (overfitting risk).
+  - High `gamma`: tight, isolated pockets around individual points ([overfitting](../deep_learning/regularization.md) risk).
   - Low `gamma`: smooth, broad boundaries (underfitting risk).
 
 ### Polynomial kernel (`kernel="poly"`)

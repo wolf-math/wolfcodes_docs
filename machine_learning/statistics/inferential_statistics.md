@@ -95,7 +95,7 @@ The width of the interval comes from the **margin of error**, which is calculate
 
 ### Example: a confidence interval for model accuracy
 
-Here's a 95% confidence interval for a model's mean accuracy across 30 cross-validation folds:
+Here's a 95% confidence interval for a model's mean accuracy across 30 [cross-validation](../fundamentals/evaluation.md#robust-validation-strategies) folds:
 
 ```python
 import numpy as np
@@ -169,7 +169,7 @@ else:
 
 ### Example: regression F-test
 
-In linear regression, the F-statistic tells you whether your features *collectively* explain a significant amount of the target's variance:
+In [linear regression](../algorithms/linear_regression.md), the F-statistic tells you whether your features *collectively* explain a significant amount of the target's variance:
 
 ```python
 import numpy as np

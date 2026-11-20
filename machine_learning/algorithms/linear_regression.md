@@ -13,7 +13,7 @@ source:
 
 ## What is linear regression?
 
-**Linear regression** models the relationship between a numeric target variable ($y$) and one or more input features ($X$) by fitting a straight line through the data. It's the simplest supervised learning algorithm for predicting continuous numbers, and the foundation many other models build on.
+**Linear regression** models the relationship between a numeric target variable ($y$) and one or more input features ($X$) by fitting a straight line through the data. It's the simplest [supervised learning](../fundamentals/types_of_ml.md#supervised-learning) algorithm for predicting continuous numbers, and the foundation many other models build on.
 
 ## Why this matters
 
